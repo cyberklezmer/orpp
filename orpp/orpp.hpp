@@ -394,7 +394,7 @@ public:
         return ret;
     }*/
 
-    matrix submatrix(unsigned r, unsigned c, unsigned nr, unsigned nc)
+    matrix submatrix(unsigned r, unsigned c, unsigned nr, unsigned nc) const
     {
         assert(c+nc <= this->c());
         assert(r+nr <= this->r());
