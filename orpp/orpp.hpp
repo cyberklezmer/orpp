@@ -571,11 +571,10 @@ inline matrix operator - (const matrix& a, const matrix& b)
 inline matrix operator * (const matrix& a, const matrix& b)
 {
     assert(a.c() == b.r());
-    matrix ret(a.r(),b.c());
+    matrix ret(a.r(),b.c(),0);
     for(unsigned i=0; i<ret.r(); i++)
         for(unsigned j=0; j<ret.c(); j++)
         {
-            double s=0;
             for(unsigned k=0; k<a.c(); k++)
                 ret(i,j) += a(i,k)*b(k,j);
         }
