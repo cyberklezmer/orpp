@@ -64,7 +64,7 @@ public:
         assert(rows()==cols());
         using namespace Eigen;
         EigenSolver<eigenmatrix> s(*this);
-        Vector<std::complex<double>,Dynamic> lambdas = s.eigenvalues();
+        VectorXcd lambdas = s.eigenvalues();
         double lambda = 0;
         for(unsigned i=0; i<rows(); i++)
             if(fabs(lambdas(i))>lambda)
@@ -89,7 +89,7 @@ inline double radius(const dmatrix& m)
     assert(m.rows()==m.cols());
     using namespace Eigen;
     EigenSolver<dmatrix> s(m);
-    Vector<std::complex<double>,Dynamic> lambdas = s.eigenvalues();
+    VectorXcd lambdas = s.eigenvalues();
     double lambda = 0;
     for(unsigned i=0; i<m.rows(); i++)
         if(fabs(lambdas(i))>lambda)
