@@ -8,10 +8,9 @@ namespace orpp
 
 
 
-
 //inline std::ostream& operator<<(std::ostream& str,const dmatrix& r);
 
-using dvector=Eigen::Vector<double, Eigen::Dynamic>;
+using dvector=Eigen::VectorXd;//<double, Eigen::Dynamic>;
 using dmatrix=Eigen::Matrix<double, Eigen::Dynamic,Eigen::Dynamic>;
 
 /*class dmatrix: public eigenmatrix
@@ -192,12 +191,17 @@ inline dvector dv(const std::vector<double> &d )
 
 inline std::vector<double> vd(const dvector& dv)
 {
-    std::vector<double> ret(dv.cols());
-    for(unsigned i=0; i<dv.cols(); i++)
+    std::vector<double> ret(dv.size());
+    for(unsigned i=0; i<dv.size(); i++)
         ret[i] = dv[i];
     return ret;
 }
 
+auto m2csv(const dmatrix& m)
+{
+    Eigen::IOFormat f(Eigen::StreamPrecision, Eigen::DontAlignCols,",");
+    return m.format(f);
+}
 
 
 
