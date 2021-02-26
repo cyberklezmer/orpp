@@ -13,76 +13,7 @@ namespace orpp
 using dvector=Eigen::VectorXd;//<double, Eigen::Dynamic>;
 using dmatrix=Eigen::Matrix<double, Eigen::Dynamic,Eigen::Dynamic>;
 
-/*class dmatrix: public eigenmatrix
-{
-public:
-    dmatrix(const eigenmatrix& e) : eigenmatrix(e.rows(),e.cols())
-    {
-        *this = e;
-    }
 
-    dmatrix(const Eigen::DenseBase<eigenmatrix>& d) : eigenmatrix(d.rows(),d.cols())
-    {
-        *this = d;
-    }
-
-    dmatrix(const Eigen::MatrixBase<eigenmatrix>& d) : eigenmatrix(d.rows(),d.cols())
-    {
-        *this = d;
-    }
-
-    dmatrix(const dvector& v) : eigenmatrix(v.size(),1)
-    {
-        for(unsigned i=0; i<v.size(); i++)
-            (*this)(i,0) = v[i];
-    }
-    dmatrix(unsigned r=0, unsigned c=0, double iv=0.0) :
-        eigenmatrix(r,c)
-    {
-        for(unsigned i=0; i<r; i++)
-            for(unsigned j=0; j<c; j++)
-                (*this)(i,0) = iv;
-    }
-    static unsigned checknz(unsigned i) { assert(i); return i; }
-    dmatrix(const std::vector<std::vector<double>>& x)
-        :  eigenmatrix(x.size(),checknz(x[0].size()))
-    {
-        unsigned m=x[0].size();
-        assert(m>0);
-        for(unsigned i=0; i<x.size(); i++)
-        {
-            assert(x[i].size() == m);
-            for(unsigned j=0; j<x.size(); j++)
-                (*this)(i,j)=x[i][j];
-        }
-    }
-    unsigned cols() const { return this->cols(); }
-    unsigned rows() const { return this->rows(); }
-
-    double radius() const
-    {
-        assert(rows()==cols());
-        using namespace Eigen;
-        EigenSolver<eigenmatrix> s(*this);
-        Vector<std::complex<double>,Dynamic> lambdas = s.eigenvalues();
-        double lambda = 0;
-        for(unsigned i=0; i<rows(); i++)
-            if(fabs(lambdas(i))>lambda)
-                lambda = fabs(lambdas(i));
-        return lambda;
-    }
-    dmatrix pseudoinverse() const
-    {
-        //tbd https://stackoverflow.com/questions/44465197/eigen-library-pseudo-inverse-of-dmatrix-matlab-pinv
-
-        using namespace Eigen;
-        assert(rows()==cols());
-
-        eigenmatrix B(rows(),cols());
-        B = this->completeOrthogonalDecomposition().pseudoInverse();
-        return B;
-    }
-};*/
 
 inline double radius(const dmatrix& m)
 {
@@ -97,7 +28,7 @@ inline double radius(const dmatrix& m)
     return lambda;
 }
 
-dmatrix pseudoinverse(const dmatrix& m)
+inline dmatrix pseudoinverse(const dmatrix& m)
 {
     //tbd https://stackoverflow.com/questions/44465197/eigen-library-pseudo-inverse-of-dmatrix-matlab-pinv
 
@@ -197,11 +128,12 @@ inline std::vector<double> vd(const dvector& dv)
     return ret;
 }
 
-auto m2csv(const dmatrix& m)
+inline auto m2csv(const dmatrix& m)
 {
     Eigen::IOFormat f(Eigen::StreamPrecision, Eigen::DontAlignCols,",");
     return m.format(f);
 }
+
 
 
 

@@ -19,8 +19,10 @@ public:
     uncertain() : fx(0), fvar(dmatrix(0,0))
         {}
     dvector x() const { return fx;}
+    dvector& x() { return fx;}
     unsigned dim() const { return fx.size(); }
     dmatrix var() const { return fvar; }
+    dmatrix& var()  { return fvar; }
 private:
     dvector fx;
     dmatrix fvar;
@@ -29,17 +31,17 @@ private:
 
 struct paraminfo
 {
-    string name;
+    std::string name;
     double lower;
     double upper;
     double initial;
     paraminfo() :
       lower(-infinity), upper(infinity), initial(na)
       {}
-    paraminfo(string aname, double ainitial) :
+    paraminfo(std::string aname, double ainitial) :
       name(aname), lower(-infinity), upper(infinity), initial(ainitial)
       {}
-    paraminfo(string aname, double ainitial, double alower, double aupper) :
+    paraminfo(std::string aname, double ainitial, double alower, double aupper) :
       name(aname), lower(alower), upper(aupper), initial(ainitial)
       {}
 };
@@ -64,7 +66,7 @@ struct paramresult
        info(r.info), value(r.value), std(r.std), grad(r.grad)
        {}
     paramresult() {}
-    static string stars(double z)
+    static std::string stars(double z)
     {
         if(z==na)
             return "";
@@ -77,11 +79,11 @@ struct paramresult
             return "*";
         return "";
     }
-    string stars() const
+    std::string stars() const
     {
         return stars(z());
     }
-    void output(ostream& str, bool latex) const
+    void output(std::ostream& str, bool latex) const
     {
         static const char* natxt="n/a";
         if(latex)
@@ -110,10 +112,10 @@ struct paramresult
     }
 };
 
-class olatexstream : public ofstream
+class olatexstream : public std::ofstream
 {
 public:
-   olatexstream(const string& afn) : ofstream(afn.c_str())
+   olatexstream(const std::string& afn) : std::ofstream(afn.c_str())
         {}
 };
 
@@ -124,7 +126,7 @@ inline olatexstream& operator<<(olatexstream& str,const paramresult& r)
     return str;
 };
 
-inline ostream& operator<<(ostream& str,const paramresult& r)
+inline std::ostream& operator<<(std::ostream& str,const paramresult& r)
 {
     r.output(str,false);
     return str;

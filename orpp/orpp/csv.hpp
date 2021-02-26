@@ -53,6 +53,16 @@ class csv : private std::vector<std::vector<std::string>>
         std::string line;
         while (getline(file, line))
         {
+            unsigned ls = line.size();
+            if(line[ls-1]=='\r')
+            {
+                if(ls==1)
+                    break;
+                else
+                    line.resize(ls-1);
+            }
+
+
             std::vector<std::string> row;
             std::istringstream is(line);
             for(;;)
@@ -161,10 +171,11 @@ public:
         throw exception(os);
     }
     csv(const std::string& afn) :
-        fn(afn),
-        std::vector<std::vector<std::string>>(getvecs(afn)) {}
+        std::vector<std::vector<std::string>>(getvecs(afn)),
+      fn(afn)
+    {}
 private:
-    const std::string& fn;
+    const std::string fn;
 };
 
 }; // namespace
