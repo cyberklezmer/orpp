@@ -129,6 +129,14 @@ inline std::vector<double> vd(const dvector& dv)
     return ret;
 }
 
+inline dvector square(const dvector& x)
+{
+    dvector ret(x.rows());
+    for(unsigned i=0; i<x.rows(); i++)
+        ret[i] = x[i] * x[i];
+    return ret;
+}
+
 inline auto m2csv(const dmatrix& m)
 {
     Eigen::IOFormat f(Eigen::StreamPrecision, Eigen::DontAlignCols,",");
