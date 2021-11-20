@@ -39,9 +39,9 @@ class csv : private std::vector<std::vector<std::string>>
         return r;
     }
 
-    static std::vector<std::vector<std::string>> getvecs(const std::string& fn)
+    static std::vector<std::vector<std::string>> getvecs(const std::string& fn, size_t initialsize)
     {
-        std::vector<vector<std::string>> res;
+        std::vector<vector<std::string>> res(initialsize);
         std::ifstream file(fn);
         if(!file.is_open())
         {
@@ -51,6 +51,8 @@ class csv : private std::vector<std::vector<std::string>>
         }
 
         std::string line;
+        size_t reserve = 1;
+        size_t index = 0;
         while (getline(file, line))
         {
             unsigned ls = line.size();
@@ -64,6 +66,7 @@ class csv : private std::vector<std::vector<std::string>>
 
 
             std::vector<std::string> row;
+            row.reserve(reserve);
             std::istringstream is(line);
             for(;;)
             {
@@ -72,9 +75,14 @@ class csv : private std::vector<std::vector<std::string>>
                 if(is.eof())
                     break;
             }
-            res.push_back(row);
+            reserve = std::max(row.size(),reserve);
+            if(index < initialsize)
+                res[index] = row;
+            else
+                res.push_back(row);
+            index++;
         }
-
+        res.resize(index);
         return res;
     }
 
@@ -170,8 +178,8 @@ public:
               << " of file " << fn << std::endl;
         throw exception(os);
     }
-    csv(const std::string& afn) :
-        std::vector<std::vector<std::string>>(getvecs(afn)),
+    csv(const std::string& afn, size_t initialsize=1) :
+        std::vector<std::vector<std::string>>(getvecs(afn, initialsize)),
       fn(afn)
     {}
 private:
