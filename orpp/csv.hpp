@@ -30,7 +30,7 @@ class csv : private std::vector<std::vector<std::string>>
             if(c=='"' && quotes)
             {
                is.get(c);
-               if(c!='"')
+               if(c!='"' || is.eof())
                   break;
             }
             r.push_back(c);
