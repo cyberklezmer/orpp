@@ -241,9 +241,12 @@ public:
     {
     }
 
-    statcounter evaluate(index s0index, const finitepolicy& p,
-                    unsigned timehorizon, double accuracy, unsigned miniters =100,
-                         unsigned maxiters = 100000)
+    statcounter evaluate(index s0index,
+                         const std::vector<finitepolicy>& p,
+                         unsigned timehorizon,
+                         double accuracy,
+                         unsigned miniters =100,
+                         unsigned maxiters = 100000) const
     {
         statcounter sc;
         for(unsigned j=0; j<maxiters; j++)
@@ -255,7 +258,7 @@ public:
             {
                 dpcondition<int,int> c;
                 c.s = this->fstate[sindex];
-                c.a = p[sindex];
+                c.a = i<p.size() ? p[i][sindex] : p[p.size()-1][sindex];
                 sum += discount * this->freward(c);
                 sindex = this->ftransition.draw(c);
                 discount *= this->fgamma;

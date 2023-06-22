@@ -7,7 +7,7 @@ using namespace orpp;
 
 
 constexpr int overlinep = 10;
-constexpr int overlinew = 10;
+constexpr int overlinew = 5;
 
 class testactionspace : public integeriteratedspace<int>
 {
@@ -86,6 +86,40 @@ public:
            testtransition(pincrease), testreward(), gamma) {}
 };
 
+void enumerate(const std::vector<finitepolicy>& ps,
+                      const testproblem& prob,
+                      unsigned horizon,
+                      double accuracy,
+                      unsigned depth,
+                      std::vector<finitepolicy>& bestp,
+                      statcounter& bestv)
+{
+    if(ps.size()==depth)
+    {
+        statcounter c = prob.evaluate(1, ps, horizon, accuracy);
+        if(bestp.size()==0 || c.average() > bestv.average())
+        {
+            bestp = ps;
+            bestv = c;
+        }
+    }
+    else
+    {
+        std::vector<finitepolicy> p = ps;
+        p.push_back(finitepolicy(overlinew+1,1));
+        for(unsigned i=1; i< overlinew; i++)
+        {
+            for(unsigned j=0; j<=i; j++)
+                p[p.size()-1][j] = 0;
+            if(p.size()<=2)
+                std::cout << p.size();
+            enumerate(p,prob,horizon,accuracy,depth, bestp, bestv);
+            if(p.size()==1)
+                std::cout << std::endl;
+        }
+    }
+}
+
 int main()
 {
     std::vector<atom<int>> a = { {0,0.5}, {1,0.5} };
@@ -103,7 +137,7 @@ int main()
        std::cout << alpha << " " << c(d,nothing()) << std::endl;;
     }*/
 
-    testproblem problem(0.95,0.7,0.90);
+    testproblem problem(0.95,0.7,0.85);
 
 //tbd test var.
 
@@ -115,13 +149,41 @@ int main()
 
 
 
+    finitepolicy besth(overlinew+1,1);
+    double besthv = 0;
+
     for(unsigned i=1; i< overlinew; i++)
     {
         finitepolicy policy(overlinew+1,1);
         for(unsigned j=0; j<=i; j++)
             policy[j] = 0;
-        auto sc = problem.evaluate(1,policy, horizon, accuracy / 2);
+        auto sc = problem.evaluate(1,{policy}, horizon, accuracy / 2);
+        if(sc.average() > besthv)
+        {
+            besthv = sc.average();
+            besth = policy;
+        }
+
         std::cout << i << ": " << sc.average() << " (" << sc.averagestdev() << ")" << std::endl;
+    }
+
+    for(unsigned j=0; j<=overlinew; j++)
+        std::cout << besth[j];
+    std::cout << std::endl;
+
+
+    std::vector<finitepolicy> bestp;
+    statcounter bestv;
+    enumerate(std::vector<finitepolicy>(0),problem,horizon, accuracy / 2,
+              4,
+              bestp,bestv);
+
+    std::cout << "Recursion: " << bestv.average() << " (" << bestv.averagestdev() << ")" << std::endl;
+    for(unsigned i=0; i<bestp.size(); i++)
+    {
+        for(unsigned j=0; j<=overlinew; j++)
+            std::cout << bestp[i][j];
+        std::cout << std::endl;
     }
 
 }
