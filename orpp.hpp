@@ -2,19 +2,35 @@
 #define ORPP_HPP
 
 #include <stdexcept>
-#include <fstream>
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <random>
+#include <memory>
 #include <assert.h>
 #include <math.h>
 #include <time.h>
-#include <nlopt.hpp>
+#include <memory>
 
 
 namespace orpp
 {
+
+
+/** \addtogroup sysclasses System Classes
+ *  @{
+ */
+
+// TBD inherit all fron this
+/// Base class
+class object
+{
+public:
+    virtual ~object() {}
+};
+
+/// \ingroup Distributions
+using probability = double;
 
 
 class exception: public std::runtime_error
@@ -159,204 +175,170 @@ private:
     std::vector<std::pair<std::string,std::string>> fenv;
 };
 
-constexpr double na=std::numeric_limits<double>::quiet_NaN();
-constexpr double infinity=std::numeric_limits<double>::infinity();
+/// Heap pointer to \p T
+template <typename T>
+using ptr=std::shared_ptr<T>;
+
+/// @}
 
 
-/*
 
-inline double pi() { return std::atan(1)*4; }
+/// \addtogroup general General Definitions
+///  @{
 
-template <char sep>
-inline void csvout(std::ostream& os, const std::string& s)
+template <typename T=double>
+constexpr T nan=std::numeric_limits<T>::quiet_NaN();
+
+template <typename T=double>
+constexpr T infinity=std::numeric_limits<T>::infinity();
+
+template <typename T=double>
+constexpr T minfinity = -infinity<T>;
+
+template <typename T=double>
+constexpr T max = std::numeric_limits<T>::max();
+
+template <typename T>
+constexpr T min = std::numeric_limits<T>::min();
+
+
+struct nothing {};
+
+using index = unsigned int;
+
+
+/// \addtogroup fns Functions
+/// @{
+
+/// A class bearing no information (alternative to \p void)
+
+constexpr nothing na;
+
+/// \brief Base class for mappings
+/// \tparam D domain
+/// \tparam R range
+template <typename D,typename R>
+class mapping: public object
 {
-    os << '"';
-    for(unsigned i=0; i<s.length(); i++)
-        if(s[i] == '"')
-            os << '"' << '"';
-        else
-            os << s[i];
-    os << '"' << sep;
-}
-
-template <char sep = ','>
-class csv : private std::vector<std::vector<std::string>>
-{
-    static std::string getstr(std::istream& is)
-    {
-        char c;
-        is >> c;
-        bool quotes = false;
-        if(c=='"')
-        {
-            quotes = true;
-            is >> c;
-        }
-
-        std::string r;
-        for(;;)
-        {
-            if((signed)c > 128)
-                throw "Czech characters cannot be used";
-            if((c==sep && !quotes) || is.eof())
-                break;
-            if(c=='"' && quotes)
-            {
-               is >> c;
-               if(c!='"')
-                  break;
-            }
-            r.push_back(c);
-            is >> c;
-        }
-        return r;
-    }
-
-    static std::vector<std::vector<std::string>> getvecs(const std::string& fn)
-    {
-        std::vector<vector<std::string>> res;
-        std::ifstream file(fn);
-        if(!file.is_open())
-        {
-            std::ostringstream es;
-            es << "cannot open csv file: " << fn ;
-            throw es.str();
-        }
-        std::string line="";
-        while (getline(file, line))
-        {
-            std::vector<std::string> row;
-            std::istringstream is(line);
-            for(;;)
-            {
-                std::string s = getstr(is);
-                row.push_back(s);
-                if(is.eof())
-                    break;
-            }
-            res.push_back(row);
-        }
-
-        return res;
-    }
-
 public:
-    unsigned r() const { return (*this).size();}
-    unsigned c(unsigned r) const
+    using D_t=D;
+    using R_t=R;
+    virtual R operator() (const D& ) const = 0;
+};
+
+/// Function (mapping from \p D to real numbers)
+template <typename D>
+using function = mapping<D,double>;
+
+/// Identity mapping
+template <typename I>
+class idmapping: public mapping<I,I>
+{
+public:
+    virtual I operator() (const I& i) const { return i; }
+};
+
+/// \brief Mapping having no value
+///
+/// Used as a condition of unconditional distributions, for instance.
+template <typename I>
+class nomapping: public mapping<I,nothing>
+{
+public:
+    virtual nothing operator() (const I& i) const { return na; }
+};
+
+/// Function from Eucleidean space
+class efunction: public function<std::vector<double>>
+{
+public:
+    efunction(unsigned int xdim) : fxdim(xdim) {}
+    unsigned int xdim() const { return fxdim; }
+    double operator() (const std::vector<double>& x) const
     {
-        assert(r < this->size());
-        return (*this)[r].size();
+        assert(x.size() == fxdim);
+        return value_is(x);
     }
-    const std::string& operator()(unsigned i, unsigned j) const
+private:
+    unsigned int fxdim;
+    virtual double value_is(const std::vector<double>& x) const = 0;
+};
+
+/// Convex function from an Eucleidean space
+class convexefunction: public efunction
+{
+public:
+    convexefunction(unsigned int xdim) : efunction(xdim) {}
+};
+
+/// Function with defined subdifferential
+class subdifefunction: public convexefunction
+{
+public:
+    subdifefunction(unsigned int dim) : convexefunction(dim) {}
+
+    std::vector<double> sg(const std::vector<double>& x) const
     {
-        std::ostringstream e;
-        if(i>(*this).size())
-        {
-            e << "csv does not have" << i+1 << " lines";
-            throw e.str();
-        }
-        if(j>(*this)[i].size())
-        {
-            e << "Line " << i+1 << " does not have" << j+1 << " columns";
-            throw e.str();
-        }
-        return (*this)[i][j];
+        return sg_is(x);
     }
+private:
+   virtual std::vector<double> sg_is(const std::vector<double>& x) const = 0;
+};
 
-    unsigned getunsigned(unsigned i, unsigned j) const
+/// Linear function
+class linearfunction: public subdifefunction
+{
+public:
+    linearfunction(unsigned int dim):
+        subdifefunction(dim), fc(dim) {}
+
+    linearfunction(std::vector<double> c):
+        subdifefunction(c.size()), fc(c) {}
+
+    void setc(const std::vector<double>& c)
     {
-        unsigned res;
-        std::string c = (*this)(i,j);
-        try {
-              res = stoul(c);
-          } catch (...) {
-              std::ostringstream e;
-              e << "Cannot convert '" << c << "' to unsigned (row="
-                << i << ", col=" << j << ")";
-              throw e.str();
-          }
-        return res;
+        assert(c.size()==xdim());
+        fc = c;
     }
-
-    double getdouble(unsigned i, unsigned j) const
+    void setc(unsigned int i, double c)
     {
-        double res;
-        std::string c = (*this)(i,j);
-        try {
-              res = stod(c);
-          } catch (...) {
-              std::ostringstream e;
-              e << "Cannot convert '" << c << "' to double (row="
-                << i << ", col=" << j << ")";
-              throw e.str();
-          }
-        return res;
+        assert(i<fc.size());
+        fc[i] = c;
+    }
+    double c(unsigned int i) const
+    {
+        assert(i < fc.size());
+        return fc[i];
+    }
+    const std::vector<double>& c() const
+    {
+        return fc;
     }
 
-
-
-
-    csv(const std::string& fn) : std::vector<std::vector<std::string>>(getvecs(fn)) {}
+private:
+    virtual std::vector<double> sg_is(const std::vector<double>& x) const
+    {
+        assert(x.size()==xdim());
+        return fc;
+    }
+    virtual double value_is(const std::vector<double>& x) const
+    {
+        assert(x.size()==xdim());
+        double s=0;
+        for(unsigned int i=0; i<fc.size(); i++)
+            s += fc[i] * x[i];
+        return s;
+    }
+private:
+    std::vector<double> fc;
 };
 
 
-template<char sep>
-inline void csvout(std::ostream& os, const std::vector<std::string>& s)
-{
-    for(unsigned i=0; i<s.size(); i++)
-        csvout<sep>(os, s[i]);
-    os << std::endl;
-}
+///@}
 
-
-template<typename T, char sep>
-inline void csvout(std::ostream& os, const std::vector<T>& s)
-{
-    for(unsigned i=0; i<s.size(); i++)
-        os << s[i] << sep;
-    os << std::endl;
-}
-
-*/
-
-/*using dvector=std::vector<double>;
-
-inline dvector stackv(const dvector& x, const dvector& y)
-{
-    dvector ret = x;
-    for(unsigned i=0; i<y.size(); i++)
-        ret.push_back(y[i]);
-    return ret;
-}
-*/
-
-/*
-std::ostream& operator << (std::ostream& o, const dvector& v)
-{
-    for(unsigned i=0; ; i++)
-    {
-        o << v[i];
-        if(++i=v.size())
-             break;
-        o << ',';
-    }
-    o << std::endl;
-    return o;
-}
-
-inline double scalarproduct(const dvector& a,
-                            const dvector& b)
-{
-    assert(a.size()==b.size());
-    double s = 0;
-    for(unsigned i=0; i<a.size(); i++)
-        s+=a[i]*b[i];
-    return s;
-}
-
-*/
 
 
 } // namespace
 
 #endif // ORPP_HPP
+

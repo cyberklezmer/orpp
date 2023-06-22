@@ -214,10 +214,10 @@ const constraint::type geq = constraint::geq;
 /// \brief Vector-like container of constraints
 /// \tparam G constraint type
 template <typename G>
-class msconstraints
+class constraints
 {
 public:
-    msconstraints(unsigned int n) : fn(n) {}
+    constraints(unsigned int n) : fn(n) {}
     G& add(const G& g)
     {
         assert(g.xdim()==fn);
@@ -238,7 +238,7 @@ public:
     operator std::vector<G> () const
     {
         return fgs;
-    }
+    };
 
 private:
     unsigned int fn;
@@ -250,6 +250,15 @@ private:
 class criterion: public object
 {
 };
+
+/// Base class for feasibility sets
+template <typename Element>
+class feasibilityset: public object
+{
+public:
+    virtual bool isfeasible(const Element&) { return true; }
+};
+
 
 ///@}
 
@@ -290,6 +299,9 @@ private:
 ///@}
 
 
+
+
 } // namespace
+
 
 #endif // OPTIMIZATION_HPP
