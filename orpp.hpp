@@ -29,7 +29,7 @@ public:
     virtual ~object() {}
 };
 
-/// \ingroup Distributions
+/// \ingroup General Random
 using probability = double;
 
 

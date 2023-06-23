@@ -8,6 +8,19 @@
 namespace orpp
 {
 
+/// \addtogroup General Random
+/// @{
+
+struct realestimate
+{
+    double x;
+    double sd;
+};
+
+
+/// @} - General Random
+
+
 /// \addtogroup Distributions
 /// @{
 
@@ -367,6 +380,11 @@ private:
 template <typename I>
 struct atom
 {
+    static bool comparator(const atom<I>& l, const atom<I>& r)
+    {
+        return  (l.x < r.x);
+    }
+
     using I_t = I;
     I x;
     probability p;
@@ -388,23 +406,35 @@ public:
         static_assert(std::is_same<C,nothing>::value);
         return atom_is(i,na);
     }
+    bool sorted() const { return is_sorted(); }
 private:
+    /// atoms must be sorted TBD
     virtual atom<I> atom_is(unsigned int i, const C& c) const  = 0;
     virtual I do_draw(const C& c) const
     {
         return this->drawuniv(c);
     }
 protected:
+    virtual bool is_sorted() const = 0;
     /// generates an uniform variable \p u and goes through the probabilities
     /// until their sum exceeds \p u. May be very slow
     I drawuniv(const C& c) const
     {
+        if(!is_sorted())
+            throw exception("distribution must be sorted to use drawuniv");
         double u = sys::uniform();
         double sum = 0;
+#ifndef NDEBUG
+        I last;
+#endif
         for(unsigned int i=0; i<std::numeric_limits<unsigned int>::max() ; i++)
         {
             atom<I> a = (*this)(i,c) ;
             sum += a.p;
+#ifndef NDEBUG
+            assert(i == 0 && a.x <= last)
+            last=a.x;
+#endif
             if(sum >= u)
                 return a.x;
         }
@@ -427,21 +457,13 @@ protected:
 template <typename I, typename C, bool listdef = false>
 class fdistribution: virtual public ddistribution<I,C>
 {
-    static bool comparator(const atom<I>& l, const atom<I>& r)
-    {
-        return  (l.x < r.x);
-    }
 public:
     static bool constexpr flistdef=listdef;
-    template <bool dosort=false>
-    void atoms(std::vector<atom<I>>& a, const C& c, bool sortthem = false) const
+//    template <bool dosort=false>
+    void atoms(std::vector<atom<I>>& a, const C& c) const
     {
         a.resize(0); // better safe than sorry
         atoms_are(a,c);
-        if (sortthem)
-        {
-            std::sort(a.begin(), a.end(), comparator);
-        }
 
         probability p=0;
         #ifndef NDEBUG
@@ -522,25 +544,39 @@ private:
 /// \tparam I type of the values
 ///
 ///
-template <typename I>
+template <typename I, bool sortable=false>
 class ldistribution: public fdistribution<I,nothing, true>
 {   
+
 public:
-    ldistribution(const std::vector<atom<I>>& atoms) :
-        fatoms(atoms), fequiprobable(false)
+    ldistribution(const std::vector<atom<I>>& atoms, bool equiprobable, bool sorted) :
+        fatoms(atoms), fequiprobable(equiprobable), fsorted(sorted)
     {
         assert(fatoms.size());
+#ifndef NDEBUG
         probability tp = fatoms[0].p;
+        double sum = tp;
+        auto last = fatoms[0].x;
         for(unsigned int i=1; i<fatoms.size(); i++)
         {
-            if(tp != fatoms[i].p)
-                return;
+            auto p = fatoms[i].p;
+            sum += p;
+            if(tp != p && equiprobable)
+                throw exception("ldistribution initialized by non-equiprobable data");
+            if constexpr(sortable)
+            {
+                if(sorted && fatoms[i].x < last)
+                   throw exception("ldistribution initialized by non-sorted data");
+                last = fatoms[0].x;
+            }
         }
-        fequiprobable = true;
+        if(fabs(sum - 1.0) > probabilitytolerance)
+            throw exception("ldistribution does not sum to one");
+#endif
     }
 
-    ldistribution(const std::vector<I>& values) :
-        fatoms(values.size()), fequiprobable(true)
+    ldistribution(const std::vector<I>& values, bool sorted) :
+        fatoms(values.size()), fequiprobable(true), fsorted(sorted)
     {
         assert(values.size());
         probability p=1.0/fatoms.size();
@@ -549,6 +585,19 @@ public:
             fatoms[i].x = values[i];
             fatoms[i].p = p;
         }
+#ifndef NDEBUG
+        auto last = fatoms[0].x;
+        for(unsigned int i=1; i<fatoms.size(); i++)
+        {
+            if constexpr(sortable)
+            {
+                if(sorted && fatoms[i].x < last)
+                   throw exception("ldistribution initialized by non-sorted data");
+                last = fatoms[0].x;
+            }
+        }
+#endif
+
     }
 private:
     virtual void atoms_are(std::vector<atom<I>>& a, const nothing&) const
@@ -565,11 +614,61 @@ private:
     {
         return fatoms[i];
     }
-private:
     std::vector<atom<I>> fatoms;
     bool fequiprobable;
+    bool fsorted;
+    virtual bool is_sorted() const { return fsorted; }
     virtual bool is_equiprobable(const nothing&) const { return fequiprobable; }
 };
+
+
+template <typename I, bool sortable=false>
+class equipdistribution: public fdistribution<I,nothing, false>
+{
+
+public:
+    equipdistribution(const std::vector<I>& values, bool sorted) :
+        fvalues(values), fsorted(sorted)
+    {
+        assert(values.size());
+        probability p=1.0/values.size();
+#ifndef NDEBUG
+        auto last = values[0].x;
+        for(unsigned int i=1; i<values.size(); i++)
+        {
+            if constexpr(sortable)
+            {
+                if(sorted && values[i] < last)
+                   throw exception("ldistribution initialized by non-sorted data");
+                last = values[0];
+            }
+        }
+#endif
+
+    }
+protected:
+    std::vector<I>& values()
+    {
+        return fvalues;
+    }
+
+private:
+
+    virtual unsigned int natoms_is(const nothing&) const
+    {
+        return fvalues.size();
+    }
+
+    virtual atom<I> atom_is(unsigned int i, const nothing&) const
+    {
+        return { fvalues[i], 1.0 / fvalues.size() };
+    }
+    std::vector<I> fvalues;
+    bool fsorted;
+    virtual bool is_sorted() const { return fsorted; }
+    virtual bool is_equiprobable(const nothing&) const { return true; }
+};
+
 
 /// \brief Alternative lists defined distribution
 /// \tparam I type of the values
@@ -1243,34 +1342,53 @@ public:
     }
 };
 
+
+
 template <typename Distribution>
-class CVaR : public riskmeasure<Distribution>
+class MeanCVaR : public riskmeasure<Distribution>
 {
 public:
-    CVaR(probability alpha) : falpha(alpha)
-    {         assert(falpha < 1); }
+    MeanCVaR(probability alpha, double lambda) : falpha(alpha),
+        flambda(lambda)
+    {         assert(falpha < 1);  assert(flambda <=1 && flambda >=0); }
 
     virtual double operator () (const Distribution& d,
          const typename Distribution::C_t& c) const
     {
         std::vector<atom<typename Distribution::I_t>> a;
-        d.atoms(a,c,true);
+        if(!d.sorted())
+            throw("The distribution has to be sorted.");
+        d.atoms(a,c);
         double p = 1-falpha;
         double s = 0;
         double m = 0;
+        double mean = 0;
         assert(a.size());
         for(int i = a.size()-1;i>=0 ;i--)
         {
             double delta = std::min(a[i].p, p-s);
-            if(delta <= 0)
-                break;
-            m+= a[i].x * delta;
-            s += delta;
+            mean += a[i].x * a[i].p;
+            if(delta > 0)
+            {
+                m+= a[i].x * delta;
+                s += delta;
+            }
         }
-        return m / p;
+        double cvar = m / p;
+        return (1-flambda)*mean + flambda*cvar;
     }
 private:
     probability falpha;
+    double flambda;
+};
+
+
+template <typename Distribution>
+class CVaR : public MeanCVaR<Distribution>
+{
+public:
+    CVaR(probability alpha) : MeanCVaR<Distribution>(alpha,1)
+     {}
 };
 
 

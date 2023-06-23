@@ -1,6 +1,7 @@
 #include "orpp/dp.hpp"
 #include "orpp/random.hpp"
 #include "orpp/boostdist.hpp"
+#include "orpp/simulations.hpp"
 
 using namespace orpp;
 
@@ -69,6 +70,7 @@ private:
         else
             return { i ,0};
     }
+    virtual bool is_sorted() const { return true; }
     probability fp;
 };
 
@@ -122,24 +124,27 @@ void enumerate(const std::vector<finitepolicy>& ps,
 
 int main()
 {
-    std::vector<atom<int>> a = { {0,0.5}, {1,0.5} };
+    std::vector<double> a = { 1,2,5,7};
 
-    ldistribution<int> d(a);
-//    d.atoms<true>(a,nothing());
+    empiricaldistribution d(a);
 
-    CVaR<ldistribution<int>> c(0.95);
-//    c(d,nothing());
 
-/*    for(double alpha = 0.0; alpha <= 0.99; alpha += 0.1)
+    for(double alpha = 0.0; alpha <= 0.99; alpha += 0.1)
     {
-        CVaR<ldistribution<int>> c(alpha);
+        CVaR<empiricaldistribution> c(alpha);
+        MeanCVaR<empiricaldistribution> cc(alpha,0.3);
+        empiricalMeanCVaR ccc(alpha,0.3);
+        auto r = ccc(d);
 
-       std::cout << alpha << " " << c(d,nothing()) << std::endl;;
-    }*/
+        std::cout << alpha << " " << c(d,nothing()) <<
+                    "=" << cc(d,nothing()) << "=" << r.x
+                  << "(" << r.sd << ")" << std::endl;
+    }
+
+    return 0;
 
     testproblem problem(0.95,0.7,0.85);
 
-//tbd test var.
 
     double accuracy = 0.01;
 
@@ -185,5 +190,4 @@ int main()
             std::cout << bestp[i][j];
         std::cout << std::endl;
     }
-
 }
