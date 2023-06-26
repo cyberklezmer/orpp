@@ -33,7 +33,7 @@ class testreward : public reward<teststatespace, testactionspace>
 {
 public:
     double operator() (const dpcondition<int, int>& x) const
-    { return x.a; }
+    { return -x.a; }
 };
 
 class testtransition: public fdistribution<unsigned int,dpcondition<int,int>>
@@ -74,7 +74,7 @@ private:
     probability fp;
 };
 
-using testcrit = CVaR<fdistribution<double,nothing>>;
+using testcrit = CVaR<ldistribution<double>>;
 
 
 class testproblem : public finitedpproblem<testcrit, teststatespace,
@@ -98,7 +98,7 @@ void enumerate(const std::vector<finitepolicy>& ps,
 {
     if(ps.size()==depth)
     {
-        statcounter c = prob.evaluate(1, ps, horizon, accuracy);
+        statcounter c = prob.evaluateraw(1, ps, horizon, accuracy);
         if(bestp.size()==0 || c.average() > bestv.average())
         {
             bestp = ps;
@@ -124,7 +124,7 @@ void enumerate(const std::vector<finitepolicy>& ps,
 
 int main()
 {
-    std::vector<double> a = { 1,2,5,7};
+/*    std::vector<double> a = { 1,2,5,7};
 
     empiricaldistribution d(a);
 
@@ -143,7 +143,10 @@ int main()
 
     return 0;
 
-    testproblem problem(0.95,0.7,0.85);
+*/
+
+    double alpha = 0.05;
+    testproblem problem(alpha,0.7,0.85);
 
 
     double accuracy = 0.01;
@@ -152,31 +155,37 @@ int main()
 
     std::cout << "horizon = " << horizon << std::endl;
 
-
-
     finitepolicy besth(overlinew+1,1);
-    double besthv = 0;
+    realestimate besthv;
 
     for(unsigned i=1; i< overlinew; i++)
     {
         finitepolicy policy(overlinew+1,1);
-        for(unsigned j=0; j<=i; j++)
+        for(unsigned j=0; j<i; j++)
             policy[j] = 0;
-        auto sc = problem.evaluate(1,{policy}, horizon, accuracy / 2);
-        if(sc.average() > besthv)
+        auto sc = problem.evaluateraw(1,{policy}, horizon, accuracy / 2);
+        empiricalMeanCVaR c(alpha,1);
+        auto crit =  c(sc.dist);
+        if(-crit.x > -besthv.x)
         {
-            besthv = sc.average();
+            besthv = crit;
             besth = policy;
         }
 
-        std::cout << i << ": " << sc.average() << " (" << sc.averagestdev() << ")" << std::endl;
+        std::cout << i << ": " << crit.x << " (" << crit.sd << ") ";
+        for(unsigned j=0; j<=overlinew; j++)
+            std::cout << policy[j];
+        std::cout << std::endl;
     }
 
     for(unsigned j=0; j<=overlinew; j++)
         std::cout << besth[j];
     std::cout << std::endl;
 
+    std::vector<double> V(overlinew+1,1);
 
+    problem.evaluate(V,2,besth,0.1);
+    return 0;
     std::vector<finitepolicy> bestp;
     statcounter bestv;
     enumerate(std::vector<finitepolicy>(0),problem,horizon, accuracy / 2,
@@ -184,6 +193,10 @@ int main()
               bestp,bestv);
 
     std::cout << "Recursion: " << bestv.average() << " (" << bestv.averagestdev() << ")" << std::endl;
+
+    auto dif = bestv.estaverage() - besthv;
+    std::cout << "Dif: " << dif.x << stars(dif.twosidedsignificance());
+
     for(unsigned i=0; i<bestp.size(); i++)
     {
         for(unsigned j=0; j<=overlinew; j++)

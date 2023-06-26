@@ -17,49 +17,23 @@ public:
     using Element_t = Element;
 };
 
-template <typename Element>
-class indexedspace : public space<Element>
-{
-public:
-    Element operator[] (index& i) const
-    {
-        Element res;
-        if(!find(res,i))
-            throw exception("Index out of bounds");
-        return res;
-    }
-private:
-    virtual bool find(Element&, index) const = 0;
-};
 
 
 template <typename Element, typename Condition = nothing>
-class iteratedspace : public indexedspace<Element>
+class iteratedspace : public space<Element>
 {
 public:
-    bool first(Element& e, const Condition& c, index& i)
+    bool first(Element& e) const
     {
-        if(getfirst(e,c))
-        {
-            i=0;
-            return true;
-        }
-        else
-            return false;
+        return getfirst(e);
     }
-    bool next(Element& e, const Condition& c, index& i)
+    bool next(Element& e) const
     {
-        if(getnext(e,c))
-        {
-            i++;
-            return true;
-        }
-        else
-            return false;
+        return getnext(e);
     }
     bool firstfeasible(Element& e, const Condition& c) const
     {
-        if(getfirst(e,c))
+        if(first(e))
         {
            if(isfeasible(e,c))
                return true;
@@ -73,7 +47,7 @@ public:
     {
         for(;;)
         {
-            if(!getnext(e,c))
+            if(!getnext(e))
                 return false;
             if(feasible(e,c))
                 return true;
@@ -81,11 +55,52 @@ public:
         return false;
     }
     virtual bool isfeasible(const Element&, const Condition&) const { return true; }
+    bool ith(Element& e, index i) const { return getith(e,i);}
+    Element operator[] (index& i) const
+    {
+        Element res;
+        if(!getith(res,i))
+            throw exception("Index out of bounds");
+        return res;
+    }
+    index num() const { return getnum(); }
 private:
-    virtual bool getfirst(Element&, const Condition& c) const = 0;
-    virtual bool getnext(Element& e,const Condition& c) const = 0;
-    virtual bool find(Element&, index) const { return false; }
+    virtual bool getfirst(Element&) const = 0;
+    virtual bool getnext(Element& e) const = 0;
+    virtual bool getith(Element& e, index i) const
+    {
+        if(!first(e))
+            return false;
+        index j=0;
+        for(;j<i;j++)
+        {
+            if(!next(e))
+                return false;
+        }
+        return true;
+    }
+    virtual index getnum() const
+    {
+        Element e;
+        if(!first(e))
+            return 0;
+        for(index i=1;;i++)
+        {
+            if(!next(e))
+                return i;
+        }
+        throw "souhld not get here";
+    }
 };
+
+/*template <typename Element>
+class indexedspace : public space<Element>
+{
+public:
+private:
+    virtual bool find(Element&, index) const = 0;
+};*/
+
 
 template <typename Condition = nothing>
 class integeriteratedspace : public iteratedspace<int, Condition>
@@ -93,44 +108,36 @@ class integeriteratedspace : public iteratedspace<int, Condition>
 public:
     integeriteratedspace(int amin, int amax) : fmin(amin), fmax(amax)
     {}
-    virtual bool getfirst(int& e, const Condition&) const
+
+private:
+    virtual bool getfirst(int& e) const
     {
         e=fmin;
         return fmin <= fmax;
     }
-    virtual bool getnext( int& e,const Condition&) const
+    virtual bool getnext( int& e) const
     {
         if(e >= fmax)
             return false;
         e++;
         return true;
     }
-    /// isfeasible colides with find
-
-private:
+    virtual bool getith(int& e, index i) const
+    {
+        e = i+fmin;
+        return e<=fmax;
+    }
+    virtual index getnum() const
+    {
+        return fmax - fmin + 1;
+    }
     int fmin;
     int fmax;
-    virtual bool find(int& e, index i) const
-    {
-        if(i <= fmax-fmin)
-        {
-            e = i-fmin;
-            return true;
-        }
-        else
-            return false;
-    }
 };
 
 
 
-/*template <typename Element>
-class statespace: public object
-{
-public:
-    using Element_t = Element;
-};
-
+/*
 template <typename Element>
 class actionspace: public feasibilityset<Element>
 {
@@ -199,13 +206,13 @@ public:
               const Transition& transition,
                const Reward& reward,
               double gamma ) :
-         fcrit(crit), fstate(state),
+         fcrit(crit), fstatespace(state),
          faction(action), ftransition(transition), freward(reward), fgamma(gamma)
     {}
     double gamma() const { return fgamma; }
 protected:
     Criterion fcrit;
-    Statespace fstate;
+    Statespace fstatespace;
     Actionspace faction;
     Transition ftransition;
     Reward freward;
@@ -241,7 +248,7 @@ public:
     {
     }
 
-    statcounter evaluate(index s0index,
+    statcounter evaluateraw(index s0index,
                          const std::vector<finitepolicy>& p,
                          unsigned timehorizon,
                          double accuracy,
@@ -257,7 +264,7 @@ public:
             for(unsigned i=0; i<=timehorizon; i++, discount *= this->fgamma)
             {
                 dpcondition<int,int> c;
-                c.s = this->fstate[sindex];
+                c.s = this->fstatespace[sindex];
                 c.a = i<p.size() ? p[i][sindex] : p[p.size()-1][sindex];
                 sum += discount * this->freward(c);
                 sindex = this->ftransition.draw(c);
@@ -280,6 +287,61 @@ public:
         }
         return sc;
     }
+
+    using vapprox = std::vector<double>;
+
+
+
+    valuewitherror<vapprox> evaluate(const vapprox& initialV,
+                    double initialerr,
+                    finitepolicy& p,
+                         double accuracy,
+                         unsigned maxiters = 100000) const
+    {
+        vapprox V = initialV;
+
+        assert(V.size() == this->fstatespace.num());
+
+        double error = initialerr;
+
+        for(unsigned j=0; j<maxiters; j++)
+        {
+std::cout << error << std::endl;
+            vapprox newV(V.size());
+            typename Statespace::Element_t e;
+            this->fstatespace.first(e);
+            for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
+            {
+                dpcondition<int,int> c;
+                c.s = e;
+                assert(i < p.size());
+                c.a = p[i];
+                double r =  this->freward(c);
+                double v=0;
+                std::vector<atom<double>> atoms;
+                for(unsigned k=0; k<this->ftransition.natoms(c); k++)
+                {
+                    atom<typename Transition::I_t> a =
+                            this->ftransition(k,c);
+                    assert(a.x == k);
+                    atom<double> newa = {a.p,this->fgamma*V[k]+r};
+
+                    auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
+                                                         atom<double>::comparator);
+                    atoms.insert(insertionPos, newa);
+                }
+                ldistribution<double> d(atoms, false, false);
+                newV[i]=this->fcrit(d,nothing());
+            }
+            V = newV;
+            error *= this->fgamma;
+            if(error < accuracy)
+                break;
+        }
+        return { V, error };
+    }
+
+
 };
 
 

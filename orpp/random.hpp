@@ -11,11 +11,60 @@ namespace orpp
 /// \addtogroup General Random
 /// @{
 
-struct realestimate
+enum esignificance { enotsignificant, e10percentsignificant, e5percensignificant,
+                   e1percentsignificant, enumsignificances};
+
+template <typename E>
+struct valuewitherror
 {
-    double x;
+    E x;
     double sd;
 };
+
+struct realestimate : public valuewitherror<double>
+{
+    esignificance twosidedsignificance() const
+    {
+        assert(sd > 0);
+        double s = fabs(x / sd);
+        if(s > 2.5758)
+            return e1percentsignificant;
+        else if(s > 1.96)
+            return e5percensignificant;
+        else if(s > 1.6449)
+            return e10percentsignificant;
+        else
+            return enotsignificant;
+    }
+};
+
+
+inline std::string stars(esignificance s)
+{
+    switch(s)
+    {
+    case enotsignificant:
+        return "";
+    case e10percentsignificant:
+        return "*";
+    case e5percensignificant:
+        return "**";
+    case e1percentsignificant:
+        return "***";
+    default:
+        throw exception("unknonw significance");
+    }
+}
+
+inline realestimate operator+(const realestimate& a, realestimate& b)
+{
+    return { a.x + b.x, sqrt( a.sd * a.sd + b.sd * b.sd)};
+}
+
+inline realestimate operator-(const realestimate& a, realestimate& b)
+{
+    return { a.x - b.x, sqrt( a.sd * a.sd + b.sd * b.sd)};
+}
 
 
 /// @} - General Random
@@ -432,7 +481,7 @@ protected:
             atom<I> a = (*this)(i,c) ;
             sum += a.p;
 #ifndef NDEBUG
-            assert(i == 0 && a.x <= last)
+            assert(i == 0 || a.x >= last);
             last=a.x;
 #endif
             if(sum >= u)
@@ -454,11 +503,11 @@ protected:
 /// \p listdef=false then the atoms are
 /// determided by overloading of \p natom_is and \p atom_is while \p atoms_are needs not
 /// be overloaded.
-template <typename I, typename C, bool listdef = false>
+template <typename I, typename C /*, bool listdef = false */ >
 class fdistribution: virtual public ddistribution<I,C>
 {
 public:
-    static bool constexpr flistdef=listdef;
+//    static bool constexpr flistdef=listdef;
 //    template <bool dosort=false>
     void atoms(std::vector<atom<I>>& a, const C& c) const
     {
@@ -500,14 +549,14 @@ public:
         return sum;
     }
 private:
-    virtual void atoms_are(std::vector<atom<I>>& a, const C& c) const
+/*    virtual void atoms_are(std::vector<atom<I>>& a, const C& c) const
     {
         assert(!listdef);
         a.resize(0);
         unsigned int s= natoms_is(c);
         for(unsigned int i=0; i<s; i++)
             a.push_back((*this)(i,c));
-    }
+    }*/
     virtual unsigned int natoms_is(const C& c) const
     {
         std::vector<atom<I>> a;
@@ -630,10 +679,8 @@ public:
     equipdistribution(const std::vector<I>& values, bool sorted) :
         fvalues(values), fsorted(sorted)
     {
-        assert(values.size());
-        probability p=1.0/values.size();
-#ifndef NDEBUG
-        auto last = values[0].x;
+/*#ifndef NDEBUG
+        auto last = values[0];
         for(unsigned int i=1; i<values.size(); i++)
         {
             if constexpr(sortable)
@@ -643,7 +690,7 @@ public:
                 last = values[0];
             }
         }
-#endif
+#endif*/
 
     }
 protected:
