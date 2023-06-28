@@ -512,7 +512,11 @@ public:
     void atoms(std::vector<atom<I>>& a, const C& c) const
     {
         a.resize(0); // better safe than sorry
-        atoms_are(a,c);
+        index n = natoms_is(c);
+        for(index i=0; i<n; i++)
+        {
+            a.push_back({atom_is(i,c)});
+        }
 
         probability p=0;
         #ifndef NDEBUG
@@ -549,30 +553,10 @@ public:
         return sum;
     }
 private:
-/*    virtual void atoms_are(std::vector<atom<I>>& a, const C& c) const
-    {
-        assert(!listdef);
-        a.resize(0);
-        unsigned int s= natoms_is(c);
-        for(unsigned int i=0; i<s; i++)
-            a.push_back((*this)(i,c));
-    }*/
-    virtual unsigned int natoms_is(const C& c) const
-    {
-        std::vector<atom<I>> a;
-        atoms_are(a,c);
-        assert(a.size());
-        return a.size();
-    }
-    virtual atom<I> atom_is(unsigned int i, const C& c) const
-    {
-        assert(listdef);
-        std::vector<atom<I>> a;
-        atoms_are(a,c);
-        assert(a.size());
-        return a[i];
-    }
+    virtual unsigned int natoms_is(const C& c) const = 0;
+    virtual atom<I> atom_is(unsigned int i, const C& c) const = 0;
     /// returning \p false means that slow \ref drawuniv will be used in MC.
+
     virtual bool is_equiprobable(const C& c) const { return false; }
     virtual I do_draw(const C& c) const
     {
@@ -594,7 +578,7 @@ private:
 ///
 ///
 template <typename I, bool sortable=false>
-class ldistribution: public fdistribution<I,nothing, true>
+class ldistribution: public fdistribution<I,nothing>
 {   
 
 public:
@@ -649,10 +633,6 @@ public:
 
     }
 private:
-    virtual void atoms_are(std::vector<atom<I>>& a, const nothing&) const
-    {
-        a = fatoms;
-    }
 
     virtual unsigned int natoms_is(const nothing&) const
     {
@@ -672,7 +652,7 @@ private:
 
 
 template <typename I, bool sortable=false>
-class equipdistribution: public fdistribution<I,nothing, false>
+class equipdistribution: public fdistribution<I,nothing>
 {
 
 public:
@@ -722,7 +702,7 @@ private:
 ///
 /// The atoms sets are based on the condition (of type <tt>unsigned int</tt>).
 template <typename I>
-class altldistribution: public fdistribution<I,unsigned int, true>
+class altldistribution: public fdistribution<I,unsigned int>
 {
     std::vector<ptr<ldistribution<I>>> makedists(const std::vector<std::vector<I>>& values)
     {
@@ -819,9 +799,9 @@ public:
 };
 
 /// \brief Product distribution
-template <typename X, bool listdefined>
-lvdistribution<X> operator *(const fdistribution<X,nothing,listdefined>& x,
-                             const fdistribution<X,nothing,listdefined>& y)
+template <typename X>
+lvdistribution<X> operator *(const fdistribution<X,nothing>& x,
+                             const fdistribution<X,nothing>& y)
 {
     assert(x.natoms());
     assert(y.natoms());
@@ -927,12 +907,12 @@ private:
 template <typename  D>
 class fmeanvardistribution:
         public meanvardistribution<D>,
-        public fdistribution<std::vector<double>,nothing,false>
+        public fdistribution<std::vector<double>,nothing>
 {
     void init(unsigned int dim)
     {
         static_assert(std::is_base_of
-          <fdistribution<double,nothing,D::flistdef>,D>::value);
+          <fdistribution<double,nothing>,D>::value);
         fn = this->d().natoms(na);
         fN = 1;
         for(unsigned int i=0; i<dim; i++)
@@ -1391,7 +1371,7 @@ public:
 
 
 
-template <typename Distribution>
+template <typename Distribution, bool negative = false>
 class MeanCVaR : public riskmeasure<Distribution>
 {
 public:
@@ -1411,13 +1391,18 @@ public:
         double m = 0;
         double mean = 0;
         assert(a.size());
-        for(int i = a.size()-1;i>=0 ;i--)
+        for(int i = 0; i<a.size(); i++)
         {
-            double delta = std::min(a[i].p, p-s);
-            mean += a[i].x * a[i].p;
+            int index;
+            if constexpr(negative)
+                 index = i;
+            else
+                 index = a.size()-1-i;
+            double delta = std::min(a[index].p, p-s);
+            mean += a[index].x * a[index].p;
             if(delta > 0)
             {
-                m+= a[i].x * delta;
+                m+= a[index].x * delta;
                 s += delta;
             }
         }
@@ -1430,11 +1415,11 @@ private:
 };
 
 
-template <typename Distribution>
-class CVaR : public MeanCVaR<Distribution>
+template <typename Distribution, bool negative = false>
+class CVaR : public MeanCVaR<Distribution, negative>
 {
 public:
-    CVaR(probability alpha) : MeanCVaR<Distribution>(alpha,1)
+    CVaR(probability alpha) : MeanCVaR<Distribution,negative>(alpha,1)
      {}
 };
 

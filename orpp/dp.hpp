@@ -18,8 +18,45 @@ public:
 };
 
 
+/// \brief Base abstract class - dp problem
+/// \tparam O risk criterion
+/// \tparam R reward
+/// \tparam A action space
+/// \tparam S state space
+/// \tparam T transition operator
+template<typename Criterion,
+          typename Statespace,
+          typename ConstrainedActionSpace,
+          typename Transition,
+          typename Reward
+          >
+class dpproblem : public object
+{
+public:
+    using Statespace_t = Statespace;
+    using ConstrainedActionSpace_t = ConstrainedActionSpace;
+public:
+    dpproblem(const Criterion& crit,
+              const Statespace& state,
+              const ConstrainedActionSpace& constraint,
+              const Transition& transition,
+               const Reward& reward,
+              double gamma ) :
+         fcrit(crit), fstatespace(state),
+         fconstraint(constraint),
+         ftransition(transition), freward(reward), fgamma(gamma)
+    {}
+    double gamma() const { return fgamma; }
+protected:
+    Criterion fcrit;
+    Statespace fstatespace;
+    ConstrainedActionSpace fconstraint;
+    Transition ftransition;
+    Reward freward;
+    double fgamma;
+};
 
-template <typename Element, typename Condition = nothing>
+template <typename Element>
 class iteratedspace : public space<Element>
 {
 public:
@@ -31,30 +68,6 @@ public:
     {
         return getnext(e);
     }
-    bool firstfeasible(Element& e, const Condition& c) const
-    {
-        if(first(e))
-        {
-           if(isfeasible(e,c))
-               return true;
-           else
-               return nextfeasible(e,c);
-        }
-        else
-            return false;
-    }
-    bool nextfeasible(Element& e, const Condition& c) const
-    {
-        for(;;)
-        {
-            if(!getnext(e))
-                return false;
-            if(feasible(e,c))
-                return true;
-        }
-        return false;
-    }
-    virtual bool isfeasible(const Element&, const Condition&) const { return true; }
     bool ith(Element& e, index i) const { return getith(e,i);}
     Element operator[] (index& i) const
     {
@@ -93,81 +106,40 @@ private:
     }
 };
 
-/*template <typename Element>
-class indexedspace : public space<Element>
+
+
+template <typename SElement, typename AElement>
+class constrainedspace : virtual public iteratedspace<AElement>
 {
 public:
-private:
-    virtual bool find(Element&, index) const = 0;
-};*/
-
-
-template <typename Condition = nothing>
-class integeriteratedspace : public iteratedspace<int, Condition>
-{
-public:
-    integeriteratedspace(int amin, int amax) : fmin(amin), fmax(amax)
-    {}
-
-private:
-    virtual bool getfirst(int& e) const
+    bool firstfeasible(AElement& e, const SElement& c) const
     {
-        e=fmin;
-        return fmin <= fmax;
-    }
-    virtual bool getnext( int& e) const
-    {
-        if(e >= fmax)
+        if(this->first(e))
+        {
+           if(isfeasible(e,c))
+               return true;
+           else
+               return nextfeasible(e,c);
+        }
+        else
             return false;
-        e++;
-        return true;
     }
-    virtual bool getith(int& e, index i) const
+    bool nextfeasible(AElement& e, const SElement& c) const
     {
-        e = i+fmin;
-        return e<=fmax;
+        for(;;)
+        {
+            if(!this->next(e))
+                return false;
+            if(isfeasible(e,c))
+                return true;
+        }
+        return false;
     }
-    virtual index getnum() const
-    {
-        return fmax - fmin + 1;
-    }
-    int fmin;
-    int fmax;
+private:
+    virtual bool isfeasible(const AElement&, const SElement& ) const
+      { return true; }
 };
 
-
-
-/*
-template <typename Element>
-class actionspace: public feasibilityset<Element>
-{
-public:
-    using Element_t = Element;
-};
-
-
-
-template <typename E>
-class iteratedstatespace: public iteratedspace<E> //, statespace<int>
-{
-
-};
-
-class integerstatespace: public integeriteratedspace //, statespace<int>
-{
-public:
-    integerstatespace(int amin, int amax) : integeriteratedspace(amin,amax)
-    {}
-
-};
-
-template <typename Element, typename Condition>
-class iteratedactionspace: public iteratedspace<Element,Condition> //, actionspace<int>
-{
-
-};
-
-*/
 
 template <typename SElement, typename AElement>
 struct dpcondition
@@ -176,80 +148,93 @@ struct dpcondition
     SElement s;
 };
 
-template <typename S, typename A>
-using reward=function<dpcondition<typename S::Element_t,typename A::Element_t>>;
+
+
+template <typename StateSpace, typename ActionSpace>
+using dpreward=function<dpcondition<typename StateSpace::Element_t,
+                                  typename ActionSpace::Element_t>>;
+
+
+//template <typename StateSpace, typename ActionSpace>
+//using policy=mapping<typename StateSpace::Element_t,
+//                     typename ActionSpace::Element_t>;
 
 
 
-/// \brief Base abstract class - dp problem
-/// \tparam O risk criterion
-/// \tparam R reward
-/// \tparam A action space
-/// \tparam S state space
-/// \tparam T transition operator
-template<typename Criterion,
-          typename Statespace,
-          typename Actionspace,
-         typename Policy,
-         typename Transition,
-         typename Reward = reward<Statespace,Actionspace>
-          >
-class dpproblem : public object
-{
-public:
-    using Statespace_t = Statespace;
-    using Actionspace_t = Actionspace;
-public:
-    dpproblem(const Criterion& crit,
-              const Statespace& state,
-              const Actionspace& action,
-              const Transition& transition,
-               const Reward& reward,
-              double gamma ) :
-         fcrit(crit), fstatespace(state),
-         faction(action), ftransition(transition), freward(reward), fgamma(gamma)
-    {}
-    double gamma() const { return fgamma; }
-protected:
-    Criterion fcrit;
-    Statespace fstatespace;
-    Actionspace faction;
-    Transition ftransition;
-    Reward freward;
-    double fgamma;
-};
 
 template <typename Statespace, typename Actionspace>
 using finitetransition
- = ddistribution<typename Statespace::Element_t, dpcondition<Statespace,Actionspace>>;
+ = fdistribution<typename Statespace::Element_t,
+   dpcondition<typename Statespace::Element_t,typename Actionspace::Element_t>>;
 
-using finitepolicy = std::vector<index>;
 
 template<typename Criterion,
          typename Statespace,
-         typename Actionspace,
-         typename Transition = finitetransition<Statespace,Actionspace>,
-         typename Reward = reward<Statespace,Actionspace>>
-class finitedpproblem : public dpproblem<Criterion,Statespace,Actionspace,
-                                 finitepolicy, Transition,Reward>
+         typename ConstrainedActionSpace,
+         typename Transition,
+         typename Reward>
+class finitedpproblem : public dpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                                 Transition,Reward>
 {
 public:
 //    using CritDistribution = fdistribution<double,nothing>;
+    class policy : public std::vector<index>, public mapping<index,index>
+    {
+    public:
+        index operator () (const index& i) const
+        {
+            assert(i < this->size());
+            return (*this)[i];
+        }
+//        policy(unsigned size) : std::vector<index>(size) {}
+        policy(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+               Transition,Reward>& p, index initial = 0) : std::vector<index>(p.fstatespace.num(),initial) {}
+    };
+
+    class value : public std::vector<double>, public mapping<index,double>
+    {
+    public:
+        double operator () (const index& i) const
+        {
+            assert(i < this->size());
+            return (*this)[i];
+        }
+        value(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+               Transition,Reward>& p, double initial = 0)
+            : std::vector<double>(p.fstatespace.num(),initial) {}
+    };
+
+    static double dist(const value& a, const value& b)
+    {
+        double d=0;
+        assert(a.size() == b.size());
+        for(unsigned i=0; i<a.size(); i++)
+            d = std::max(d, fabs(a[i]-b[i]) );
+        return d;
+    }
 
     finitedpproblem(const Criterion& crit,
               const Statespace& state,
-              const Actionspace& action,
+              const ConstrainedActionSpace& constraint,
               const Transition& transition,
               const Reward& reward,
               double gamma ) :
-         dpproblem<Criterion, Statespace,Actionspace, finitepolicy,
+         dpproblem<Criterion, Statespace,ConstrainedActionSpace,
                           Transition,Reward>
-           (crit, state,action, transition, reward, gamma)
+           (crit, state, constraint, transition, reward, gamma)
     {
+        static_assert(std::is_base_of<riskmeasure<ldistribution<double>>,
+                                                          Criterion>::value);
+        static_assert(std::is_base_of<iteratedspace<typename Statespace::Element_t>,Statespace>::value);
+        static_assert(std::is_base_of<constrainedspace<
+                          typename Statespace::Element_t,
+                          typename ConstrainedActionSpace::Element_t>,ConstrainedActionSpace>::value);
+        static_assert(std::is_base_of<finitetransition<Statespace,ConstrainedActionSpace>,Transition>::value);
+        static_assert(std::is_base_of<dpreward<Statespace,ConstrainedActionSpace>,Reward>::value);
     }
 
     statcounter evaluateraw(index s0index,
-                         const std::vector<finitepolicy>& p,
+                         const std::vector<policy>& p,
                          unsigned timehorizon,
                          double accuracy,
                          unsigned miniters =100,
@@ -261,9 +246,9 @@ public:
             double discount = 1;
             double sum = 0;
             index sindex = s0index;
-            for(unsigned i=0; i<=timehorizon; i++, discount *= this->fgamma)
+            for(unsigned i=0; i<=timehorizon; i++)
             {
-                dpcondition<int,int> c;
+                dpcondition<unsigned int,unsigned int> c;
                 c.s = this->fstatespace[sindex];
                 c.a = i<p.size() ? p[i][sindex] : p[p.size()-1][sindex];
                 sum += discount * this->freward(c);
@@ -288,31 +273,32 @@ public:
         return sc;
     }
 
-    using vapprox = std::vector<double>;
 
 
 
-    valuewitherror<vapprox> evaluate(const vapprox& initialV,
-                    double initialerr,
-                    finitepolicy& p,
+    valuewitherror<value> evaluate(const value& initialV,
+                    policy& p,
                          double accuracy,
                          unsigned maxiters = 100000) const
     {
-        vapprox V = initialV;
+        value V = initialV;
 
         assert(V.size() == this->fstatespace.num());
 
-        double error = initialerr;
+        double error = infinity<double>;
 
         for(unsigned j=0; j<maxiters; j++)
         {
-std::cout << error << std::endl;
-            vapprox newV(V.size());
+std::cout << error;
+for(unsigned k=0; k<V.size(); k++)
+    std::cout << "," << V[k];
+std::cout << std::endl;
+            value newV(*this);
             typename Statespace::Element_t e;
             this->fstatespace.first(e);
             for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
             {
-                dpcondition<int,int> c;
+                dpcondition<unsigned int,unsigned int> c;
                 c.s = e;
                 assert(i < p.size());
                 c.a = p[i];
@@ -324,28 +310,111 @@ std::cout << error << std::endl;
                     atom<typename Transition::I_t> a =
                             this->ftransition(k,c);
                     assert(a.x == k);
-                    atom<double> newa = {a.p,this->fgamma*V[k]+r};
+                    atom<double> newa = {this->fgamma*V[k]+r,a.p};
 
                     auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
                                                          atom<double>::comparator);
                     atoms.insert(insertionPos, newa);
                 }
-                ldistribution<double> d(atoms, false, false);
+                ldistribution<double> d(atoms, false, true);
                 newV[i]=this->fcrit(d,nothing());
             }
+            if(j==0)
+                error = dist(V,newV) / (1.0-this->fgamma) ;
+            else
+               error *= this->fgamma;
             V = newV;
-            error *= this->fgamma;
             if(error < accuracy)
                 break;
         }
         return { V, error };
     }
 
+    struct viresult
+    {
+        policy p;
+        valuewitherror<value> v;
+    };
+
+    viresult valueiteration(const value& initialV,
+                            double accuracy,
+                             unsigned maxiters = 100000) const
+    {
+        value V = initialV;
+        policy bestp(*this);
+
+        assert(V.size() == this->fstatespace.num());
+
+        double error = infinity<double>;
+
+        for(unsigned j=0; j<maxiters; j++)
+        {
+    std::cout << error;
+    for(unsigned k=0; k<V.size(); k++)
+    std::cout << "," << V[k];
+    std::cout << std::endl;
+            value newV(*this);
+            typename Statespace::Element_t e;
+            this->fstatespace.first(e);
+            for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
+            {
+                dpcondition<unsigned int,unsigned int> c;
+                typename ConstrainedActionSpace::Element_t a;
+                double bestv = minfinity<double>;
+                bool found = this->fconstraint.firstfeasible(a,e);
+                if(!found)
+                    throw exception("At least one feasible value missing in value iteration");
+                for(index k=0; ; k++)
+                {
+                    c.s = e;
+                    // assert(i < p.size());
+                    c.a = a; // p[i];
+                    double r =  this->freward(c);
+                    double v=0;
+                    std::vector<atom<double>> atoms;
+                    for(unsigned k=0; k<this->ftransition.natoms(c); k++)
+                    {
+                        atom<typename Transition::I_t> a =
+                              this->ftransition(k,c);
+                        assert(a.x == k);
+                        atom<double> newa = {this->fgamma*V[k]+r,a.p};
+
+                        auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
+                                                         atom<double>::comparator);
+                        atoms.insert(insertionPos, newa);
+                    }
+                    ldistribution<double> d(atoms, false, true);
+                    //newV[i]=this->fcrit(d,nothing());
+                    double x =this->fcrit(d,nothing());
+                    if(x > bestv)
+                    {
+                        bestv = x;
+                        bestp[i]= a;
+                    }
+                    found = this->fconstraint.nextfeasible(a,e);
+                    if(!found)
+                        break;
+
+                }
+                newV[i] = bestv;
+            }
+            if(j==0)
+                error = dist(V,newV) / (1.0-this->fgamma) ;
+            else
+               error *= this->fgamma;
+            V = newV;
+            if(error < accuracy)
+                break;
+        }
+        return { bestp, { V, error }};
+    }
 
 };
 
 
 
+
+/*
 template <typename P, typename D>
 class valueitersolution;
 
@@ -443,8 +512,49 @@ private:
        return res;
     }
 };
+*/
+
+class integerspace : virtual public iteratedspace<unsigned int>
+{
+public:
+    integerspace(unsigned int amin, unsigned int amax) : fmin(amin), fmax(amax)
+    {}
+
+private:
+    virtual bool getfirst(unsigned int& e) const
+    {
+        e=fmin;
+        return fmin <= fmax;
+    }
+    virtual bool getnext(unsigned int& e) const
+    {
+        if(e >= fmax)
+            return false;
+        e++;
+        return true;
+    }
+    virtual bool getith(unsigned int& e, index i) const
+    {
+        e = i+fmin;
+        return e<=fmax;
+    }
+    virtual index getnum() const
+    {
+        return fmax - fmin + 1;
+    }
+    unsigned int fmin;
+    unsigned int fmax;
+};
 
 
+/*
+template <typename Condition = nothing>
+class integeractionspace : public integerspace, actionspace<int, Condition>
+{
+public:
+    integeractionspace(int amin, int amax) : integerspace(amin,amax) {}
+};
+*/
 
 } // namespace
 

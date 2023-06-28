@@ -43,6 +43,7 @@ struct statcounter
 };
 
 
+template <bool negative = false>
 class empiricalMeanCVaR
 {
 public:
@@ -57,14 +58,20 @@ public:
 
         double p = 1-falpha;
         double s = 0;
-        for(int i = d.natoms()-1;i>=0 ;i--)
+        for(int i = 0; i< d.natoms() ;i++)
         {
-            double x = d.value(i);
+            int index;
+            if constexpr(negative)
+                index = i;
+            else
+                index = d.natoms()-1-i;
+
+            double x = d.value(index);
             double delta = std::min(1.0 / n, p-s);
             double inc = x * (1-flambda);
             if(delta >= 0)
             {
-               inc += d.value(i) / p * delta * n * flambda;
+               inc += d.value(index) / p * delta * n * flambda;
                s += delta;
             }
             sc.add(inc);
