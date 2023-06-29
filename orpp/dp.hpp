@@ -47,6 +47,7 @@ public:
          ftransition(transition), freward(reward), fgamma(gamma)
     {}
     double gamma() const { return fgamma; }
+    const ConstrainedActionSpace& constraint() const { return fconstraint; }
 protected:
     Criterion fcrit;
     Statespace fstatespace;
@@ -135,6 +136,10 @@ public:
         }
         return false;
     }
+    bool feasible(const AElement& a, const SElement& s) const
+    {
+        return isfeasible(a,s);
+    }
 private:
     virtual bool isfeasible(const AElement&, const SElement& ) const
       { return true; }
@@ -186,6 +191,17 @@ public:
             assert(i < this->size());
             return (*this)[i];
         }
+        bool operator==(const policy& b) const
+        {
+            assert(b.size() == this->size());
+            for(unsigned i=0; i<b.size; i++)
+            {
+                if((*this)[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+
 //        policy(unsigned size) : std::vector<index>(size) {}
         policy(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
                Transition,Reward>& p, index initial = 0) : std::vector<index>(p.fstatespace.num(),initial) {}
@@ -333,14 +349,111 @@ std::cout << std::endl;
     struct viresult
     {
         policy p;
-        valuewitherror<value> v;
+        value v;
+        error e;
     };
+
+    template <bool optimize>
+    void iterate(viresult& params,
+                            double accuracy,
+                             unsigned maxiters = 100000) const
+    {
+        value V = params.v;
+
+        assert(V.size() == this->fstatespace.num());
+
+        double error = infinity<double>;
+
+        for(unsigned j=0; j<maxiters; j++)
+        {
+    std::cout << error;
+    for(unsigned k=0; k<V.size(); k++)
+    std::cout << "," << V[k];
+    std::cout << std::endl;
+            value newV(*this);
+            typename Statespace::Element_t e;
+            this->fstatespace.first(e);
+            for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
+            {
+                dpcondition<unsigned int,unsigned int> c;
+                typename ConstrainedActionSpace::Element_t a;
+                double bestv = minfinity<double>;
+                if constexpr(optimize)
+                {
+                   if(!this->fconstraint.firstfeasible(a,e))
+                       throw exception("At least one feasible value missing in value iteration");
+                }
+                else
+                {
+                    a = params.policy[i];
+#ifndef NDEBUG
+                    if(!this->fconstraint.feasible(a,e))
+                        throw exception("Cannot evaluate an infeasible policy.");
+#endif
+                }
+                for(index k=0; ; k++)
+                {
+                    c.s = e;
+                    // assert(i < p.size());
+                    c.a = a; // p[i];
+                    double r =  this->freward(c);
+                    double v=0;
+                    std::vector<atom<double>> atoms;
+                    for(unsigned k=0; k<this->ftransition.natoms(c); k++)
+                    {
+                        atom<typename Transition::I_t> a =
+                              this->ftransition(k,c);
+                        assert(a.x == k);
+                        atom<double> newa = {this->fgamma*V[k]+r,a.p};
+
+                        auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
+                                                         atom<double>::comparator);
+                        atoms.insert(insertionPos, newa);
+                    }
+                    ldistribution<double> d(atoms, false, true);
+                    //newV[i]=this->fcrit(d,nothing());
+                    double x =this->fcrit(d,nothing());
+                    if constexpr(optimize)
+                    {
+                        if(x > bestv)
+                        {
+                            bestv = x;
+                            params.p[i]= a;
+                        }
+                        if(!this->fconstraint.nextfeasible(a,e))
+                            break;
+                    }
+                    else
+                    {
+                        bestv = x;
+                        break;
+                    }
+                }
+                newV[i] = bestv;
+            }
+            if(j==0)
+                error = dist(V,newV) / (1.0-this->fgamma) ;
+            else
+               error *= this->fgamma;
+            V = newV;
+            if(error < accuracy)
+                break;
+        }
+        params.v = V;
+        params.e = error;
+    }
+
+
 
     viresult valueiteration(const value& initialV,
                             double accuracy,
                              unsigned maxiters = 100000) const
     {
-        value V = initialV;
+        viresult vr;
+        vr.v = initialV;
+        iterate(vr, accuracy, maxiters);
+        return vr;
+
         policy bestp(*this);
 
         assert(V.size() == this->fstatespace.num());

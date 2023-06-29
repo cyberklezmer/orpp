@@ -15,7 +15,7 @@ class testactionspace :
 {
 public:
     testactionspace() : integerspace(0,1) {}
-    virtual bool isfeasible(const int& e, const int& c) const
+    virtual bool isfeasible(const unsigned int& e, const unsigned int& c) const
     {
         if(c == 0 && e==1)
             return false;
@@ -141,37 +141,52 @@ bool testhomogeneity(double accuracy = 0.001)
 {
     testproblem problem(0,0.7,0.80);
 
-
-    std::cout << "value iteration" << std::endl;
+    std::cout << "Value iteration" << std::endl;
 
     testproblem::value initV(problem,0.5);
 
-    auto res=problem.valueiteration(initV,0.01);
-    std::cout << "Results" << std::endl;
+    auto vires=problem.valueiteration(initV,0.01);
+    std::cout << "Result:" << std::endl;
     std::cout << "V=";
-    for(unsigned i=0; i<res.v.x.size(); i++)
-        std::cout << res.v.x[i] << ",";
+    for(unsigned i=0; i<vires.v.x.size(); i++)
+        std::cout << vires.v.x[i] << ",";
     std::cout << std::endl;
-    for(unsigned j=0; j<=overlinew; j++)
-        std::cout << res.p[j];
+    for(unsigned j=0; j<=vires.p.size(); j++)
+        std::cout << vires.p[j];
     std::cout << std::endl;
-    return false;
-
-
-    int horizon = log(accuracy / 2.0 * (1-problem.gamma())) / log( problem.gamma());
 
     std::cout << "Homogeneous enumeration." << std::endl;
 
+    int horizon = log(accuracy / 2.0 * (1-problem.gamma())) / log( problem.gamma());
+
     std::cout << "horizon = " << horizon << std::endl;
 
-    testproblem::policy besthomo(problem,1);
+    testproblem::policy besthomo(problem);
     realestimate besthv;
 
-    for(unsigned i=1; i<= overlinew; i++)
+    for(unsigned i=1; i< pow(2,besthomo.size()); i++)
     {
-        testproblem::policy policy(problem,1);
-        for(unsigned j=0; j<i; j++)
-            policy[j] = 0;
+        testproblem::policy policy(problem,0);
+        auto decimal = i;
+        unsigned k=0;
+        bool feasible = true;
+        while (decimal != 0) {
+            unsigned int p = decimal % 2;
+            if(!problem.constraint().feasible(p,k))
+                feasible = false;
+            assert(k < policy.size());
+            policy[k++] = p;
+            decimal = decimal / 2;
+          }
+        std::cout << i << ": ";
+        for(unsigned j=0; j<=overlinew; j++)
+            std::cout << policy[j];
+        if(!feasible)
+        {
+            std::cout << " infeasible" << std::endl;
+            continue;
+        }
+
         auto sc = problem.evaluateraw(1,{policy}, horizon, accuracy / 2);
         auto crit =  sc.estaverage();
         if(crit.x > besthv.x)
@@ -180,15 +195,20 @@ bool testhomogeneity(double accuracy = 0.001)
             besthomo = policy;
         }
 
-        std::cout << i << ": " << crit.x << " (" << crit.sd << ") ";
-        for(unsigned j=0; j<=overlinew; j++)
-            std::cout << policy[j];
+        std::cout  << " " << crit.x << " (" << crit.sd << ")";
         std::cout << std::endl;
     }
 
-    std::cout << "Optimal homo: " << besthv.x << "(" << besthv.sd << ")" << std::endl;
+    std::cout << "Optimal homo: ";
+    for(unsigned j=0; j<=overlinew; j++)
+        std::cout << besthomo[j];
+
+    std::cout << " " << besthv.x << "(" << besthv.sd << ")" << std::endl;
 
     std::cout << "Evaluating the value function by evaluateraw" << std::endl;
+
+    return true;
+
 
     testproblem::value V(problem);
     for(unsigned i=0; i<= overlinew; i++)
