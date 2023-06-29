@@ -7,7 +7,6 @@ using namespace orpp;
 
 
 
-constexpr int overlinep = 10;
 constexpr int overlinew = 5;
 
 class testactionspace :
@@ -84,7 +83,7 @@ private:
         else
             return { i ,0};
     }
-    virtual unsigned int natoms_is(const dpcondition<int,int>& c) const { return overlinew +1; };
+    virtual unsigned int natoms_is(const dpcondition<int,int>&) const { return overlinew +1; };
     virtual bool is_sorted() const { return true; }
     probability fp;
 };
@@ -148,8 +147,8 @@ bool testhomogeneity(double accuracy = 0.001)
     auto vires=problem.valueiteration(initV,0.01);
     std::cout << "Result:" << std::endl;
     std::cout << "V=";
-    for(unsigned i=0; i<vires.v.x.size(); i++)
-        std::cout << vires.v.x[i] << ",";
+    for(unsigned i=0; i<vires.v.size(); i++)
+        std::cout << vires.v[i] << ",";
     std::cout << std::endl;
     for(unsigned j=0; j<=vires.p.size(); j++)
         std::cout << vires.p[j];
@@ -207,24 +206,23 @@ bool testhomogeneity(double accuracy = 0.001)
 
     std::cout << "Evaluating the value function by evaluateraw" << std::endl;
 
-    return true;
 
-
-    testproblem::value V(problem);
+    testproblem::value Vraw(problem);
     for(unsigned i=0; i<= overlinew; i++)
     {
         auto sc = problem.evaluateraw(i,{besthomo}, horizon, accuracy / 2);
-        V[i] = sc.average();
-        std::cout << i << " ~ " << V[i] << std::endl;
+        Vraw[i] = sc.average();
+        std::cout << i << " ~ " << Vraw[i] << std::endl;
     }
 
 
     std::cout << "Evaluating the value function by method evaluate " << std::endl;
 
-    V=problem.evaluate(V,besthomo,accuracy).x;
+    testproblem::value Ve(problem, 0.5);
+    Ve = problem.evaluate(Ve,besthomo,accuracy).x;
     std::cout << "V=";
-    for(unsigned i=0; i<V.size(); i++)
-        std::cout << V[i] << ",";
+    for(unsigned i=0; i<Ve.size(); i++)
+        std::cout << Ve[i] << ",";
     std::cout << std::endl;
 
 

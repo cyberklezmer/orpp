@@ -292,65 +292,15 @@ public:
 
 
 
-    valuewitherror<value> evaluate(const value& initialV,
-                    policy& p,
-                         double accuracy,
-                         unsigned maxiters = 100000) const
-    {
-        value V = initialV;
 
-        assert(V.size() == this->fstatespace.num());
-
-        double error = infinity<double>;
-
-        for(unsigned j=0; j<maxiters; j++)
-        {
-std::cout << error;
-for(unsigned k=0; k<V.size(); k++)
-    std::cout << "," << V[k];
-std::cout << std::endl;
-            value newV(*this);
-            typename Statespace::Element_t e;
-            this->fstatespace.first(e);
-            for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
-            {
-                dpcondition<unsigned int,unsigned int> c;
-                c.s = e;
-                assert(i < p.size());
-                c.a = p[i];
-                double r =  this->freward(c);
-                double v=0;
-                std::vector<atom<double>> atoms;
-                for(unsigned k=0; k<this->ftransition.natoms(c); k++)
-                {
-                    atom<typename Transition::I_t> a =
-                            this->ftransition(k,c);
-                    assert(a.x == k);
-                    atom<double> newa = {this->fgamma*V[k]+r,a.p};
-
-                    auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
-                                                         atom<double>::comparator);
-                    atoms.insert(insertionPos, newa);
-                }
-                ldistribution<double> d(atoms, false, true);
-                newV[i]=this->fcrit(d,nothing());
-            }
-            if(j==0)
-                error = dist(V,newV) / (1.0-this->fgamma) ;
-            else
-               error *= this->fgamma;
-            V = newV;
-            if(error < accuracy)
-                break;
-        }
-        return { V, error };
-    }
 
     struct viresult
     {
+        viresult(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                 Transition,Reward>& pr) : p(pr),v(pr), e(0) {}
         policy p;
         value v;
-        error e;
+        double e;
     };
 
     template <bool optimize>
@@ -449,78 +399,24 @@ std::cout << std::endl;
                             double accuracy,
                              unsigned maxiters = 100000) const
     {
-        viresult vr;
+        viresult vr(*this);
         vr.v = initialV;
-        iterate(vr, accuracy, maxiters);
+        iterate<true>(vr, accuracy, maxiters);
         return vr;
-
-        policy bestp(*this);
-
-        assert(V.size() == this->fstatespace.num());
-
-        double error = infinity<double>;
-
-        for(unsigned j=0; j<maxiters; j++)
-        {
-    std::cout << error;
-    for(unsigned k=0; k<V.size(); k++)
-    std::cout << "," << V[k];
-    std::cout << std::endl;
-            value newV(*this);
-            typename Statespace::Element_t e;
-            this->fstatespace.first(e);
-            for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
-            {
-                dpcondition<unsigned int,unsigned int> c;
-                typename ConstrainedActionSpace::Element_t a;
-                double bestv = minfinity<double>;
-                bool found = this->fconstraint.firstfeasible(a,e);
-                if(!found)
-                    throw exception("At least one feasible value missing in value iteration");
-                for(index k=0; ; k++)
-                {
-                    c.s = e;
-                    // assert(i < p.size());
-                    c.a = a; // p[i];
-                    double r =  this->freward(c);
-                    double v=0;
-                    std::vector<atom<double>> atoms;
-                    for(unsigned k=0; k<this->ftransition.natoms(c); k++)
-                    {
-                        atom<typename Transition::I_t> a =
-                              this->ftransition(k,c);
-                        assert(a.x == k);
-                        atom<double> newa = {this->fgamma*V[k]+r,a.p};
-
-                        auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
-                                                         atom<double>::comparator);
-                        atoms.insert(insertionPos, newa);
-                    }
-                    ldistribution<double> d(atoms, false, true);
-                    //newV[i]=this->fcrit(d,nothing());
-                    double x =this->fcrit(d,nothing());
-                    if(x > bestv)
-                    {
-                        bestv = x;
-                        bestp[i]= a;
-                    }
-                    found = this->fconstraint.nextfeasible(a,e);
-                    if(!found)
-                        break;
-
-                }
-                newV[i] = bestv;
-            }
-            if(j==0)
-                error = dist(V,newV) / (1.0-this->fgamma) ;
-            else
-               error *= this->fgamma;
-            V = newV;
-            if(error < accuracy)
-                break;
-        }
-        return { bestp, { V, error }};
     }
+
+    valuewitherror<value> evaluate(const value& initialV,
+                    policy& p,
+                         double accuracy,
+                         unsigned maxiters = 100000) const
+    {
+        viresult vr(*this);
+        vr.p = p;
+        iterate<true>(vr, accuracy, maxiters);
+
+        return { vr.v, vr.e };
+    }
+
 
 };
 
