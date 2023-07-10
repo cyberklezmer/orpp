@@ -205,6 +205,7 @@ public:
 //        policy(unsigned size) : std::vector<index>(size) {}
         policy(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
                Transition,Reward>& p, index initial = 0) : std::vector<index>(p.fstatespace.num(),initial) {}
+        policy(const policy& p): std::vector<index>(p) {}
     };
 
     class value : public std::vector<double>, public mapping<index,double>
@@ -247,6 +248,11 @@ public:
                           typename ConstrainedActionSpace::Element_t>,ConstrainedActionSpace>::value);
         static_assert(std::is_base_of<finitetransition<Statespace,ConstrainedActionSpace>,Transition>::value);
         static_assert(std::is_base_of<dpreward<Statespace,ConstrainedActionSpace>,Reward>::value);
+    }
+
+    unsigned horizon(double accuracy, double maxval)
+    {
+        return (log(accuracy * (1-this->gamma())) - log(maxval)) / log( this->gamma());
     }
 
     statcounter evaluateraw(index s0index,
@@ -316,10 +322,10 @@ public:
 
         for(unsigned j=0; j<maxiters; j++)
         {
-    std::cout << error;
+    /* std::cout << error;
     for(unsigned k=0; k<V.size(); k++)
     std::cout << "," << V[k];
-    std::cout << std::endl;
+    std::cout << std::endl;*/
             value newV(*this);
             typename Statespace::Element_t e;
             this->fstatespace.first(e);
@@ -405,8 +411,9 @@ public:
         return vr;
     }
 
-    valuewitherror<value> evaluate(const value& initialV,
-                    policy& p,
+    valuewitherror<value> evaluate(
+                         const value& initialV,
+                         policy& p,
                          double accuracy,
                          unsigned maxiters = 100000) const
     {
