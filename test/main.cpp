@@ -301,6 +301,65 @@ bool testhomogeneity(double accuracy = 0.001)
     return true;
 }
 
+valuewitherror<double> pseudogradientdescent(
+                      orpp::index s0ind,
+                      double kappa,
+                      std::vector<testproblem::policy>& ps,
+                      const testproblem& prob,
+                      unsigned horizon,
+                      double accuracy,
+                      unsigned numiters)
+{
+    valuewitherror<double> bestv={0,0};
+    for(unsigned i=0; i<numiters; i++)
+    {
+        std::vector<testproblem::policy> bestps = ps;
+        for(unsigned j=0; j<ps.size(); j++)
+        {
+std::cout << "j=" << j << std::endl;
+            for(unsigned k=1; k<ps[j].size(); k++)
+            {
+std::cout << "k=" << k << std::endl;
+                std::vector<testproblem::policy> p = ps;
+                p[j][k]=1-p[j][k];
+                statcounter sc = prob.evaluateraw(s0ind, p, horizon, accuracy);
+
+                empiricalMeanCVaR<true> c(kappa,1.0);
+
+                auto v = c(sc.dist);
+                if(v.x > bestv.x + bestv.sd)
+                {
+                    bestv = v;
+                    bestps = p;
+                }
+            }
+        }
+        bool differs = false;
+        for(unsigned j=0; j<ps.size(); j++)
+        {
+            if(!(ps[j] == bestps[j]))
+            {
+                differs = true;
+                break;
+            }
+        }
+        if(!differs)
+            return bestv;
+        ps = bestps;
+
+        for(unsigned j=0; j<ps.size(); j++)
+        {
+            for(unsigned k=0; k<ps[j].size(); k++)
+            {
+                std::cout << ps[j][k];
+            }
+            std::cout << " ";
+        }
+        std::cout << bestv.x << std::endl;
+    }
+    return bestv;
+}
+
 
 void testcvar()
 {
@@ -364,11 +423,12 @@ private:
 
 int main()
 {
+    unsigned origdepth = 2;
     double accuracy = 0.001;
     double kappa = 0.6;
     testproblem problem(kappa,0.7,0.85);
 
-    unsigned numiters = 10;
+    unsigned numiters = 3;
     testproblem::value initV(problem,0.5);
 
     int horizon = problem.horizon(accuracy / 2.0, 1.0 / (1-problem.gamma()) );
@@ -411,10 +471,6 @@ int main()
            bisect(dif, from, to, term);
         iota = (result.first + result.second) / 2;  // = 0.381966...
 
-
-
-
-
     }
 
     std::cout << "Evaluating the value function by method evaluate" << std::endl;
@@ -423,6 +479,13 @@ int main()
     testproblem::value Ve = problem.evaluate(initV,bestp,accuracy).x;
     std::cout << "Result is " << Ve[s0ind] << std::endl;
     std::cout << "comparing to " << constant << std::endl;
+
+    std::cout << "Solving the original problem" << std::endl;
+
+    std::vector<testproblem::policy> ps(origdepth,bestp);
+
+    auto bestv = pseudogradientdescent(s0ind,kappa,ps,problem,horizon,accuracy,3);
+    std::cout << "With result " << bestv.x << " compared to " << constant << std::endl;
 
     return 0;
 

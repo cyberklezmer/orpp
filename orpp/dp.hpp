@@ -194,7 +194,7 @@ public:
         bool operator==(const policy& b) const
         {
             assert(b.size() == this->size());
-            for(unsigned i=0; i<b.size; i++)
+            for(unsigned i=0; i<b.size(); i++)
             {
                 if((*this)[i] != b[i])
                     return false;
