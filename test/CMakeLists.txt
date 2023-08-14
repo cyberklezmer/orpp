@@ -23,6 +23,6 @@ include_directories("..")
 # find_library(LNLOPT libnlopt.so "/usr/local/lib" )
 
 
-add_executable(radp main.cpp )
+add_executable(radp main.cpp main_old.cpp)
 
 # target_link_libraries(${PROJECT_NAME} ${LNLOPT} )

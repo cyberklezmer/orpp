@@ -445,11 +445,12 @@ void testheuristicodl(std::ostream& out)
 }
 
 
-int main()
+int main_old()
 {
     std::ofstream out("testdpprotocol.txt");
     if(!out)
         throw "cannot open protocol";
 //    testheuristicodl(out);
     testhomogeneity(out);
+    return 0;
 }

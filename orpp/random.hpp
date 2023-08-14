@@ -1353,6 +1353,49 @@ private:
 
 /// @} - distribution
 
+
+/// \addtogroup Samples
+/// @{
+
+
+class empiricaldistribution : public equipdistribution<double, true>
+{
+public:
+    empiricaldistribution()
+        : equipdistribution<double, true> (std::vector<double>(),true)
+    {
+    }
+
+    empiricaldistribution(const std::vector<double>& values)
+        : equipdistribution<double, true> (values,true)
+    {
+    }
+    void add(double v)
+    {
+        auto insertionPos = std::lower_bound(values().begin(), values().end(), v);
+        values().insert(insertionPos, v);
+    }
+    double value(unsigned i) const { return (*this)(i).x; }
+    double p() const { return 1.0 / (*this).natoms(); }
+};
+
+struct statcounter
+{
+    empiricaldistribution dist;
+    double sum = 0.0;
+    double sumsq = 0.0;
+    unsigned num = 0;
+    void add(double x) { sum += x; sumsq += x*x; num++; dist.add(x); }
+    double var() const { return sumsq/num - average()*average(); }
+    double averagevar() const  { return var() / num; }
+    double averagestdev() const { return sqrt(averagevar()); }
+    double average() const { return sum / num; }
+    realestimate estaverage() const { return {average(),averagestdev()};  }
+};
+
+/// @} - Samples
+
+
 /// \addtogroup Risk Measures
 /// @{
 
@@ -1369,19 +1412,31 @@ public:
     }
 };
 
+template <typename Distribution>
+class estimableriskmeasure : public riskmeasure<Distribution>
+{
+public:
+    virtual realestimate operator ()
+       (const empiricaldistribution& d) const = 0;
+};
 
+
+using empriricalriskmeasure = riskmeasure<empiricaldistribution>;
 
 template <typename Distribution, bool negative = false>
-class MeanCVaR : public riskmeasure<Distribution>
+class MeanCVaR : public estimableriskmeasure<Distribution>
 {
 public:
     MeanCVaR(probability alpha, double lambda) : falpha(alpha),
         flambda(lambda)
     {         assert(falpha < 1);  assert(flambda <=1 && flambda >=0); }
 
-    virtual double operator () (const Distribution& d,
+    /// tbd can be done for sorted ddistribution
+    virtual double operator () (
+         const Distribution& d,
          const typename Distribution::C_t& c) const
     {
+        // tbd static assert here
         std::vector<atom<typename Distribution::I_t>> a;
         if(!d.sorted())
             throw("The distribution has to be sorted.");
@@ -1409,6 +1464,37 @@ public:
         double cvar = m / p;
         return (1-flambda)*mean + flambda*cvar;
     }
+
+    virtual realestimate operator () (const empiricaldistribution& d) const
+    {
+        statcounter sc;
+        unsigned n = d.natoms();
+        assert(n);
+
+
+        double p = 1-falpha;
+        double s = 0;
+        for(int i = 0; i< d.natoms() ;i++)
+        {
+            int index;
+            if constexpr(negative)
+                index = i;
+            else
+                index = d.natoms()-1-i;
+
+            double x = d.value(index);
+            double delta = std::min(1.0 / n, p-s);
+            double inc = x * (1-flambda);
+            if(delta >= 0)
+            {
+               inc += d.value(index) / p * delta * n * flambda;
+               s += delta;
+            }
+            sc.add(inc);
+        }
+        return sc.estaverage();
+    }
+
 private:
     probability falpha;
     double flambda;
@@ -1424,8 +1510,9 @@ public:
 };
 
 
-
 /// @} - Risk Measures
+
+
 
 } // namespace
 
