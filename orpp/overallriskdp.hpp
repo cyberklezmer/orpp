@@ -54,6 +54,48 @@ public:
         void setriskaversion(double ra) { this->fcrit.nesting().setparam(ra); }
     };
 
+    class onedreward : public Reward
+    {
+    public:
+        onedreward(std::vector<ConstrainedActionSpace>) :
+            fmaskpolicy(maskpolicy), findex(aindex) {}
+        double operator() (const dpcondition<unsigned int, unsigned int>& x) const
+        { return x.a; }
+    private: 
+        finitepolicy fmaskpolicy;
+        index findex;
+    };
+
+    class nestedonedproblem : public  nestedproblem
+    {
+    public:
+        nestedonedproblem(const Criterion& crit,
+                  const Statespace& state,
+                  const ConstrainedActionSpace& constraint,
+                  const Transition& transition,
+                  const Reward& reward,
+                  double gamma,
+                  double maxreward,
+                  const  overallriskproblem<Criterion,
+                          Statespace,ConstrainedActionSpace,Transition,Reward>& parentproblem) :
+            nestedproblem
+               (crit, state, constraint, transition, reward, gamma, maxreward),
+            factivedim(0), fparentproblem(parentproblem)
+        {
+        }
+//        using value = typename finitedpproblem<nestedcriterion<Criterion>,
+//             Statespace,ConstrainedActionSpace,Transition,Reward>::value;
+//        using computationparams = typename finitehomodpproblem<nestedcriterion<Criterion>,
+//           Statespace,ConstrainedActionSpace,Transition,Reward>::computationparams;
+
+
+        void setactivedim(index d) { factivedim = d; }
+    private:
+        index factivedim;
+        const overallriskproblem <Criterion,
+                Statespace,ConstrainedActionSpace,Transition,Reward>& fparentproblem;
+    };
+
 
     struct computationparams:
           public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
@@ -198,6 +240,7 @@ public:
             throw exception("Error finding nested r.a. parameter: from > to");
     }
 
+    template <bool gradientdescent=false>
     heuristicresult heuristic(index s0ind, double accuracy, const computationparams& params) const
     {
         sys::log() << "overallriskproblem::heuristic" << std::endl;
