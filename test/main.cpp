@@ -166,7 +166,7 @@ void measure(int threads)
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.0005;
+    double accuracy = 0.02;
     orpp::index s0ind = 1;
     unsigned testiters = 3;
 
@@ -189,7 +189,7 @@ void measure(int threads)
 
 int main()
 {
+    measure(10);
     measure(0);
-    measure(2);
     return 0;
 }
