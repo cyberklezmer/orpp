@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.18)
+cmake_minimum_required (VERSION 3.17)
 
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -13,8 +13,11 @@ project (radp)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS -pthread)
+# set(CMAKE_CXX_FLAGS -std=c17)
+
 
 include_directories("/usr/local/include")
+include_directories("/usr/include")
 # include_directories("../marketsim")
 include_directories("..")
 #include_directories("../chronos")
@@ -24,5 +27,8 @@ include_directories("..")
 
 
 add_executable(radp main.cpp)
+
+# target_compile_features(radp PRIVATE cxx_std_17)
+
 
 # target_link_libraries(${PROJECT_NAME} ${LNLOPT} )
