@@ -92,27 +92,27 @@ private:
 using testcrit = CVaR<ldistribution<double>,true>;
 
 
-class testproblem : public finitedpproblem<testcrit, teststatespace,
+class testproblem : public finitehomodpproblem<testcrit, teststatespace,
         testactionspace, testtransition, testreward>
 {
 public:
     testproblem(probability alpha, probability pincrease, double gamma) :
-        finitedpproblem<testcrit, teststatespace,
+        finitehomodpproblem<testcrit, teststatespace,
                     testactionspace, testtransition, testreward>
           (testcrit(alpha),teststatespace(), testactionspace(),
-           testtransition(pincrease), testreward(), gamma) {}
+           testtransition(pincrease), testreward(), gamma,1) {}
     void setriskaversion(probability alpha)
     {
         fcrit = testcrit(alpha);
     }
 };
 
-void enumerate(const std::vector<testproblem::policy>& ps,
+void enumerate(const std::vector<finitepolicy>& ps,
                       const testproblem& prob,
                       unsigned horizon,
                       double accuracy,
                       unsigned depth,
-                      std::vector<testproblem::policy>& bestp,
+                      std::vector<finitepolicy>& bestp,
                       statcounter& bestv)
 {
     if(ps.size()==depth)
@@ -154,7 +154,7 @@ void testhomogeneity(std::ostream& out)
 
     out << "Homogeneous enumeration." << std::endl;
 
-    int horizon = problem.horizon(accuracy / 2.0, 1.0 / (1-problem.gamma()) );
+    int horizon = problem.requiredhorizon(accuracy / 2.0 );
 
     out << "required horizon = " << horizon << std::endl;
 
@@ -184,7 +184,7 @@ void testhomogeneity(std::ostream& out)
             continue;
         }
 
-        auto sc = problem.evaluateraw(1,{policy}, horizon, accuracy / 2);
+        auto sc = problem.evaluateraw(1,{policy}, accuracy / 2);
         auto crit =  sc.estaverage();
         if(crit.x > besthv.x)
         {
@@ -202,7 +202,7 @@ void testhomogeneity(std::ostream& out)
     testproblem::value Vraw(problem);
     for(unsigned i=0; i<= overlinew; i++)
     {
-        auto sc = problem.evaluateraw(i,{besthomo}, horizon, accuracy / 2);
+        auto sc = problem.evaluateraw(i,{besthomo}, accuracy / 2);
         Vraw[i] = sc.average();
     }
 
@@ -259,10 +259,10 @@ valuewitherror<double> pseudogradientdescent(
                       double kappa,
                       std::vector<testproblem::policy>& ps,
                       const testproblem& prob,
-                      unsigned horizon,
                       double accuracy,
                       unsigned numiters)
 {
+    unsigned horizon = prob.requiredhorizon(accuracy / 2);
     valuewitherror<double> bestv={0,0};
     for(unsigned i=0; i<numiters; i++)
     {
@@ -275,7 +275,7 @@ std::cout << "j=" << j << std::endl;
 std::cout << "k=" << k << std::endl;
                 std::vector<testproblem::policy> p = ps;
                 p[j][k]=1-p[j][k];
-                statcounter sc = prob.evaluateraw(s0ind, p, horizon, accuracy);
+                statcounter sc = prob.evaluateraw(s0ind, p, accuracy);
 
                 MeanCVaR<empiricaldistribution,true> c(kappa,1.0);
 
@@ -378,7 +378,6 @@ private:
 
 void testheuristicodl(std::ostream& out)
 {
-    unsigned origdepth = 2;
     double accuracy = 0.001;
     double kappa = 0.6;
     testproblem problem(kappa,0.7,0.85);
@@ -386,8 +385,6 @@ void testheuristicodl(std::ostream& out)
     unsigned numiters = 3;
     testproblem::value initV(problem,0.5);
 
-    int horizon = problem.horizon(accuracy / 2.0, 1.0 / (1-problem.gamma()) );
-    out << "Horizon neede for accuracy " << accuracy << ": " << horizon << std::endl;
     orpp::index s0ind = 1;
 
     double iota = kappa;
@@ -398,11 +395,11 @@ void testheuristicodl(std::ostream& out)
     {
         problem.setriskaversion(iota);
 
-        testproblem::viresult vires=problem.valueiteration(initV,accuracy);
+        auto vires=problem.valueiteration(initV,accuracy);
         initV = vires.v;
         bestp = vires.p;
 
-        statcounter cs = problem.evaluateraw( s0ind, {vires.p}, horizon, accuracy / 2.0 );
+        statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0 );
 
         MeanCVaR<empiricaldistribution,true> cv(kappa,1.0);
 
@@ -438,9 +435,10 @@ void testheuristicodl(std::ostream& out)
 
     out << "Solving the original problem by pseudogradientdescent" << std::endl;
 
-    std::vector<testproblem::policy> ps(origdepth,bestp);
+    std::vector<testproblem::policy> ps(2,bestp);
 
-    auto bestv = pseudogradientdescent(s0ind,kappa,ps,problem,horizon,accuracy,3);
+
+    auto bestv = pseudogradientdescent(s0ind,kappa,ps,problem,accuracy,3);
     out << "With result " << bestv.x << " compared to " << constant << std::endl;
 }
 
@@ -450,7 +448,7 @@ int main_old()
     std::ofstream out("testdpprotocol.txt");
     if(!out)
         throw "cannot open protocol";
-//    testheuristicodl(out);
-    testhomogeneity(out);
+    testheuristicodl(std::cout);
+//    testhomogeneity(std::cout);
     return 0;
 }

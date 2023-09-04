@@ -3,7 +3,7 @@
 
 //#include "orpp/optimization.hpp"
 #include "orpp/random.hpp"
-
+#include <thread>
 //#include <fstream>
 
 namespace orpp
@@ -47,6 +47,7 @@ public:
     {}
     double gamma() const { return fgamma; }
     const ConstrainedActionSpace& constraint() const { return fconstraint; }
+    const Statespace& statespace() const { return fstatespace; }
 protected:
     Criterion fcrit;
     Statespace fstatespace;
@@ -160,7 +161,7 @@ using dpreward=function<dpcondition<typename StateSpace::Element_t,
 
 
 //template <typename StateSpace, typename ActionSpace>
-//using policy=mapping<typename StateSpace::Element_t,
+//using =mapping<typename StateSpace::Element_t,
 //                     typename ActionSpace::Element_t>;
 
 
@@ -210,6 +211,37 @@ using finitedptransition = finitetransition<finitedpactionspace, finitedpactions
 using finitedpreward = dpreward<finitedpactionspace, finitedpactionspace>;
 */
 
+
+class finitepolicy : public std::vector<index>, public mapping<index,index>
+{
+public:
+    index operator () (const index& i) const
+    {
+        assert(i < this->size());
+        return (*this)[i];
+    }
+    bool operator==(const finitepolicy& b) const
+    {
+        assert(b.size() == this->size());
+        for(unsigned i=0; i<b.size(); i++)
+        {
+            if((*this)[i] != b[i])
+                return false;
+        }
+        return true;
+    }
+    finitepolicy(const std::vector<index> v) : std::vector<index>(v) {}
+
+    finitepolicy(unsigned size) : std::vector<index>(size) {}
+//    template <typename Statespace>
+//    finitepolicy(const Statespace& s, index initial = 0) : std::vector<index>(s.num(),initial) {}
+    template <typename Problem>
+    finitepolicy(const Problem& p, index initial = 0) : std::vector<index>(p.statespace().num(),initial) {}
+    finitepolicy(const finitepolicy& p): std::vector<index>(p) {}
+};
+
+
+
 template<typename Criterion,
          typename Statespace,
          typename ConstrainedActionSpace,
@@ -220,30 +252,6 @@ class finitedpproblem : public dpproblem<Criterion,Statespace,ConstrainedActionS
 {
 public:
 //    using CritDistribution = fdistribution<double,nothing>;
-    class policy : public std::vector<index>, public mapping<index,index>
-    {
-    public:
-        index operator () (const index& i) const
-        {
-            assert(i < this->size());
-            return (*this)[i];
-        }
-        bool operator==(const policy& b) const
-        {
-            assert(b.size() == this->size());
-            for(unsigned i=0; i<b.size(); i++)
-            {
-                if((*this)[i] != b[i])
-                    return false;
-            }
-            return true;
-        }
-
-//        policy(unsigned size) : std::vector<index>(size) {}
-        policy(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
-               Transition,Reward>& p, index initial = 0) : std::vector<index>(p.fstatespace.num(),initial) {}
-        policy(const policy& p): std::vector<index>(p) {}
-    };
 
     class value : public std::vector<double>, public mapping<index,double>
     {
@@ -258,6 +266,15 @@ public:
             : std::vector<double>(p.fstatespace.num(),initial) {}
     };
 
+    struct computationparams
+    {
+        computationparams() : fmaxevaliterations(1000000),
+            fthreadstouse(0), fthreadbatch(10) {}
+        unsigned fmaxevaliterations;
+        unsigned fthreadstouse;
+        unsigned fthreadbatch;
+    };
+
     static double dist(const value& a, const value& b)
     {
         double d=0;
@@ -267,18 +284,19 @@ public:
         return d;
     }
 
+
     finitedpproblem(const Criterion& crit,
               const Statespace& state,
               const ConstrainedActionSpace& constraint,
               const Transition& transition,
               const Reward& reward,
-              double gamma ) :
+              double gamma,
+              double maxreward) :
          dpproblem<Criterion, Statespace,ConstrainedActionSpace,
                           Transition,Reward>
-           (crit, state, constraint, transition, reward, gamma)
+           (crit, state, constraint, transition, reward, gamma),
+         fmaxreward(maxreward)
     {
-        static_assert(std::is_base_of<estimableriskmeasure<ldistribution<double>>,
-                                                          Criterion>::value);
         static_assert(std::is_base_of<iteratedspace<typename Statespace::Element_t>,Statespace>::value);
         static_assert(std::is_base_of<constrainedspace<
                           typename Statespace::Element_t,
@@ -287,20 +305,28 @@ public:
         static_assert(std::is_base_of<dpreward<Statespace,ConstrainedActionSpace>,Reward>::value);
     }
 
-    unsigned horizon(double accuracy, double maxval)
+
+    unsigned requiredhorizon(double accuracy) const
     {
-        return (log(accuracy * (1-this->gamma())) - log(maxval)) / log( this->gamma());
+        return (log(accuracy * (1-this->gamma())) - log(maxreward())) / log( this->gamma());
     }
 
-    statcounter evaluateraw(index s0index,
-                         const std::vector<policy>& p,
-                         unsigned timehorizon,
-                         double accuracy,
-                         unsigned miniters =100,
-                         unsigned maxiters = 100000) const
+    valuewitherror<double> evaluatecrit(index s0ind,
+                                         const std::vector<finitepolicy>& ps,
+                                         double accuracy,
+                                         const computationparams& params) const
     {
-        statcounter sc;
-        for(unsigned j=0; j<maxiters; j++)
+        statcounter sc = this->evaluateraw(s0ind, ps, accuracy, params);
+
+        return this->fcrit(sc.dist);
+    }
+private:
+     void computepath(orpp::index s0index,
+                     const std::vector<finitepolicy>& p,
+                     unsigned timehorizon, std::vector<double>* results) const
+    {
+        std::vector<double>& rs = *results;
+        for(unsigned n=0; n<rs.size(); n++)
         {
             double discount = 1;
             double sum = 0;
@@ -313,31 +339,107 @@ public:
                 sum += discount * this->freward(c);
                 sindex = this->ftransition.draw(c);
                 discount *= this->fgamma;
-
-/* test of distribution                if(i==0 && j==0)
-                {
-                    std::ofstream o("dist.csv");
-                    std::cout << "c.s=" << c.s << ", c.a=" << c.a << std::endl;
-                    for(unsigned k=0; k<50000; k++)
-                        o << k << "," << this->ftransition.draw(c) << std::endl;
-                    throw;
-                } */
-
-//std::cout << j << " - " << i << ", s=" << sindex << ", sum="  << sum << std::endl;
             }
-            sc.add(sum);
-            if(j>miniters && sc.averagestdev() < accuracy)
+           rs[n] = sum;
+        }
+    }
+public:
+    statcounter evaluateraw(index s0index,
+                         const std::vector<finitepolicy>& p,
+                         double accuracy,
+                         const computationparams& params) const
+    {
+        unsigned timehorizon = requiredhorizon(accuracy / 2);
+        statcounter sc;
+        for(unsigned j=0;j<params.fmaxevaliterations;)
+        {
+            if(params.fthreadstouse==0)
+            {
+                std::vector<double> sum(1);
+                computepath(s0index,p, timehorizon, &sum);
+                sc.add(sum[0]);
+                j++;
+            }
+            else
+            {
+                std::vector<std::thread> ts;
+                std::vector<std::vector<double>> rs(params.fthreadstouse,std::vector<double>(params.fthreadbatch));
+                for(unsigned k=0; k<params.fthreadstouse; k++)
+                    ts.push_back(std::thread(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
+                                 Transition,Reward>::computepath,
+                                 this, s0index,p, timehorizon, &rs[k]));
+                for(unsigned k=0; k<params.fthreadstouse; k++)
+                    ts[k].join();
+                for(unsigned k=0; k<params.fthreadstouse; k++)
+                    for(unsigned n=0; n<params.fthreadbatch; n++)
+                       sc.add(rs[k][n]);
+                j+=params.fthreadstouse * params.fthreadbatch;
+             }
+
+            if(j>10 && sc.averagestdev() < accuracy / 4)
                 break;
         }
         return sc;
     }
 
 
+    double maxreward() const { return fmaxreward; }
+protected:
+    double fmaxreward;
+
+};
+
+template<typename NestingCriterion>
+class nestedcriterion {
+public:
+    using NestingCriterion_t = NestingCriterion;
+    const NestingCriterion& nesting() const { return fnestingcrit; }
+    NestingCriterion& nesting() { return fnestingcrit; }
+    nestedcriterion(const NestingCriterion& nestingcrit) :
+        fnestingcrit(nestingcrit) {}
+private:
+    NestingCriterion fnestingcrit;
+};
+
+template<typename Criterion,
+         typename Statespace,
+         typename ConstrainedActionSpace,
+         typename Transition,
+         typename Reward>
+class finitehomodpproblem : public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                                 Transition,Reward>
+{
+public:
+    finitehomodpproblem(const Criterion& crit,
+              const Statespace& state,
+              const ConstrainedActionSpace& constraint,
+              const Transition& transition,
+              const Reward& reward,
+              double gamma,
+              double maxreward) :finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                                 Transition,Reward>(crit, state,constraint,
+                                                 transition, reward, gamma,maxreward)
+    {
+        static_assert(std::is_base_of<nestedcriterion<typename Criterion::NestingCriterion_t>,Criterion>::value);
+    }
+
+
+    using value = typename finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+    Transition,Reward>::value;
+
+    struct computationparams:
+          public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+            Transition,Reward>::computationparams
+    {
+        computationparams() : fvaluemaxiterations(100) {}
+        unsigned fvaluemaxiterations;
+    };
+
     struct viresult
     {
         viresult(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
                  Transition,Reward>& pr) : p(pr),v(pr), e(0) {}
-        policy p;
+        finitepolicy p;
         value v;
         double e;
     };
@@ -345,7 +447,7 @@ public:
     template <bool optimize>
     void iterate(viresult& params,
                             double accuracy,
-                             unsigned maxiters = 100000) const
+                             const computationparams& evalparams) const
     {
         value V = params.v;
 
@@ -353,7 +455,7 @@ public:
 
         double error = infinity<double>;
 
-        for(unsigned j=0; j<maxiters; j++)
+        for(unsigned j=0; j<evalparams.fvaluemaxiterations; j++)
         {
     /* std::cout << error;
     for(unsigned k=0; k<V.size(); k++)
@@ -401,7 +503,8 @@ public:
                     }
                     ldistribution<double> d(atoms, false, true);
                     //newV[i]=this->fcrit(d,nothing());
-                    double x =this->fcrit(d,nothing());
+                    const auto& crit = this->fcrit.nesting();
+                    double x = crit(d,nothing());
                     if constexpr(optimize)
                     {
                         if(x > bestv)
@@ -421,7 +524,7 @@ public:
                 newV[i] = bestv;
             }
             if(j==0)
-                error = dist(V,newV) / (1.0-this->fgamma) ;
+                error = this->dist(V,newV) / (1.0-this->fgamma) ;
             else
                error *= this->fgamma;
             V = newV;
@@ -434,31 +537,30 @@ public:
 
     viresult valueiteration(const value& initialV,
                             double accuracy,
-                             unsigned maxiters = 100000) const
+                            const computationparams& evalparams) const
     {
         viresult vr(*this);
         vr.v = initialV;
-        iterate<true>(vr, accuracy, maxiters);
+        iterate<true>(vr, accuracy, evalparams);
         return vr;
     }
 
     valuewitherror<value> evaluate(
                          const value& initialV,
-                         policy& p,
+                         finitepolicy& p,
                          double accuracy,
-                         unsigned maxiters = 100000) const
+                         const computationparams& evalparams) const
     {
         viresult vr(*this);
         vr.p = p;
-        iterate<false>(vr, accuracy, maxiters);
+        vr.v = initialV;
+        iterate<false>(vr, accuracy, evalparams);
 
         return { vr.v, vr.e };
     }
 
 
 };
-
-
 
 
 } // namespace

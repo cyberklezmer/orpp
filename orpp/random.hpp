@@ -1387,6 +1387,9 @@ struct statcounter
     unsigned num = 0;
     void add(double x) { sum += x; sumsq += x*x; num++; dist.add(x); }
     double var() const { return sumsq/num - average()*average(); }
+    double varvar() const { return var()*var() / num; }
+    double varstdev() const { return sqrt(varvar()); }
+    double stdev() const { return sqrt(var()); }
     double averagevar() const  { return var() / num; }
     double averagestdev() const { return sqrt(averagevar()); }
     double average() const { return sum / num; }
@@ -1413,18 +1416,26 @@ public:
 };
 
 template <typename Distribution>
-class estimableriskmeasure : public riskmeasure<Distribution>
+class estimableriskmeasure : virtual public riskmeasure<Distribution>
 {
 public:
     virtual realestimate operator ()
        (const empiricaldistribution& d) const = 0;
 };
 
+template <typename Distribution>
+class parametricriskmeasure : virtual public riskmeasure<Distribution>
+{
+public:
+    virtual void setparam(double param) = 0;
+    virtual double getparam() const = 0;
+};
 
-using empriricalriskmeasure = riskmeasure<empiricaldistribution>;
+using empriricalriskmeasure = estimableriskmeasure<empiricaldistribution>;
 
 template <typename Distribution, bool negative = false>
-class MeanCVaR : public estimableriskmeasure<Distribution>
+class MeanCVaR : public estimableriskmeasure<Distribution>,
+                 public parametricriskmeasure<Distribution>
 {
 public:
     MeanCVaR(probability alpha, double lambda) : falpha(alpha),
@@ -1467,14 +1478,15 @@ public:
 
     virtual realestimate operator () (const empiricaldistribution& d) const
     {
-        statcounter sc;
+        statcounter msc, csc;
         unsigned n = d.natoms();
         assert(n);
 
-
         double p = 1-falpha;
         double s = 0;
-        for(int i = 0; i< d.natoms() ;i++)
+        double mean = 0;
+        double cvar = 0;
+        for(int i = 0; i< n;i++)
         {
             int index;
             if constexpr(negative)
@@ -1483,19 +1495,34 @@ public:
                 index = d.natoms()-1-i;
 
             double x = d.value(index);
+            msc.add(x);
+            mean += x / n;
+//            double inc = x * (1-flambda);
             double delta = std::min(1.0 / n, p-s);
-            double inc = x * (1-flambda);
             if(delta >= 0)
             {
-               inc += d.value(index) / p * delta * n * flambda;
+//               inc += d.value(index) / p * delta * n * flambda;
+               cvar+= x * delta / p;
+               csc.add(x);
                s += delta;
             }
-            sc.add(inc);
+//            sc.add(inc);
         }
-        return sc.estaverage();
+        double res = flambda * cvar + (1-flambda) * mean;
+//        assert(fabs(res - sc.average()) < 0.00000001);
+        double sd = flambda * csc.averagestdev() + (1-flambda) * msc.averagestdev();
+        return { res, sd };
+    }
+    virtual void setparam(double param)
+    {
+        flambda = param;
+    }
+    virtual double getparam() const
+    {
+        return flambda;
     }
 
-private:
+protected:
     probability falpha;
     double flambda;
 };
@@ -1507,6 +1534,14 @@ class CVaR : public MeanCVaR<Distribution, negative>
 public:
     CVaR(probability alpha) : MeanCVaR<Distribution,negative>(alpha,1)
      {}
+    virtual void setparam(double param)
+    {
+        this->falpha = param;
+    }
+    virtual double getparam() const
+    {
+        return this->falpha;
+    }
 };
 
 
