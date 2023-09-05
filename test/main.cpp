@@ -95,7 +95,7 @@ public:
         overallriskproblem<testcrit, teststatespace,
                     testactionspace, testtransition, testreward>
           (testcrit(alpha),teststatespace(), testactionspace(),
-           testtransition(pincrease), testreward(), gamma,1) {}
+           testtransition(pincrease), testreward(), gamma,1,2.0 / (1-alpha)) {}
 };
 
 
@@ -117,7 +117,7 @@ accuracytestresult testhomo(const testhomoproblem& problem,
                             const testhomoproblem::computationparams& cp
                             )
 {
-    testhomoproblem::value initV(problem,0);
+    finitevaluefunction initV(problem,0);
     auto res = problem.valueiteration(initV,accuracy,cp);
 
     return testevaluatehomo(problem, s0ind, res.p ,accuracy, cp, testiters);
@@ -131,10 +131,10 @@ void proceed(double kappa, double pincrease, double gamma,
 {
     testproblem problem(kappa,pincrease,gamma);
 
-    testproblem::heuristicresult res = problem.heuristic(s0ind,accuracy,params);
+    testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
 //std::vector<orpp::index> fv = { 0,0,0,1,1,1};
 //finitepolicy foo(fv);
-
+throw;
     if constexpr(test)
     {
         testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
@@ -189,7 +189,7 @@ void measure(int threads)
 
 int main()
 {
-    measure(10);
+//    measure(10);
     measure(0);
     return 0;
 }

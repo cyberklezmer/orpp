@@ -90,7 +90,7 @@ inline accuracytestresult testevaluatehomo(
     sys::log() << "testevaluatehomo accuracy="
                << accuracy << std::endl;
 
-    typename Problem::value initialV(problem);
+    finitevaluefunction initialV(problem);
 
     for(unsigned i=0; i<testmaxiters; i++)
     {

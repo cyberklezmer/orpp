@@ -240,6 +240,31 @@ public:
     finitepolicy(const finitepolicy& p): std::vector<index>(p) {}
 };
 
+class finitevaluefunction : public std::vector<double>, public mapping<index,double>
+{
+public:
+    double operator () (const index& i) const
+    {
+        assert(i < this->size());
+        return (*this)[i];
+    }
+    template <typename Problem>
+    finitevaluefunction(const Problem& p, double initial = 0)
+        : std::vector<double>(p.statespace().num(),initial) {}
+    finitevaluefunction(unsigned num, index initial = 0 )
+        : std::vector<double>(num,initial) {}
+};
+
+
+inline double dist(const finitevaluefunction& a, const finitevaluefunction& b)
+{
+    double d=0;
+    assert(a.size() == b.size());
+    for(unsigned i=0; i<a.size(); i++)
+        d = std::max(d, fabs(a[i]-b[i]) );
+    return d;
+}
+
 
 
 template<typename Criterion,
@@ -253,19 +278,6 @@ class finitedpproblem : public dpproblem<Criterion,Statespace,ConstrainedActionS
 public:
 //    using CritDistribution = fdistribution<double,nothing>;
 
-    class value : public std::vector<double>, public mapping<index,double>
-    {
-    public:
-        double operator () (const index& i) const
-        {
-            assert(i < this->size());
-            return (*this)[i];
-        }
-        value(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
-               Transition,Reward>& p, double initial = 0)
-            : std::vector<double>(p.fstatespace.num(),initial) {}
-    };
-
     struct computationparams
     {
         computationparams() : fmaxevaliterations(1000000),
@@ -274,16 +286,6 @@ public:
         unsigned fthreadstouse;
         unsigned fthreadbatch;
     };
-
-    static double dist(const value& a, const value& b)
-    {
-        double d=0;
-        assert(a.size() == b.size());
-        for(unsigned i=0; i<a.size(); i++)
-            d = std::max(d, fabs(a[i]-b[i]) );
-        return d;
-    }
-
 
     finitedpproblem(const Criterion& crit,
               const Statespace& state,
@@ -423,10 +425,6 @@ public:
         static_assert(std::is_base_of<nestedcriterion<typename Criterion::NestingCriterion_t>,Criterion>::value);
     }
 
-
-    using value = typename finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
-    Transition,Reward>::value;
-
     struct computationparams:
           public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
             Transition,Reward>::computationparams
@@ -440,7 +438,7 @@ public:
         viresult(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
                  Transition,Reward>& pr) : p(pr),v(pr), e(0) {}
         finitepolicy p;
-        value v;
+        finitevaluefunction v;
         double e;
     };
 
@@ -449,7 +447,7 @@ public:
                             double accuracy,
                              const computationparams& evalparams) const
     {
-        value V = params.v;
+        finitevaluefunction V = params.v;
 
         assert(V.size() == this->fstatespace.num());
 
@@ -461,7 +459,7 @@ public:
     for(unsigned k=0; k<V.size(); k++)
     std::cout << "," << V[k];
     std::cout << std::endl;*/
-            value newV(*this);
+            finitevaluefunction newV(*this);
             typename Statespace::Element_t e;
             this->fstatespace.first(e);
             for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
@@ -524,7 +522,7 @@ public:
                 newV[i] = bestv;
             }
             if(j==0)
-                error = this->dist(V,newV) / (1.0-this->fgamma) ;
+                error = dist(V,newV) / (1.0-this->fgamma) ;
             else
                error *= this->fgamma;
             V = newV;
@@ -535,7 +533,7 @@ public:
         params.e = error;
     }
 
-    viresult valueiteration(const value& initialV,
+    viresult valueiteration(const finitevaluefunction& initialV,
                             double accuracy,
                             const computationparams& evalparams) const
     {
@@ -545,8 +543,8 @@ public:
         return vr;
     }
 
-    valuewitherror<value> evaluate(
-                         const value& initialV,
+    valuewitherror<finitevaluefunction> evaluate(
+                         const finitevaluefunction& initialV,
                          finitepolicy& p,
                          double accuracy,
                          const computationparams& evalparams) const

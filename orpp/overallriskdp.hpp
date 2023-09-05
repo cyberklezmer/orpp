@@ -22,19 +22,20 @@ public:
     using Statespace_t = Statespace;
     using ConstrainedActionSpace_t = ConstrainedActionSpace;
 
-    class nestedproblem : public finitehomodpproblem<nestedcriterion<Criterion>,Statespace,ConstrainedActionSpace,
-            Transition, Reward>
+    template <typename A, typename R>
+    class nestedproblembase : public finitehomodpproblem<nestedcriterion<Criterion>,Statespace,A,
+            Transition, R>
     {
     public:
-        nestedproblem(const Criterion& crit,
+        nestedproblembase(const Criterion& crit,
                   const Statespace& state,
-                  const ConstrainedActionSpace& constraint,
+                  const A& constraint,
                   const Transition& transition,
-                  const Reward& reward,
+                  const R& reward,
                   double gamma,
                   double maxreward) :
-             finitehomodpproblem<nestedcriterion<Criterion>, Statespace,ConstrainedActionSpace,
-                              Transition,Reward>
+             finitehomodpproblem<nestedcriterion<Criterion>, Statespace,A,
+                              Transition,R>
                (crit, state, constraint, transition, reward, gamma, maxreward)
         {
             static_assert(std::is_base_of<parametricriskmeasure<ldistribution<double>>,
@@ -42,59 +43,51 @@ public:
             static_assert(std::is_base_of<iteratedspace<typename Statespace::Element_t>,Statespace>::value);
             static_assert(std::is_base_of<constrainedspace<
                               typename Statespace::Element_t,
-                              typename ConstrainedActionSpace::Element_t>,ConstrainedActionSpace>::value);
-            static_assert(std::is_base_of<finitetransition<Statespace,ConstrainedActionSpace>,Transition>::value);
-            static_assert(std::is_base_of<dpreward<Statespace,ConstrainedActionSpace>,Reward>::value);
+                              typename A::Element_t>,A>::value);
+            static_assert(std::is_base_of<finitetransition<Statespace,A>,Transition>::value);
+            static_assert(std::is_base_of<dpreward<Statespace,A>,R>::value);
         }
-        using value = typename finitedpproblem<nestedcriterion<Criterion>,
-             Statespace,ConstrainedActionSpace,Transition,Reward>::value;
-        using computationparams = typename finitehomodpproblem<nestedcriterion<Criterion>,
-           Statespace,ConstrainedActionSpace,Transition,Reward>::computationparams;
 
+//        using computationparams = typename finitehomodpproblem<nestedcriterion<Criterion>,
+//                           Statespace,ConstrainedActionSpace,Transition,Reward>::computationparams;
         void setriskaversion(double ra) { this->fcrit.nesting().setparam(ra); }
     };
+
+    using nestedproblem = nestedproblembase<ConstrainedActionSpace,Reward>;
+
 
     class onedreward : public Reward
     {
     public:
-        onedreward(std::vector<ConstrainedActionSpace>) :
-            fmaskpolicy(maskpolicy), findex(aindex) {}
+        onedreward(std::vector<double> additions) :
+            fadditions(additions) {}
         double operator() (const dpcondition<unsigned int, unsigned int>& x) const
-        { return x.a; }
+        { return Reward::operator()(x)+fadditions[x.a]; }
     private: 
-        finitepolicy fmaskpolicy;
-        index findex;
+        std::vector<double> fadditions;
     };
 
-    class nestedonedproblem : public  nestedproblem
+    class onedactionspace : public ConstrainedActionSpace
     {
     public:
-        nestedonedproblem(const Criterion& crit,
-                  const Statespace& state,
-                  const ConstrainedActionSpace& constraint,
-                  const Transition& transition,
-                  const Reward& reward,
-                  double gamma,
-                  double maxreward,
-                  const  overallriskproblem<Criterion,
-                          Statespace,ConstrainedActionSpace,Transition,Reward>& parentproblem) :
-            nestedproblem
-               (crit, state, constraint, transition, reward, gamma, maxreward),
-            factivedim(0), fparentproblem(parentproblem)
-        {
-        }
-//        using value = typename finitedpproblem<nestedcriterion<Criterion>,
-//             Statespace,ConstrainedActionSpace,Transition,Reward>::value;
-//        using computationparams = typename finitehomodpproblem<nestedcriterion<Criterion>,
-//           Statespace,ConstrainedActionSpace,Transition,Reward>::computationparams;
-
-
-        void setactivedim(index d) { factivedim = d; }
+        onedactionspace(const finitepolicy& maskpolicy, index freeindex)
+            : ffreeindex(freeindex), fmaskpolicy(maskpolicy) {}
     private:
-        index factivedim;
-        const overallriskproblem <Criterion,
-                Statespace,ConstrainedActionSpace,Transition,Reward>& fparentproblem;
+        index ffreeindex;
+        finitepolicy fmaskpolicy;
+    public:
+        virtual bool isfeasible(const typename ConstrainedActionSpace::Element_t& a,
+                                const typename Statespace::Element_t& s ) const
+        {
+            assert(s < fmaskpolicy.size());
+            if(s == ffreeindex)
+                return ConstrainedActionSpace::isfeasible(a,s);
+            else
+                return a == fmaskpolicy[s];
+        }
     };
+
+    using nestedonedproblem = nestedproblembase<onedactionspace,onedreward>;
 
 
     struct computationparams:
@@ -104,6 +97,7 @@ public:
         computationparams() : fpseudogradientmaxiters(100),
             fheuristicmaxiters(100) {}
         typename nestedproblem::computationparams fnestedparams;
+        typename nestedonedproblem::computationparams fnestedonedparams;
         unsigned fpseudogradientmaxiters;
         unsigned fheuristicmaxiters;
     };
@@ -115,7 +109,8 @@ public:
               const Transition& transition,
               const Reward& reward,
               double gamma,
-              double maxreward ) :
+              double maxreward ,
+              double rmlipshitzfactor) :
         finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
                          Transition,Reward>
           (crit, state, constraint, transition, reward, gamma, maxreward)
@@ -147,7 +142,7 @@ private:
       rmdifference(const Problem& problem,
                    const finitepolicy& policy,
                    double constant,
-                   const typename Problem::value& initvalue,
+                   const finitevaluefunction& initvalue,
                    orpp::index initindex,
                    const rmtermination& term,
                    const typename nestedproblem::computationparams& pars ):
@@ -157,7 +152,7 @@ private:
       Problem fproblem;
       finitepolicy fpolicy;
       double fconstant;
-      typename Problem::value finitvalue;
+      finitevaluefunction finitvalue;
       orpp::index finitindex;
       double faccuracy;
       typename nestedproblem::computationparams fparams;
@@ -189,7 +184,7 @@ public:
     double findiota(const nestedproblem& problem,
                     const finitepolicy& policy,
                     double constant,
-                    const typename nestedproblem::value& initvalue,
+                    const finitevaluefunction initvalue,
                     orpp::index initindex,
                     double accuracy,
                     const typename nestedproblem::computationparams& pars
@@ -248,42 +243,112 @@ public:
         double iota = this->fcrit.getparam();
 
         double valueofcrit = 0;
-        nestedproblem problem(this->fcrit,this->fstatespace,
-                              this->fconstraint,
-                              this->ftransition,this->freward,
-                              this->fgamma,
-                              this->fmaxreward);
-        finitepolicy bestp(problem);
-        typename nestedproblem::value initV(problem,0);
+        finitepolicy bestp(this->fstatespace.num());
+        finitevaluefunction initV(this->fstatespace.num(),0);
 
         double error;
         double lastvalue = 0;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
-            problem.setriskaversion(iota);
-            sys::log() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
+            nestedproblem problem(this->fcrit,
+                                  this->fstatespace,
+                                  this->fconstraint,
+                                  this->ftransition,this->freward,
+                                  this->fgamma,
+                                  this->fmaxreward);
 
-            auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
-
-            initV = vires.v;
-            bestp = vires.p;
-
-            statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
-
-            valueofcrit = this->fcrit(cs.dist).x;
-
-            if(i > 0)
+            if constexpr(gradientdescent)
             {
-                error  = valueofcrit - lastvalue;
-                if(error < accuracy)
+                if(i==0)
                 {
-                    break;
+                   sys::log() << "Initial iteration" << std::endl;
+                   problem.setriskaversion(iota);
+                   auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
+                   bestp = vires.p;
+                   initV = vires.v;
+                   statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
+                   valueofcrit = this->fcrit(cs.dist).x;
+                   iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
                 }
+
+                for(unsigned j=0; j<this->fstatespace.num(); j++)
+                {
+                    onedactionspace as(bestp,j);
+                    std::vector<double> adds;
+                    auto p = bestp;
+                    double maxadd = 0;
+                    for(index k=0; k<as.num(); k++)
+                    {
+                        if(as.isfeasible(k,j))
+                        {
+                            p[j] = k;
+                            statcounter cs = problem.evaluateraw( s0ind, {p}, accuracy / 2.0, params.fnestedparams);
+                            auto c = this->fcrit(cs.dist).x;
+
+                            auto lambda = findiota(problem,p,c,initV, s0ind, accuracy, params.fnestedparams);
+                            double addition = 2 * this->maxreward() * this->frmlipshitzfactor * (this->fcrit.getparam() - fabs(lambda-iota) );
+                            adds.push_back(addition);
+                            if(addition > maxadd)
+                                maxadd = addition;
+                        }
+                        else
+                            adds.push_back(0);
+                    }
+                    onedreward r(adds);
+                    nestedonedproblem onedproblem(this->fcrit,
+                                          this->fstatespace,
+                                          as,
+                                          this->ftransition,r,
+                                          this->fgamma,
+                                          this->fmaxreward + maxadd);
+                    onedproblem.setriskaversion(iota);
+                    sys::log() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
+
+                    auto vires = onedproblem.valueiteration(initV,accuracy/3,params.fnestedonedparams);
+
+                    initV = vires.v;
+                    bestp = vires.p;
+
+                    statcounter cs = onedproblem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedonedparams);
+                    valueofcrit = this->fcrit(cs.dist).x;
+                }
+                if(i > 0)
+                {
+                    error  = valueofcrit - lastvalue;
+                    if(error < accuracy)
+                    {
+                        break;
+                    }
+                }
+
+                lastvalue = valueofcrit;
+
+                iota = findiota(problem,bestp,valueofcrit,initV, s0ind, accuracy, params.fnestedparams);
             }
+            else //constexpr !gradientdescent
+            {
+                problem.setriskaversion(iota);
+                sys::log() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
 
-            lastvalue = valueofcrit;
+                auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
 
-            iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
+                initV = vires.v;
+                bestp = vires.p;
+
+                statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
+
+                valueofcrit = this->fcrit(cs.dist).x;
+
+                if(i > 0)
+                {
+                    error  = valueofcrit - lastvalue;
+                    if(error < accuracy)
+                        break;
+                }
+
+                lastvalue = valueofcrit;
+                iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
+            }
         }
         heuristicresult res(*this);
         res.p = bestp;
@@ -382,7 +447,8 @@ public:
         return bestv;
     }
 
-
+private:
+    double frmlipshitzfactor;
 };
 
 

@@ -1431,6 +1431,7 @@ public:
     virtual double getparam() const = 0;
 };
 
+
 using empriricalriskmeasure = estimableriskmeasure<empiricaldistribution>;
 
 template <typename Distribution, bool negative = false>
