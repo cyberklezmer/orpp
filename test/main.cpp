@@ -161,6 +161,7 @@ void measure(int threads)
     time(&start);
 
     sys::setlog(std::cout);
+    sys::setloglevel(2);
 
     double pincrease = 0.7;
     double gamma = 0.85;

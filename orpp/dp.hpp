@@ -241,6 +241,13 @@ public:
     finitepolicy(const finitepolicy& p): std::vector<index>(p) {}
 };
 
+inline std::ostream& operator<<(std::ostream& os, const finitepolicy& p)
+{
+    for(unsigned i=0; i<p.size(); i++)
+        os << p[i] << ' ';
+    return os;
+}
+
 class finitevaluefunction : public std::vector<double>, public mapping<index,double>
 {
 public:
@@ -358,10 +365,7 @@ private:
         {
             observerrecord r;
             
-            auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
-            auto epoch = now_ms.time_since_epoch();
-            auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
-            r.t = value.count();
+            r.t = sys().timems();
             r.ns = *ns;
             r.final = final;
             obs->push_back(r);
@@ -376,6 +380,14 @@ public:
                          double accuracy,
                          const computationparams& params) const
     {
+        if(sys::loglevel() >= 2)
+        {
+           sys::logline(2) << "dpproblem::evaluateraw(" << s0index
+                 << ", {";
+           for(unsigned i=0; i<p.size(); i++)
+               sys::log() << p[i] << ",";
+           sys::log() << "}, "<< accuracy<< ", ...)" << std::endl;
+        }
         unsigned timehorizon = requiredhorizon(accuracy / 2);
         statcounter sc;
         std::vector<observerrecord> obss;
@@ -435,6 +447,14 @@ if(foofoo)
                 break;
             }
         }
+
+        if(sys::loglevel() >= 2)
+        {
+           sys::logline(2) << "dpproblem::evaluateraw ended: n="
+                      << sc.num << ", stdev=" << sc.averagestdev() << std::endl;
+        }
+
+
         return sc;
     }
 

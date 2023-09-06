@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <vector>
+#include <chrono>
 #include <sstream>
 #include <random>
 #include <memory>
@@ -49,7 +50,7 @@ class sys
        return s;
     }
 public:
-    sys() : fout(0), flog(0), ferr(0), funiform(0.0,1.0)
+    sys() : fout(0), flog(0), floglevel(0), ferr(0), funiform(0.0,1.0), fstarttime(abstimems())
     {
     }
     ~sys()
@@ -76,6 +77,12 @@ public:
     static void resetlog()
     {
         self().flog=0;
+    }
+
+
+    static void setloglevel(unsigned l)
+    {
+        self().floglevel = l;
     }
 
     static void seterr(std::ostream& e)
@@ -105,6 +112,20 @@ public:
     {
         return self().flog ? *(self().flog) : std::clog;
     }
+    static std::ostream& logline(unsigned level=0)
+    {
+        log() << timems() << ",";
+        for(unsigned i=0; i<level; i++)
+        {
+           log() << "   ,";
+        }
+        return log();
+    }
+    static unsigned loglevel()
+    {
+        return self().floglevel;
+    }
+
     static std::ostream& err()
     {
         return self().ferr ? *(self().ferr) : std::cerr;
@@ -118,6 +139,19 @@ public:
     static const std::string& tmpfolder()
     {
         return self().ftmpfolder;
+    }
+
+    static unsigned abstimems()
+    {
+        auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+        auto epoch = now_ms.time_since_epoch();
+        auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+        return value.count();
+    }
+
+    static unsigned timems()
+    {
+        return abstimems() - self().fstarttime;
     }
 
     /// Resets the seed of the random generator according to computer time.
@@ -167,12 +201,14 @@ public:
 private:
     std::ostream* fout;
     std::ostream* flog;
+    unsigned floglevel;
     std::ostream* ferr;
     std::default_random_engine fengine;
     std::uniform_real_distribution<double> funiform;
     std::string foutputfolder;
     std::string ftmpfolder;
     std::vector<std::pair<std::string,std::string>> fenv;
+    unsigned fstarttime;
 };
 
 /// Heap pointer to \p T

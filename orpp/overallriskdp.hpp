@@ -220,7 +220,7 @@ public:
                 }
                 catch(...)
                 {
-                    sys::log() << std::endl << "error finding dif(iota)=0, constant=" << constant << std::endl;
+                    sys::logline() << std::endl << "error finding dif(iota)=0, constant=" << constant << std::endl;
                     const unsigned nsteps = 5;
                     for(unsigned i=0; i<=nsteps; i++)
                     {
@@ -238,7 +238,7 @@ public:
     template <bool gradientdescent=false>
     heuristicresult heuristic(index s0ind, double accuracy, const computationparams& params) const
     {
-        sys::log() << "overallriskproblem::heuristic" << std::endl;
+        sys::logline() << "overallriskproblem::heuristic" << std::endl;
 
         double iota = this->fcrit.getparam();
 
@@ -261,7 +261,7 @@ public:
             {
                 if(i==0)
                 {
-                   sys::log() << "Initial iteration" << std::endl;
+                   sys::logline() << "Initial iteration" << std::endl;
                    problem.setriskaversion(iota);
                    auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
                    bestp = vires.p;
@@ -302,7 +302,7 @@ public:
                                           this->fgamma,
                                           this->fmaxreward + maxadd);
                     onedproblem.setriskaversion(iota);
-                    sys::log() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " cirt=" << valueofcrit;
+                    sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " cirt=" << valueofcrit;
 
                     auto vires = onedproblem.valueiteration(initV,accuracy/3,params.fnestedonedparams);
 
@@ -333,7 +333,7 @@ public:
             else //constexpr !gradientdescent
             {
                 problem.setriskaversion(iota);
-                sys::log() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
+                sys::logline() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
 
                 auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
 
@@ -360,6 +360,7 @@ public:
         res.v = valueofcrit;
         res.e = accuracy;
         res.iota = iota;
+        sys::logline() << "huristic ended: ";
         res.output(sys::log());
         return res;
     }
@@ -371,7 +372,7 @@ public:
                           const computationparams& params
                            )
     {
-        sys::log() << "overallriskproblem::pseudogradientdescent" << std::endl;
+        sys::logline() << "overallriskproblem::pseudogradientdescent,";
 
         unsigned horizon = this->requiredhorizon(accuracy / 2);
 
@@ -381,22 +382,15 @@ public:
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
             std::vector<finitepolicy> bestps = ps;
-            sys::log() << "iteration " << i << " value=" << bestv.x << " ";
+            sys::logline() << "iteration " << i << " value=" << bestv.x << " ";
             for(unsigned x=0; x<ps.size(); x++)
-            {
-                for(unsigned y=0; y<ps[x].size(); y++)
-                {
-                    sys::log() << ps[x][y] << " ";
-                }
-                sys::log() << "- ";
-            }
+                sys::log() << ps[x] << ",";
             sys::log() << std::endl;
             for(unsigned j=0; j<ps.size(); j++)
             {
-                sys::log() << "time=" << j << std::endl;
+                sys::logline() << "time=" << j << std::endl;
                 for(unsigned k=0; k<ps[j].size(); k++)
                 {
-                    sys::log() << "k=" << k;
                     for(unsigned n = 0; n <= 1; n++ )
                     {
                         std::vector<finitepolicy> p = ps;
@@ -406,21 +400,19 @@ public:
                             p[j][k]++;
                         else
                             continue;
-                        for(unsigned x=0; x<ps.size(); x++)
-                        {
-                            sys::log()<< " -";
-                            for(unsigned y=0; y<ps[x].size(); y++)
-                            {
-                                sys::log() << " " << p[x][y];
-                            }
-                        }
+                        sys::logline() << "k=" << k << "," << "p:";
                         if(!this->fconstraint.isfeasible(p[j][k],k))
                         {
+                            for(unsigned x=0; x<ps.size(); x++)
+                              sys::log() <<  p[x] << ",";
                             sys::log() << " infeasible" << std::endl;
                             continue;
                         }
                         auto v = this->evaluatecrit(s0ind, p, accuracy,params);
 
+                        sys::logline();
+                        for(unsigned x=0; x<ps.size(); x++)
+                            sys::log() <<  p[x] << ",";
                         sys::log() << " = " << v.x << "(" << v.sd << ")";
 
                         if(v.x > bestv.x + bestv.sd)
