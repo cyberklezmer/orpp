@@ -131,14 +131,13 @@ void proceed(double kappa, double pincrease, double gamma,
 {
     testproblem problem(kappa,pincrease,gamma);
 
-    testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
-//std::vector<orpp::index> fv = { 0,0,0,1,1,1};
-//finitepolicy foo(fv);
-throw;
+    //testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
+std::vector<orpp::index> fv = { 0,0,0,1,1,1};
+finitepolicy foo(fv);
     if constexpr(test)
     {
-        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
-//testoverall(problem,{foo},s0ind,accuracy,testiters,params);
+//        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
+testoverall(problem,{foo},s0ind,accuracy,testiters,params);
 
 
 //        testhomoproblem hp(res.iota,pincrease,gamma);
@@ -146,11 +145,11 @@ throw;
 
 
     }
-//std::vector<finitepolicy> ps(2,foo);
-  std::vector<finitepolicy> ps(2,res.p);
+std::vector<finitepolicy> ps(2,foo);
+//  std::vector<finitepolicy> ps(2,res.p);
 
     auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
-    sys::log() << "result heuristic = " << res.v << std::endl;
+    //sys::log() << "result heuristic = " << res.v << std::endl;
     sys::log() << "result pseudo = " << resp.x << std::endl;
 }
 
@@ -166,7 +165,7 @@ void measure(int threads)
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.02;
+    double accuracy = 0.005;
     orpp::index s0ind = 1;
     unsigned testiters = 3;
 
@@ -189,7 +188,7 @@ void measure(int threads)
 
 int main()
 {
-//    measure(10);
+    measure(10);
     measure(0);
     return 0;
 }

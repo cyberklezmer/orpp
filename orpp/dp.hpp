@@ -281,7 +281,7 @@ public:
     struct computationparams
     {
         computationparams() : fmaxevaliterations(1000000),
-            fthreadstouse(0), fthreadbatch(10) {}
+            fthreadstouse(0), fthreadbatch(1000) {}
         unsigned fmaxevaliterations;
         unsigned fthreadstouse;
         unsigned fthreadbatch;
