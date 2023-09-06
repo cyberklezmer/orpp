@@ -302,12 +302,17 @@ public:
                                           this->fgamma,
                                           this->fmaxreward + maxadd);
                     onedproblem.setriskaversion(iota);
-                    sys::log() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
+                    sys::log() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " cirt=" << valueofcrit;
 
                     auto vires = onedproblem.valueiteration(initV,accuracy/3,params.fnestedonedparams);
 
+
                     initV = vires.v;
                     bestp = vires.p;
+
+                    for(unsigned i=0; i<bestp.size(); i++)
+                        sys::log() << " " << bestp[i];
+                    sys::log() << std::endl;
 
                     statcounter cs = onedproblem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedonedparams);
                     valueofcrit = this->fcrit(cs.dist).x;
