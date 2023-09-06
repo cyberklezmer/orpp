@@ -171,7 +171,7 @@ void measure(int threads)
 
     testproblem::computationparams pars;
     pars.fthreadstouse = threads;
-    pars.fthreadbatch = 100;
+    pars.fthreadbatch = 10000;
     pars.fmaxevaliterations = 2000000;
 
     proceed<false>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
@@ -189,6 +189,6 @@ void measure(int threads)
 int main()
 {
     measure(10);
-    measure(0);
+//    measure(0);
     return 0;
 }

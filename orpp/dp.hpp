@@ -4,7 +4,8 @@
 //#include "orpp/optimization.hpp"
 #include "orpp/random.hpp"
 #include <thread>
-//#include <fstream>
+#include <chrono>
+#include <fstream>
 
 namespace orpp
 {
@@ -325,8 +326,11 @@ public:
 private:
      void computepath(orpp::index s0index,
                      const std::vector<finitepolicy>& p,
-                     unsigned timehorizon, std::vector<double>* results) const
+                     unsigned timehorizon,
+                      std::vector<double>* results,
+                      unsigned* cnt) const
     {
+        *cnt = 0;
         std::vector<double>& rs = *results;
         for(unsigned n=0; n<rs.size(); n++)
         {
@@ -343,6 +347,23 @@ private:
                 discount *= this->fgamma;
             }
            rs[n] = sum;
+           (*cnt)++;
+        }
+    }
+
+    struct observerrecord { std::time_t t; std::vector<unsigned> ns; int final; };
+    void observer(std::vector<unsigned>* ns , std::vector<observerrecord>* obs, bool* semaphor, int final) const
+    {
+        for(;;)
+        {
+            std::this_thread::sleep_for (std::chrono::milliseconds(10));
+            observerrecord r;
+            r.t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            r.ns = *ns;
+            r.final = final;
+            obs->push_back(r);
+            if(*semaphor)
+                break;
         }
     }
 public:
@@ -353,12 +374,14 @@ public:
     {
         unsigned timehorizon = requiredhorizon(accuracy / 2);
         statcounter sc;
+        std::vector<observerrecord> obss;
         for(unsigned j=0;j<params.fmaxevaliterations;)
         {
             if(params.fthreadstouse==0)
             {
                 std::vector<double> sum(1);
-                computepath(s0index,p, timehorizon, &sum);
+                unsigned foocnt;
+                computepath(s0index,p, timehorizon, &sum,&foocnt);
                 sc.add(sum[0]);
                 j++;
             }
@@ -366,20 +389,46 @@ public:
             {
                 std::vector<std::thread> ts;
                 std::vector<std::vector<double>> rs(params.fthreadstouse,std::vector<double>(params.fthreadbatch));
+                std::vector<unsigned> ns(params.fthreadstouse,0);
+
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     ts.push_back(std::thread(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
-                                 Transition,Reward>::computepath,
-                                 this, s0index,p, timehorizon, &rs[k]));
+                                    Transition,Reward>::computepath,
+                                 this, s0index,p, timehorizon, &rs[k], &ns[k]));
+                bool semaphor = false;
+                std::thread obst(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
+                                 Transition,Reward>::observer,this,
+                                 &ns,&obss, &semaphor, 0
+                                 );
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     ts[k].join();
+                semaphor = true;
+                obst.join();
+                observer(&ns,&obss, &semaphor, 1);
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     for(unsigned n=0; n<params.fthreadbatch; n++)
                        sc.add(rs[k][n]);
                 j+=params.fthreadstouse * params.fthreadbatch;
-             }
+            }
 
             if(j>10 && sc.averagestdev() < accuracy / 4)
+            {
+static bool foofoo = true;
+if(foofoo)
+{
+    std::ofstream s("loglog.csv");
+    for(unsigned i=0; i<obss.size(); i++)
+    {
+        s << obss[i].t << "," << obss[i].final;
+        for(unsigned j=0; j<obss[i].ns.size(); j++)
+            s << "," << obss[i].ns[j];
+        s << std::endl;
+    }
+    s << "totalsc," << sc.num << std::endl;
+    foofoo = false;
+}
                 break;
+            }
         }
         return sc;
     }
