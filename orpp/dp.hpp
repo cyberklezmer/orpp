@@ -356,14 +356,18 @@ private:
     {
         for(;;)
         {
-            std::this_thread::sleep_for (std::chrono::milliseconds(10));
             observerrecord r;
-            r.t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            
+            auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
+            auto epoch = now_ms.time_since_epoch();
+            auto value = std::chrono::duration_cast<std::chrono::milliseconds>(epoch);
+            r.t = value.count();
             r.ns = *ns;
             r.final = final;
             obs->push_back(r);
             if(*semaphor)
                 break;
+            std::this_thread::sleep_for (std::chrono::milliseconds(10));
         }
     }
 public:
@@ -425,6 +429,7 @@ if(foofoo)
         s << std::endl;
     }
     s << "totalsc," << sc.num << std::endl;
+    s << "horizon," << timehorizon << std::endl;
     foofoo = false;
 }
                 break;
