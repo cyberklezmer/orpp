@@ -350,6 +350,7 @@ private:
                 c.s = this->fstatespace[sindex];
                 c.a = i<p.size() ? p[i][sindex] : p[p.size()-1][sindex];
                 sum += discount * this->freward(c);
+//sindex = n % 5;//    
                 sindex = this->ftransition.draw(c);
                 discount *= this->fgamma;
             }

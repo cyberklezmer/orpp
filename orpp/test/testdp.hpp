@@ -30,12 +30,11 @@ inline accuracytestresult testevaluate(
                      )
 {
     accuracytestresult res;
-    sys::log() << "testevaluate accuracy="
+    sys::logline() << "testevaluate accuracy="
                << accuracy << std::endl;
     res.maxiterswarning = false;
     for(unsigned i=0; i<testmaxiters; i++)
     {
-        sys::log() << "Iteration " << i << " ";
         double r;
         double e;
         unsigned num;
@@ -59,6 +58,7 @@ inline accuracytestresult testevaluate(
         res.details.add(r);
         res.errors.add(e);
         double acc = sqrt(res.details.varstdev());
+        sys::logline() << "Iteration " << i << " ";
         sys::log() << " value=" << r << "(" << e << ")"
                       << " n=" << num <<
                       " err=" << res.details.stdev()
@@ -67,7 +67,7 @@ inline accuracytestresult testevaluate(
             break;
     }
     res.requiredaccuracy=accuracy;
-    sys::log() << "Result: required=" << res.requiredaccuracy
+    sys::logline() << "Result: required=" << res.requiredaccuracy
                << " reported=" << res.errors.average()
                << " acquired=" << res.details.stdev()
                << "(" << sqrt(res.details.varstdev())

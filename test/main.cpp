@@ -166,13 +166,13 @@ void measure(int threads)
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.001;
+    double accuracy = 0.003;
     orpp::index s0ind = 1;
-    unsigned testiters = 3;
+    unsigned testiters = 1;
 
     testproblem::computationparams pars;
     pars.fthreadstouse = threads;
-    pars.fthreadbatch = 3000;
+    pars.fthreadbatch = 10000;
     pars.fmaxevaliterations = 2000000;
 
     proceed<true>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
