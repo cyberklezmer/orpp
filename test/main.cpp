@@ -145,12 +145,12 @@ testoverall(problem,{foo},s0ind,accuracy,testiters,params);
 
 
     }
-std::vector<finitepolicy> ps(2,foo);
+//std::vector<finitepolicy> ps(2,foo);
 //  std::vector<finitepolicy> ps(2,res.p);
 
-    auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
+//    auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
     //sys::log() << "result heuristic = " << res.v << std::endl;
-    sys::log() << "result pseudo = " << resp.x << std::endl;
+//    sys::log() << "result pseudo = " << resp.x << std::endl;
 }
 
 
@@ -165,16 +165,16 @@ void measure(int threads)
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.01;
+    double accuracy = 0.001;
     orpp::index s0ind = 1;
     unsigned testiters = 3;
 
     testproblem::computationparams pars;
     pars.fthreadstouse = threads;
-    pars.fthreadbatch = 10000;
+    pars.fthreadbatch = 3000;
     pars.fmaxevaliterations = 2000000;
 
-    proceed<false>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
+    proceed<true>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
 
     time(&end);
 
@@ -188,7 +188,7 @@ void measure(int threads)
 
 int main()
 {
-    measure(10);
+    measure(40);
     measure(0);
     return 0;
 }
