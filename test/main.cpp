@@ -189,7 +189,7 @@ void measure(int threads)
 
 int main()
 {
-    measure(40);
+    measure(10);
     measure(0);
     return 0;
 }
