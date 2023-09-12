@@ -50,7 +50,8 @@ class sys
        return s;
     }
 public:
-    sys() : fout(0), flog(0), floglevel(0), ferr(0), funiform(0.0,1.0), fstarttime(abstimems())
+    sys() : fout(0), flog(0), floglevel(0), ferr(0), funiform(0.0,1.0),
+        fstarttime(abstimems()), flastlinetime(0)
     {
     }
     ~sys()
@@ -114,10 +115,12 @@ public:
     }
     static std::ostream& logline(unsigned level=0)
     {
-        log() << timems() << ",";
+        auto tm = timems();
+        log() << timems() << "," << tm - self().flastlinetime << ",";
+        self().flastlinetime = tm;
         for(unsigned i=0; i<level; i++)
         {
-           log() << "   ,";
+           log() << ",";
         }
         return log();
     }
@@ -141,6 +144,11 @@ public:
         return self().ftmpfolder;
     }
 
+    static unsigned timems()
+    {
+        return abstimems() - self().fstarttime;
+    }
+
     static unsigned abstimems()
     {
         auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
@@ -149,10 +157,6 @@ public:
         return value.count();
     }
 
-    static unsigned timems()
-    {
-        return abstimems() - self().fstarttime;
-    }
 
     /// Resets the seed of the random generator according to computer time.
     static void seed()
@@ -209,6 +213,7 @@ private:
     std::string ftmpfolder;
     std::vector<std::pair<std::string,std::string>> fenv;
     unsigned fstarttime;
+    unsigned flastlinetime;
 };
 
 /// Heap pointer to \p T

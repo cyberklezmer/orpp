@@ -1357,26 +1357,55 @@ private:
 /// \addtogroup Samples
 /// @{
 
-
+//template <bool autosort=false>
 class empiricaldistribution : public equipdistribution<double, true>
 {
 public:
     empiricaldistribution()
-        : equipdistribution<double, true> (std::vector<double>(),true)
+        : equipdistribution<double, true> (std::vector<double>(),true), fsorted(true)
     {
     }
 
     empiricaldistribution(const std::vector<double>& values)
-        : equipdistribution<double, true> (values,true)
+        : equipdistribution<double, true> (values,true), fsorted(false)
     {
+//        static_assert(!autosort);
     }
     void add(double v)
     {
-        auto insertionPos = std::lower_bound(values().begin(), values().end(), v);
-        values().insert(insertionPos, v);
+//        if constexpr(autosort)
+//        {
+//            auto insertionPos = std::lower_bound(values().begin(), values().end(), v);
+//            values().insert(insertionPos, v);
+//        }
+//        else
+        {
+            values().push_back(v);
+            fsorted = false;
+        }
     }
-    double value(unsigned i) const { return (*this)(i).x; }
+    void sort()
+    {
+        std::sort(values().begin(),values().end());
+    }
+    double value(unsigned i)
+    {
+        if(fsorted)
+        {
+            sort();
+            fsorted = true;
+        }
+        return (*this)(i).x;
+    }
+    double value(unsigned i) const
+    {
+        if(fsorted)
+            throw exception("Empirical distribution not sorted");
+        return (*this)(i).x;
+    }
     double p() const { return 1.0 / (*this).natoms(); }
+private:
+    bool fsorted;
 };
 
 struct statcounter

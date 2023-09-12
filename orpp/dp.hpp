@@ -408,24 +408,37 @@ public:
                 std::vector<std::vector<double>> rs(params.fthreadstouse,std::vector<double>(params.fthreadbatch));
                 std::vector<unsigned> ns(params.fthreadstouse,0);
 
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Starting creating threads" << std::endl;
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     ts.push_back(std::thread(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
                                     Transition,Reward>::computepath,
                                  this, s0index,p, timehorizon, &rs[k], &ns[k]));
                 bool semaphor = false;
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Starting the observing thread" << std::endl;
                 std::thread obst(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
                                  Transition,Reward>::observer,this,
                                  &ns,&obss, &semaphor, 0
                                  );
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Join threads" << std::endl;
+
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     ts[k].join();
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Join observer" << std::endl;
                 semaphor = true;
                 obst.join();
                 observer(&ns,&obss, &semaphor, 1);
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Adding results" << std::endl;
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     for(unsigned n=0; n<params.fthreadbatch; n++)
                        sc.add(rs[k][n]);
                 j+=params.fthreadstouse * params.fthreadbatch;
+                if(sys::loglevel() >= 3)
+                    sys::logline(3) << "End fo loop" << std::endl;
             }
 
             if(j>10 && sc.averagestdev() < accuracy / 4)
@@ -449,13 +462,15 @@ if(foofoo)
             }
         }
 
+
+        if(sys::loglevel() >= 3)
+           sys::logline(3) << "Starting sort the distribution" << std::endl;
+        sc.dist.sort();
         if(sys::loglevel() >= 2)
         {
            sys::logline(2) << "dpproblem::evaluateraw ended: n="
                       << sc.num << ", stdev=" << sc.averagestdev() << std::endl;
         }
-
-
         return sc;
     }
 
