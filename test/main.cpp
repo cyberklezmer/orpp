@@ -131,9 +131,9 @@ void proceed(double kappa, double pincrease, double gamma,
 {
     testproblem problem(kappa,pincrease,gamma);
 
-    testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
-//std::vector<orpp::index> fv = { 0,0,0,1,1,1};
-//finitepolicy foo(fv);
+   testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
+std::vector<orpp::index> fv = { 0,0,0,1,1,1};
+finitepolicy foo(fv);
     if constexpr(test)
     {
 //        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
@@ -146,10 +146,10 @@ void proceed(double kappa, double pincrease, double gamma,
 
     }
 //std::vector<finitepolicy> ps(2,foo);
-//  std::vector<finitepolicy> ps(2,res.p);
+//    std::vector<finitepolicy> ps(2,res.p);
 
-//    auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
-    //sys::log() << "result heuristic = " << res.v << std::endl;
+    //auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
+//    sys::log() << "result heuristic = " << res.v << std::endl;
 //    sys::log() << "result pseudo = " << resp.x << std::endl;
 }
 
@@ -160,17 +160,18 @@ void measure(int threads)
 
     time(&start);
 
-
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.003;
+    double accuracy = 0.01;
     orpp::index s0ind = 1;
     unsigned testiters = 1;
 
     testproblem::computationparams pars;
-    pars.fthreadstouse = threads;
-    pars.fthreadbatch = 10000;
+    pars.fthreadstouse = pars.fnestedonedparams.fthreadstouse
+            = pars.fnestedparams.fthreadstouse = threads;
+    pars.fthreadbatch = pars.fnestedonedparams.fthreadbatch
+            = pars.fnestedparams.fthreadbatch = 3000;
     pars.fmaxevaliterations = 2000000;
 
     proceed<false>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
@@ -188,8 +189,9 @@ void measure(int threads)
 int main()
 {
     sys::setlog(std::cout);
-    sys::setloglevel(3);
-    measure(10);
+    sys::setloglevel(0);
+    measure(48);
     measure(0);
     return 0;
 }
+

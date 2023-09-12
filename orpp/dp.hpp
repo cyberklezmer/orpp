@@ -394,7 +394,7 @@ public:
         std::vector<observerrecord> obss;
         for(unsigned j=0;j<params.fmaxevaliterations;)
         {
-            if(params.fthreadstouse==0)
+            if(params.fthreadstouse <= 1)
             {
                 std::vector<double> sum(1);
                 unsigned foocnt;
@@ -531,12 +531,89 @@ public:
         finitevaluefunction v;
         double e;
     };
+private:
+    template <bool optimize>
+    void foo() const {}
+
+
+    template <bool optimize>
+    void evaluatestates(const std::vector<typename Statespace::Element_t>& es,
+                        const finitevaluefunction& V,
+                        std::vector<typename ConstrainedActionSpace::Element_t*> actions,
+                         std::vector<double*> res) const
+    {
+        assert(actions.size() == es.size());
+        assert(actions.size() == res.size());
+
+        for(unsigned i=0; i<es.size(); i++)
+        {
+            typename Statespace::Element_t e = es[i];
+            dpcondition<unsigned int,unsigned int> c;
+            typename ConstrainedActionSpace::Element_t a;
+            double bestv = minfinity<double>;
+            if constexpr(optimize)
+            {
+               if(!this->fconstraint.firstfeasible(a,e))
+                   throw exception("At least one feasible value missing in value iteration");
+            }
+            else
+            {
+                a = *(actions[i]);
+        #ifndef NDEBUG
+                if(!this->fconstraint.feasible(a,e))
+                    throw exception("Cannot evaluate an infeasible policy.");
+        #endif
+            }
+            for(index k=0; ; k++)
+            {
+                c.s = e;
+                // assert(i < p.size());
+                c.a = a; // p[i];
+                double r =  this->freward(c);
+                std::vector<atom<double>> atoms;
+                for(unsigned k=0; k<this->ftransition.natoms(c); k++)
+                {
+                    atom<typename Transition::I_t> a =
+                          this->ftransition(k,c);
+                    assert(a.x == k);
+                    atom<double> newa = {this->fgamma*V[k]+r,a.p};
+
+                    atoms.push_back(newa);
+                }
+                std::sort(atoms.begin(), atoms.end(), atom<double>::comparator);
+
+                ldistribution<double> d(atoms, false, true);
+                //newV[i]=this->fcrit(d,nothing());
+                const auto& crit = this->fcrit.nesting();
+                double x = crit(d,nothing());
+                if constexpr(optimize)
+                {
+                    if(x > bestv)
+                    {
+                        bestv = x;
+                        *(actions[i]) = a;
+                    }
+                    if(!this->fconstraint.nextfeasible(a,e))
+                        break;
+                }
+                else
+                {
+                    bestv = x;
+                    break;
+                }
+            }
+            *(res[i]) = bestv;
+        }
+    }
+public:
 
     template <bool optimize>
     void iterate(viresult& params,
                             double accuracy,
                              const computationparams& evalparams) const
     {
+        if(sys::loglevel()>=1)
+            sys::logline(1) << "finitehomodpproblem::iterate<" << optimize << ">" << std::endl;
         finitevaluefunction V = params.v;
 
         assert(V.size() == this->fstatespace.num());
@@ -552,64 +629,66 @@ public:
             finitevaluefunction newV(*this);
             typename Statespace::Element_t e;
             this->fstatespace.first(e);
-            for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
+            if(evalparams.fthreadstouse <= 1)
             {
-                dpcondition<unsigned int,unsigned int> c;
-                typename ConstrainedActionSpace::Element_t a;
-                double bestv = minfinity<double>;
-                if constexpr(optimize)
+                for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
                 {
-                   if(!this->fconstraint.firstfeasible(a,e))
-                       throw exception("At least one feasible value missing in value iteration");
+                    //std::vector<typename Statespace::Element_t>
+                    evaluatestates<optimize>({e}, V, {&(params.p[i])}, {&(newV[i])});
                 }
-                else
-                {
-                    a = params.p[i];
-#ifndef NDEBUG
-                    if(!this->fconstraint.feasible(a,e))
-                        throw exception("Cannot evaluate an infeasible policy.");
-#endif
-                }
-                for(index k=0; ; k++)
-                {
-                    c.s = e;
-                    // assert(i < p.size());
-                    c.a = a; // p[i];
-                    double r =  this->freward(c);
-                    double v=0;
-                    std::vector<atom<double>> atoms;
-                    for(unsigned k=0; k<this->ftransition.natoms(c); k++)
-                    {
-                        atom<typename Transition::I_t> a =
-                              this->ftransition(k,c);
-                        assert(a.x == k);
-                        atom<double> newa = {this->fgamma*V[k]+r,a.p};
+            }
+            else
+            {
+                auto nt = std::min(evalparams.fthreadstouse,
+                                   static_cast<unsigned>(V.size()));
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Number of threads actually used: " << nt << std::endl;
 
-                        auto insertionPos = std::lower_bound(atoms.begin(), atoms.end(), newa,
-                                                         atom<double>::comparator);
-                        atoms.insert(insertionPos, newa);
-                    }
-                    ldistribution<double> d(atoms, false, true);
-                    //newV[i]=this->fcrit(d,nothing());
-                    const auto& crit = this->fcrit.nesting();
-                    double x = crit(d,nothing());
-                    if constexpr(optimize)
-                    {
-                        if(x > bestv)
-                        {
-                            bestv = x;
-                            params.p[i]= a;
-                        }
-                        if(!this->fconstraint.nextfeasible(a,e))
-                            break;
-                    }
-                    else
-                    {
-                        bestv = x;
-                        break;
-                    }
+                std::vector<std::vector<typename Statespace::Element_t>>
+                        ss(nt);
+                std::vector<std::vector<typename ConstrainedActionSpace::Element_t*>>
+                        aptrs(nt);
+                std::vector<std::vector<double*>> vptrs(nt);
+                unsigned k = 0;
+                for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
+                {
+                    ss[k].push_back(e);
+                    aptrs[k].push_back(&(params.p[i]));
+                    vptrs[k].push_back(&(newV[i]));
+                    if(++k == nt)
+                        k=0;
                 }
-                newV[i] = bestv;
+                std::vector<std::thread> ts;
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Starting creating threads" << std::endl;
+                for(unsigned k=0; k<nt; k++)
+/*ts.push_back(std::thread(&finitehomodpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                                             Transition,Reward>::foo<optimize>,
+                                             this));*/
+                    ts.push_back(std::thread(&finitehomodpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                                             Transition,Reward>::evaluatestates<optimize>,
+                                             this, ss[k], V,
+                                             aptrs[k],
+                                             vptrs[k]));
+//                bool semaphor = false;
+//                if(sys::loglevel() >= 3)
+//                   sys::logline(3) << "Starting the observing thread" << std::endl;
+//                std::thread obst(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
+//                                 Transition,Reward>::observer,this,
+//                                 &ns,&obss, &semaphor, 0
+//                                 );
+                if(sys::loglevel() >= 3)
+                   sys::logline(3) << "Join threads" << std::endl;
+
+                for(unsigned k=0; k<nt; k++)
+                    ts[k].join();
+//                if(sys::loglevel() >= 3)
+//                   sys::logline(3) << "Join observer" << std::endl;
+//                semaphor = true;
+//                obst.join();
+//                observer(&ns,&obss, &semaphor, 1);
+                if(sys::loglevel() >= 3)
+                    sys::logline(3) << "End fo thread loop" << std::endl;
             }
             if(j==0)
                 error = dist(V,newV) / (1.0-this->fgamma) ;
@@ -621,6 +700,8 @@ public:
         }
         params.v = V;
         params.e = error;
+        if(sys::loglevel()>=1)
+            sys::logline(1) << "end of finitehomodpproblem::iterate<" << optimize << ">" << std::endl;
     }
 
     viresult valueiteration(const finitevaluefunction& initialV,
@@ -654,3 +735,4 @@ public:
 } // namespace
 
 #endif // DP_HPP
+

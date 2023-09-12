@@ -435,7 +435,9 @@ public:
                     break;
                 }
             }
-            if(!differs)
+            if(!differs 
+&& i > 3            
+            )
                 return bestv;
             ps = bestps;
 
