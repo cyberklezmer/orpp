@@ -131,13 +131,13 @@ void proceed(double kappa, double pincrease, double gamma,
 {
     testproblem problem(kappa,pincrease,gamma);
 
-    //testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
-std::vector<orpp::index> fv = { 0,0,0,1,1,1};
-finitepolicy foo(fv);
+    testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
+//std::vector<orpp::index> fv = { 0,0,0,1,1,1};
+//finitepolicy foo(fv);
     if constexpr(test)
     {
 //        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
-testoverall(problem,{foo},s0ind,accuracy,testiters,params);
+// testoverall(problem,{foo},s0ind,accuracy,testiters,params);
 
 
 //        testhomoproblem hp(res.iota,pincrease,gamma);
@@ -173,7 +173,7 @@ void measure(int threads)
     pars.fthreadbatch = 10000;
     pars.fmaxevaliterations = 2000000;
 
-    proceed<true>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
+    proceed<false>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
 
     time(&end);
 
