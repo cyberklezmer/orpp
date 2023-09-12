@@ -109,7 +109,18 @@ accuracytestresult testoverall(const testproblem& problem,
     return testevaluate<false>(problem, s0ind, ps ,accuracy, params, testiters);
 }
 
-using testhomoproblem = typename testproblem::nestedproblem;
+class testhomoproblem: public testproblem::nestedproblem
+{
+public:
+    testhomoproblem(double iota, double pincrease, double gamma) :
+//        overallriskproblem<testcrit, teststatespace,
+//                    testactionspace, testtransition, testreward>
+          testproblem::nestedproblem(testcrit(iota),teststatespace(), testactionspace(),
+           testtransition(pincrease), testreward(), gamma,1)
+    {
+
+    }
+};
 
 accuracytestresult testhomo(const testhomoproblem& problem,
                             double accuracy, orpp::index s0ind,
@@ -139,10 +150,8 @@ void proceed(double kappa, double pincrease, double gamma,
 //        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
 // testoverall(problem,{foo},s0ind,accuracy,testiters,params);
 
-
-//        testhomoproblem hp(res.iota,pincrease,gamma);
+//        testhomoproblem hp(//res.iota, pincrease,gamma);
 //        testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
-
 
     }
 //std::vector<finitepolicy> ps(2,foo);
@@ -160,20 +169,21 @@ void measure(int threads)
 
     time(&start);
 
-
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.003;
+    double accuracy = 0.03;
     orpp::index s0ind = 1;
-    unsigned testiters = 1;
+    unsigned testiters = 10;
 
     testproblem::computationparams pars;
-    pars.fthreadstouse = threads;
-    pars.fthreadbatch = 10000;
+    pars.fthreadstouse = pars.fnestedonedparams.fthreadstouse
+            = pars.fnestedparams.fthreadstouse = threads;
+    pars.fthreadbatch = pars.fnestedonedparams.fthreadbatch
+            = pars.fnestedparams.fthreadbatch = 10000;
     pars.fmaxevaliterations = 2000000;
 
-    proceed<false>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
+    proceed<true>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
 
     time(&end);
 
@@ -188,8 +198,8 @@ void measure(int threads)
 int main()
 {
     sys::setlog(std::cout);
-    sys::setloglevel(3);
-    measure(10);
+    sys::setloglevel(0);
     measure(0);
+    measure(40);
     return 0;
 }
