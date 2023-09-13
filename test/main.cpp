@@ -203,11 +203,11 @@ void examine(double kappa, double gamma, std::ostream& report)
 
 
     report << vires.p << ","
-           << vires.v[s0ind] << ",,"
+           << vires.v[s0ind] << ","
            << eend - hend << ",";
 
     // Calculating total time taken by the program.
-    double time_taken = double(tstart - eend) / 1000.0;
+    double time_taken = (eend - tstart) / 1000.0;
     sys::logline() << "Time taken by program is : " << std::fixed
         << time_taken << std::setprecision(5);
     sys::log() << " sec " << std::endl;

@@ -246,7 +246,7 @@ inline std::ostream& operator<<(std::ostream& os, const finitepolicy& p)
     for(unsigned i=0; ; i++)
     {
         os << p[i];
-        if(i<p.size()-1)
+        if(i==p.size()-1)
             break;
         os << ' ';
     }
