@@ -156,11 +156,10 @@ void test(double kappa, double pincrease, double gamma,
 }
 
 
-void examine(double kappa, double gamma, std::ostream& report)
+void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
 {
 
     double pincrease = 0.7;
-    double accuracy = 0.05;
     orpp::index s0ind = 1;
     unsigned testiters = 10;
 
@@ -173,7 +172,7 @@ void examine(double kappa, double gamma, std::ostream& report)
 
     testproblem problem(kappa,pincrease,gamma);
 
-    report << kappa << "," << gamma << ",";
+    report << kappa << "," << gamma << "," << accuracy << ",;
 
     unsigned tstart = sys::timems();
     testproblem::heuristicresult gdres = problem.heuristic<true>(s0ind,accuracy,pars);
@@ -218,11 +217,12 @@ int main()
 {
     sys::setlog(std::cout);
     sys::setloglevel(0);
-    std::ofstream report("report.csv");
+//    std::ofstream report("report.csv");
     if(!report)
         throw exception("Cannot open report.csv");
-    report << "kappa,gamma,"
-           << "gdpolicy,gdcrit,gdlambda,gdtime,"
+   std::ostringstream report;
+   report << "kappa,gamma,"
+           << "gdpolicy,gdcrit,accuracygdlambda,gdtime,"
            << "hpolicy,hcrit,hlambda,htime,"
            << "epolicy,ecrit,etime,"
            << "pgpolicy,pgcrit,pgtime" << std::endl;
@@ -230,7 +230,8 @@ int main()
      std::vector<double> kappas = { 0.6, 0.75, 0.9 };
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
-    examine(kappas[1],gammas[1], report);
+    examine(kappas[2],gammas[1], 0.05, report);
+    std::cout << report.str() << std::endl;
     return 0;
 }
 
