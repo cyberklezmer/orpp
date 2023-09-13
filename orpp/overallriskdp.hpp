@@ -363,7 +363,13 @@ public:
         return res;
     }
 
-    valuewitherror<double> pseudogradientdescent(
+    struct pgdresult
+    {
+        valuewitherror<double> v;
+        std::vector<finitepolicy> ps;
+    };
+
+    pgdresult pseudogradientdescent(
                           orpp::index s0ind,
                           std::vector<finitepolicy>& ps,
                           double accuracy,
@@ -377,9 +383,9 @@ public:
         sys::log() << "Required horizon: " << horizon << std::endl;
         auto bestv = this->evaluatecrit(s0ind, ps, accuracy,params);
 
+        std::vector<finitepolicy> bestps = ps;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
-            std::vector<finitepolicy> bestps = ps;
             sys::logline() << "iteration " << i << " value=" << bestv.x << " ";
             for(unsigned x=0; x<ps.size(); x++)
                 sys::log() << ps[x] << ",";
@@ -433,12 +439,14 @@ public:
                 }
             }
             if(!differs)
-                return bestv;
-            ps = bestps;
+                break;
 
             sys::log() << "bestv=" << bestv.x << std::endl;
         }
-        return bestv;
+        pgdresult res;
+        res.ps = bestps;
+        res.v = bestv;
+        return res;
     }
 
 private:
