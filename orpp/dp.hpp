@@ -658,6 +658,7 @@ public:
                     if(++k == nt)
                         k=0;
                 }
+
                 std::vector<std::thread> ts;
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting creating threads" << std::endl;
