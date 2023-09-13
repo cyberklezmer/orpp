@@ -213,7 +213,7 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
             break;
         report << "-";
     }
-    report << respg.v.x << "," << pgend - eend; ;
+    report << "," <<respg.v.x << "," << pgend - eend; ;
 
 
     // Calculating total time taken by the program.
