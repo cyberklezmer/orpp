@@ -352,6 +352,11 @@ private:
                 sum += discount * this->freward(c);
 //sindex = n % 5;//    
                 sindex = this->ftransition.draw(c);
+                if(sindex >= p[0].size())
+                {
+                    std::cerr << "natoms: " << this->ftransition.natoms(c) << std::endl;
+                    throw;
+                }
                 discount *= this->fgamma;
             }
            rs[n] = sum;
@@ -658,6 +663,7 @@ public:
                     if(++k == nt)
                         k=0;
                 }
+
                 std::vector<std::thread> ts;
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting creating threads" << std::endl;
@@ -735,3 +741,4 @@ public:
 } // namespace
 
 #endif // DP_HPP
+

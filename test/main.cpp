@@ -22,8 +22,8 @@ public:
 class teststatespace : public integerspace
 {
 public:
-    static constexpr int nstates = 5;
-    teststatespace() : integerspace(0,nstates) {}
+    static constexpr int nstates = 10;
+    teststatespace() : integerspace(0,nstates-1) {}
 };
 
 class testreward : public dpreward<teststatespace, testactionspace>
@@ -39,12 +39,15 @@ public:
     testtransition(probability ap) : fp(ap) {}
 private:
     virtual unsigned natoms_is(const dpcondition<unsigned int,unsigned int>&) const
-    { return teststatespace::nstates+1; }
+    { return teststatespace::nstates; }
     virtual atom<unsigned int> atom_is(unsigned int i, const dpcondition<unsigned int,unsigned int>& c) const
     {
+        assert(i < teststatespace::nstates);
+        assert(c.s < teststatespace::nstates);
 //std::cout << "atom " << i << " = ";
         assert(!(c.s == 0 && c.a==1));
-
+        assert(c.a <= 1);
+        assert(i < teststatespace::nstates);
         auto s = c.s - c.a;
         if(s==0)
         {
@@ -55,32 +58,23 @@ private:
         }
         if(i < s)
             return {i, 0};
-        int bincensorship = teststatespace::nstates - s;
-        assert(bincensorship>=0);
+        if(i > 2 * s)
+            return {i, 0};
+
+//        int bincensorship = teststatespace::nstates - 1 - s;
+//        assert(bincensorship>=0);
         boost::math::binomial d(s,fp);
-        unsigned int bini = i - s;
-        if(bini<bincensorship)
-        {
-            assert(i<=teststatespace::nstates);
-            if(bini <= s)
-                return { i,  boost::math::pdf( d, bini ) };
-            else
-                return { i, 0 };
-        }
-        else if(bini==bincensorship)
-        {
-            double p = 0;
-            for(int j=bincensorship; j<=s; j++)
-                p +=  boost::math::pdf( d, j);
-//std::cout << ""
-            assert(i<=teststatespace::nstates);
-            return { i, p };
-//std::cout << "i=" << i << " p=" << p << std::endl;
-        }
+        if(i < teststatespace::nstates - 1)
+            return { i,  boost::math::pdf( d, i - s ) };
         else
-            return { i ,0};
+        {
+            assert(i == teststatespace::nstates - 1);
+            double p = 0;
+            for(int j=i-s; j<=s; j++)
+                p +=  boost::math::pdf( d, j);
+            return { i, p };
+        }
     }
-    virtual unsigned int natoms_is(const dpcondition<int,int>&) const { return teststatespace::nstates +1; };
     virtual bool is_sorted() const { return true; }
     probability fp;
 };
@@ -135,17 +129,16 @@ accuracytestresult testhomo(const testhomoproblem& problem,
 }
 
 
-accuracytestresult testhomotime(const testhomoproblem& problem,
+void testhomotime(const testhomoproblem& problem,
                             double accuracy, orpp::index s0ind,
                             unsigned testiters,
                             const testhomoproblem::computationparams& cp
                             )
 {
     finitevaluefunction initV(problem,0);
-    for(unsigned i=0; i<100; i++)
-    problem.valueiteration(initV,accuracy,cp);
+    for(unsigned i=0; i<10; i++)
+       problem.valueiteration(initV,accuracy,cp);
 }
-
 
 
 template <bool test>
@@ -154,13 +147,11 @@ void proceed(double kappa, double pincrease, double gamma,
              unsigned testiters,
              const testproblem::computationparams& params)
 {
-
-
-//    testproblem problem(kappa,pincrease,gamma);
+   testproblem problem(kappa,pincrease,gamma);
 
 // testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
-//std::vector<orpp::index> fv = { 0,0,0,1,1,1};
-//finitepolicy foo(fv);
+std::vector<orpp::index> fv = { 0,0,0,1,1,1,1,1,1,1};
+finitepolicy foo(fv);
     if constexpr(test)
     {
 //        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
@@ -172,13 +163,17 @@ void proceed(double kappa, double pincrease, double gamma,
 
     testhomoproblem hp(0.4, pincrease,gamma);
         testhomotime(hp,accuracy,s0ind,testiters,params.fnestedparams);
-
-
-    }
 //std::vector<finitepolicy> ps(2,foo);
 //    std::vector<finitepolicy> ps(2,res.p);
 
     //auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
+     
+
+    }
+std::vector<finitepolicy> ps(2,foo);
+//    std::vector<finitepolicy> ps(2,res.p);
+
+  auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
 //    sys::log() << "result heuristic = " << res.v << std::endl;
 //    sys::log() << "result pseudo = " << resp.x << std::endl;
 }
@@ -193,7 +188,7 @@ void measure(int threads)
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.003;
+    double accuracy = 0.03;
     orpp::index s0ind = 1;
     unsigned testiters = 10;
 
@@ -220,7 +215,8 @@ int main()
 {
     sys::setlog(std::cout);
     sys::setloglevel(0);
-    measure(40);
-    //measure(0);
+    // measure(40);
+    measure(0);
     return 0;
 }
+

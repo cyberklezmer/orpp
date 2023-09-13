@@ -410,7 +410,6 @@ public:
                         }
                         auto v = this->evaluatecrit(s0ind, p, accuracy,params);
 
-                        sys::logline();
                         for(unsigned x=0; x<ps.size(); x++)
                             sys::log() <<  p[x] << ",";
                         sys::log() << " = " << v.x << "(" << v.sd << ")";
