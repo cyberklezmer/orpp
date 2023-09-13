@@ -243,8 +243,13 @@ public:
 
 inline std::ostream& operator<<(std::ostream& os, const finitepolicy& p)
 {
-    for(unsigned i=0; i<p.size(); i++)
-        os << p[i] << ' ';
+    for(unsigned i=0; ; i++)
+    {
+        os << p[i];
+        if(i<p.size()-1)
+            break;
+        os << ' ';
+    }
     return os;
 }
 

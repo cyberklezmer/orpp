@@ -141,73 +141,76 @@ void testhomotime(const testhomoproblem& problem,
 }
 
 
-template <bool test>
-void proceed(double kappa, double pincrease, double gamma,
+void test(double kappa, double pincrease, double gamma,
              orpp::index s0ind, double accuracy,
              unsigned testiters,
              const testproblem::computationparams& params)
 {
    testproblem problem(kappa,pincrease,gamma);
 
-// testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
-std::vector<orpp::index> fv = { 0,0,0,1,1,1,1,1,1,1};
-finitepolicy foo(fv);
-    if constexpr(test)
-    {
-//        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
-// testoverall(problem,{foo},s0ind,accuracy,testiters,params);
+   testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
+   testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
 
-
-        //testhomoproblem hp(res.iota, pincrease,gamma);
-//        testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
-
-    testhomoproblem hp(0.4, pincrease,gamma);
-        testhomotime(hp,accuracy,s0ind,testiters,params.fnestedparams);
-//std::vector<finitepolicy> ps(2,foo);
-//    std::vector<finitepolicy> ps(2,res.p);
-
-    //auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
-     
-
-    }
-std::vector<finitepolicy> ps(2,foo);
-//    std::vector<finitepolicy> ps(2,res.p);
-
-  auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
-//    sys::log() << "result heuristic = " << res.v << std::endl;
-//    sys::log() << "result pseudo = " << resp.x << std::endl;
+   testhomoproblem hp(res.iota, pincrease,gamma);
+   testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
 }
 
 
-void measure(int threads)
+void examine(double kappa, double gamma, std::ostream& report)
 {
-    time_t start, end;
-
-    time(&start);
 
     double pincrease = 0.7;
-    double gamma = 0.85;
-    double kappa = 0.6;// 0.6;
-    double accuracy = 0.03;
+    double accuracy = 0.05;
     orpp::index s0ind = 1;
     unsigned testiters = 10;
 
     testproblem::computationparams pars;
     pars.fthreadstouse = pars.fnestedonedparams.fthreadstouse
-            = pars.fnestedparams.fthreadstouse = threads;
+            = pars.fnestedparams.fthreadstouse = 48;
     pars.fthreadbatch = pars.fnestedonedparams.fthreadbatch
             = pars.fnestedparams.fthreadbatch = 3000;
     pars.fmaxevaliterations = 2000000;
 
-    proceed<true>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
+    testproblem problem(kappa,pincrease,gamma);
 
-    time(&end);
+    report << kappa << "," << gamma << ",";
+
+    unsigned tstart = sys::timems();
+    testproblem::heuristicresult gdres = problem.heuristic<true>(s0ind,accuracy,pars);
+    unsigned gdend = sys::timems();
+    report << gdres.p << ","
+           << gdres.v << "," << gdres.iota << ","
+           << gdend - tstart << ",";
+
+    testproblem::heuristicresult hres = problem.heuristic<false>(s0ind,accuracy,pars);
+    unsigned hend = sys::timems();
+    report << hres.p << ","
+           << hres.v << "," << hres.iota << ","
+           << hend - gdend << ",";
+
+//    std::vector<finitepolicy> ps(2,gdres.p);
+
+//    auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
+    //    sys::log() << "result heuristic = " << res.v << std::endl;
+    //    sys::log() << "result pseudo = " << resp.x << std::endl;
+
+
+    testhomoproblem hp(0, pincrease,gamma);
+    finitevaluefunction initV(hp,0);
+    testhomoproblem::viresult vires = hp.valueiteration(initV,accuracy,pars.fnestedparams);
+
+    unsigned eend = sys::timems();
+
+
+    report << vires.p << ","
+           << vires.v[s0ind] << ",,"
+           << eend - hend << ",";
 
     // Calculating total time taken by the program.
-    double time_taken = double(end - start);
-    std::cout << "Time taken by program is : " << std::fixed
+    double time_taken = double(tstart - eend) / 1000.0;
+    sys::logline() << "Time taken by program is : " << std::fixed
         << time_taken << std::setprecision(5);
-    std::cout << " sec " << std::endl;
+    sys::log() << " sec " << std::endl;
 }
 
 
@@ -215,8 +218,19 @@ int main()
 {
     sys::setlog(std::cout);
     sys::setloglevel(0);
-    // measure(40);
-    measure(0);
+    std::ofstream report("report.csv");
+    if(!report)
+        throw exception("Cannot open report.csv");
+    report << "kappa,gamma,"
+           << "gdpolicy,gdcrit,gdlambda,gdtime,"
+           << "hpolicy,hcrit,hlambda,htime,"
+           << "epolicy,ecrit,etime,"
+           << "pgpolicy,pgcrit,pgtime" << std::endl;
+    report << std::setprecision(5);
+     std::vector<double> kappas = { 0.6, 0.75, 0.9 };
+    std::vector<double> gammas = { 0.85, 0.9, 0.95 };
+
+    examine(kappas[1],gammas[1], report);
     return 0;
 }
 
