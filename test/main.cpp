@@ -134,15 +134,31 @@ accuracytestresult testhomo(const testhomoproblem& problem,
     return testevaluatehomo(problem, s0ind, res.p ,accuracy, cp, testiters);
 }
 
+
+accuracytestresult testhomotime(const testhomoproblem& problem,
+                            double accuracy, orpp::index s0ind,
+                            unsigned testiters,
+                            const testhomoproblem::computationparams& cp
+                            )
+{
+    finitevaluefunction initV(problem,0);
+    for(unsigned i=0; i<100; i++)
+    problem.valueiteration(initV,accuracy,cp);
+}
+
+
+
 template <bool test>
 void proceed(double kappa, double pincrease, double gamma,
              orpp::index s0ind, double accuracy,
              unsigned testiters,
              const testproblem::computationparams& params)
 {
-    testproblem problem(kappa,pincrease,gamma);
 
-    testproblem::heuristicresult res = problem.heuristic<true>(s0ind,accuracy,params);
+
+//    testproblem problem(kappa,pincrease,gamma);
+
+// testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
 //std::vector<orpp::index> fv = { 0,0,0,1,1,1};
 //finitepolicy foo(fv);
     if constexpr(test)
@@ -150,15 +166,20 @@ void proceed(double kappa, double pincrease, double gamma,
 //        testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
 // testoverall(problem,{foo},s0ind,accuracy,testiters,params);
 
-//        testhomoproblem hp(//res.iota, pincrease,gamma);
+
+        //testhomoproblem hp(res.iota, pincrease,gamma);
 //        testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
+
+    testhomoproblem hp(0.4, pincrease,gamma);
+        testhomotime(hp,accuracy,s0ind,testiters,params.fnestedparams);
+
 
     }
 //std::vector<finitepolicy> ps(2,foo);
-//  std::vector<finitepolicy> ps(2,res.p);
+//    std::vector<finitepolicy> ps(2,res.p);
 
-//    auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
-    //sys::log() << "result heuristic = " << res.v << std::endl;
+    //auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
+//    sys::log() << "result heuristic = " << res.v << std::endl;
 //    sys::log() << "result pseudo = " << resp.x << std::endl;
 }
 
@@ -172,7 +193,7 @@ void measure(int threads)
     double pincrease = 0.7;
     double gamma = 0.85;
     double kappa = 0.6;// 0.6;
-    double accuracy = 0.03;
+    double accuracy = 0.003;
     orpp::index s0ind = 1;
     unsigned testiters = 10;
 
@@ -180,7 +201,7 @@ void measure(int threads)
     pars.fthreadstouse = pars.fnestedonedparams.fthreadstouse
             = pars.fnestedparams.fthreadstouse = threads;
     pars.fthreadbatch = pars.fnestedonedparams.fthreadbatch
-            = pars.fnestedparams.fthreadbatch = 10000;
+            = pars.fnestedparams.fthreadbatch = 3000;
     pars.fmaxevaliterations = 2000000;
 
     proceed<true>(kappa, pincrease, gamma, s0ind, accuracy, testiters, pars);
@@ -199,7 +220,7 @@ int main()
 {
     sys::setlog(std::cout);
     sys::setloglevel(0);
-    measure(0);
     measure(40);
+    //measure(0);
     return 0;
 }
