@@ -172,7 +172,7 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
 
     testproblem problem(kappa,pincrease,gamma);
 
-    report << kappa << "," << gamma << "," << accuracy << ",;
+    report << kappa << "," << gamma << "," << accuracy << ",";
 
     unsigned tstart = sys::timems();
     testproblem::heuristicresult gdres = problem.heuristic<true>(s0ind,accuracy,pars);
@@ -187,11 +187,6 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
            << hres.v << "," << hres.iota << ","
            << hend - gdend << ",";
 
-//    std::vector<finitepolicy> ps(2,gdres.p);
-
-//    auto resp = problem.pseudogradientdescent(s0ind, ps, accuracy, params);
-    //    sys::log() << "result heuristic = " << res.v << std::endl;
-    //    sys::log() << "result pseudo = " << resp.x << std::endl;
 
 
     testhomoproblem hp(0, pincrease,gamma);
@@ -205,11 +200,29 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
            << vires.v[s0ind] << ","
            << eend - hend << ",";
 
+    std::vector<finitepolicy> ps(2,gdres.p);
+
+    testproblem::pgdresult respg = problem.pseudogradientdescent(s0ind, ps, accuracy, pars);
+
+    unsigned pgend = sys::timems();
+
+    for(unsigned k=0;; k++)
+    {
+        report << respg.ps[k];
+        if(k== ps.size()-1)
+            break;
+        report << "-";
+    }
+    report << respg.v.x << "," << pgend - eend; ;
+
+
     // Calculating total time taken by the program.
-    double time_taken = (eend - tstart) / 1000.0;
+    double time_taken = (pgend - tstart) / 1000.0;
     sys::logline() << "Time taken by program is : " << std::fixed
         << time_taken << std::setprecision(5);
     sys::log() << " sec " << std::endl;
+
+    report << std::endl;
 }
 
 
@@ -218,8 +231,8 @@ int main()
     sys::setlog(std::cout);
     sys::setloglevel(0);
 //    std::ofstream report("report.csv");
-    if(!report)
-        throw exception("Cannot open report.csv");
+//    if(!report)
+//        throw exception("Cannot open report.csv");
    std::ostringstream report;
    report << "kappa,gamma,"
            << "gdpolicy,gdcrit,accuracygdlambda,gdtime,"
@@ -234,4 +247,3 @@ int main()
     std::cout << report.str() << std::endl;
     return 0;
 }
-
