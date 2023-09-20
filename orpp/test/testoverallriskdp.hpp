@@ -20,7 +20,7 @@ inline bool testlipshitzproperty(
     double ra = problem.crit().getparam();
     if(fabs(ra) <= std::numeric_limits<double>::epsilon())
         throw exception("Zero param of crit!");
-    auto res0 = problem.evaluatecrit(s0index,{p},accuracy, params);
+    auto res0 = problem.evaluatecrit(s0index,p,accuracy, params);
     double crit = res0.x;
     double l=problem.lipschitzconstant();
     sys::logline() << "Reference ra=" << ra << " crit=" << crit
@@ -32,7 +32,7 @@ inline bool testlipshitzproperty(
         Problem problemcopy(problem);
         double newra = ra * static_cast<double>(i)/numpoints;
         problemcopy.setriskaversion(newra);
-        auto res = problemcopy.evaluatecrit(s0index,{p},accuracy, params);
+        auto res = problemcopy.evaluatecrit(s0index,p,accuracy, params);
         double newcrit = res.x;
         double realizedlipschitz = (newcrit-crit) / (ra-newra);
         if(realizedlipschitz < - 2*accuracy)

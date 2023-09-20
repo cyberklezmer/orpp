@@ -95,13 +95,14 @@ public:
 
 
 accuracytestresult testoverall(const testproblem& problem,
+                               orpp::index p0,
                                const std::vector<finitepolicy>& ps,
                                orpp::index s0ind, double accuracy,
                                unsigned testiters,
                                const typename testproblem::computationparams& params)
 {
     sys::log() << "testoverall" << std::endl;
-    return testevaluate<false>(problem, s0ind, ps, accuracy, params, testiters);
+    return testevaluate<false>(problem, s0ind, p0, ps, accuracy, params, testiters);
 }
 
 class testhomoproblem: public testproblem::nestedproblem
@@ -149,13 +150,13 @@ void test(double kappa, double pincrease, double gamma,
    testproblem problem(kappa,pincrease,gamma);
 
    testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
-   testoverall(problem,{res.p},s0ind,accuracy,testiters,params);
+   testoverall(problem,res.p[s0ind],{res.p},s0ind,accuracy,testiters,params);
 
    testhomoproblem hp(res.iota, pincrease,gamma);
    testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
 }
 
-
+template <bool enumerate = false, bool test=false>
 void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
 {
     double pincrease = 0.7;
@@ -174,75 +175,65 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
     std::vector<orpp::index>  foop = {0,0,0,1,1,1,1,1,1,1};
     finitepolicy foopp(foop);
 
-//    if(!testlipshitzproperty(problem,s0ind,foopp,accuracy,pars,2))
-//       throw exception("nonlipschitz or nonomonotonous problem");
-
-/* std::vector<orpp::index>  foop = {0,0,0,1,1,1,1,1,1,1};
-finitepolicy foopp(foop);
-auto res = problem.evaluatecrit(s0ind,{foop}, accuracy / 2, pars);
-
-sys::log() << " first " << res.x << " (" << res.sd << ")" << std::endl;
-
-std::vector<orpp::index>  poop = {0,0,0,0,1,1,1,1,1,1};
-finitepolicy poopp(poop);
-res = problem.evaluatecrit(s0ind,{poopp}, accuracy / 2, pars);
-
-sys::log() << " sec " << res.x << " (" << res.sd << ")" << std::endl;
-*/
-
-/*        Pfinitepolicy besthomo(problem);
-    double besthomov = 0;
-    for(unsigned i=1; i< pow(2,teststatespace::nstates); i++)
+    if constexpr(test)
     {
-        finitepolicy policy(problem,0);
-        auto decimal = i;
-        unsigned k=0;
-        bool feasible = true;
-        while (decimal != 0) {
-            unsigned int p = decimal % 2;
-            if(!problem.constraint().feasible(p,k))
-                feasible = false;
-            assert(k < policy.size());
-            policy[k++] = p;
-            decimal = decimal / 2;
-          }
-        sys::logline() << i << ": "  << policy;
-        if(!feasible)
-        {
-            sys::log() << " infeasible" << std::endl;
-            continue;
-        }
-
-        auto res = problem.evaluatecrit(s0ind,{policy}, accuracy / 2, pars);
-        if(res.x > besthomov)
-        {
-            besthomov = res.x;
-            besthomo = policy;
-            sys::log() << "*";
-        }
-
-        sys::log() << " " << res.x << " (" << res.sd << ")";
-        sys::log() << std::endl;
+        if(!testlipshitzproperty(problem,s0ind,foopp,accuracy,pars,2))
+           throw exception("nonlipschitz or nonomonotonous problem");
     }
 
-*/
+    // enumeration
+    if constexpr(enumerate) // tbd still only to log
+    {
+        finitepolicy besthomo(problem);
+        double besthomov = 0;
+        for(unsigned i=1; i< pow(2,teststatespace::nstates); i++)
+        {
+            finitepolicy policy(problem,0);
+            auto decimal = i;
+            unsigned k=0;
+            bool feasible = true;
+            while (decimal != 0) {
+                unsigned int p = decimal % 2;
+                if(!problem.constraint().feasible(p,k))
+                    feasible = false;
+                assert(k < policy.size());
+                policy[k++] = p;
+                decimal = decimal / 2;
+              }
+            sys::logline() << i << ": "  << policy;
+            if(!feasible)
+            {
+                sys::log() << " infeasible" << std::endl;
+                continue;
+            }
+
+            auto res = problem.evaluatecrit(s0ind,policy, accuracy / 2, pars);
+            if(res.x > besthomov)
+            {
+                besthomov = res.x;
+                besthomo = policy;
+                sys::log() << "*";
+            }
+
+            sys::log() << " " << res.x << " (" << res.sd << ")";
+            sys::log() << std::endl;
+        }
+    }
     report << kappa << "," << gamma << "," << accuracy << ",";
 
     unsigned tstart = sys::timems();
+
     testproblem::heuristicresult gdres = problem.heuristic<true>(s0ind,accuracy,pars);
     unsigned gdend = sys::timems();
     report << gdres.p << ","
            << gdres.v << "," << gdres.iota << ","
            << gdend - tstart << ",";
 
-//    testproblem::heuristicresult hres = problem.heuristic<false>(s0ind,accuracy,pars);
+    testproblem::heuristicresult hres = problem.heuristic<false>(s0ind,accuracy,pars);
     unsigned hend = sys::timems();
-/*    report << hres.p << ","
+     report << hres.p << ","
            << hres.v << "," << hres.iota << ","
            << hend - gdend << ",";
-*/
-throw;testproblem::heuristicresult gres = gdres;
-
 
     testhomoproblem hp(0, pincrease,gamma);
     finitevaluefunction initV(hp,0);
@@ -250,23 +241,21 @@ throw;testproblem::heuristicresult gres = gdres;
 
     unsigned eend = sys::timems();
 
-
     report << vires.p << ","
            << vires.v[s0ind] << ","
            << eend - hend << ",";
 
-    std::vector<finitepolicy> ps(2,gdres.p);
+    testproblem::heteropolicy heterop = { hres.p[s0ind], {hres.p, hres.p} };
 
-    testproblem::pgdresult respg = problem.pseudogradientdescent(s0ind, ps, accuracy, pars);
+    testproblem::pgdresult respg = problem.pseudogradientdescent(s0ind, heterop, accuracy, pars);
 
     unsigned pgend = sys::timems();
 
-    for(unsigned k=0;; k++)
+    report << respg.p.p0;
+    for(unsigned k=0;k < respg.p.ps.size(); k++)
     {
-        report << respg.ps[k];
-        if(k== ps.size()-1)
-            break;
         report << "-";
+        report << respg.p.ps[k];
     }
     report << "," <<respg.v.x << "," << pgend - eend; ;
 
@@ -285,20 +274,17 @@ int main()
 {
     sys::setlog(std::cout);
     sys::setloglevel(0);
-//    std::ofstream report("report.csv");
-//    if(!report)
-//        throw exception("Cannot open report.csv");
-   std::ostringstream report;
-   report << "kappa,gamma,"
+     std::ostringstream report;
+     report << "kappa,gamma,"
            << "gdpolicy,gdcrit,accuracygdlambda,gdtime,"
            << "hpolicy,hcrit,hlambda,htime,"
            << "epolicy,ecrit,etime,"
            << "pgpolicy,pgcrit,pgtime" << std::endl;
     report << std::setprecision(5);
-     std::vector<double> kappas = { 0.6, 0.75, 0.9 };
+    std::vector<double> kappas = { 0.6, 0.75, 0.9 };
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
-    examine(kappas[2],gammas[1], 0.05, report);
+    examine(kappas[2],gammas[1], 0.05, report); // tbd
     std::cout << report.str() << std::endl;
     return 0;
 }

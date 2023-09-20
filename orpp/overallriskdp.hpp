@@ -269,9 +269,8 @@ public:
                    auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
                    bestp = vires.p;
                    initV = vires.v;
-                   statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
+                   statcounter cs = problem.evaluateraw( s0ind, vires.p, accuracy / 2.0, params.fnestedparams);
                    double valueofcrit = this->fcrit(cs.dist).x;
-                   iota = findiota(problem,vires.p,valueofcrit,finitevaluefunction(*this,0), s0ind, accuracy, params.fnestedparams);
                    sys::logline() << "Initial iteration iota=" << iota
                                   << " homocrit=" << vires.v[s0ind]
                                   << " crit=" << valueofcrit
@@ -281,27 +280,24 @@ public:
                 for(unsigned j=0; j<this->fstatespace.num(); j++)
                 {
                     onedactionspace as(bestp,j);
-                    std::vector<double> adds;
+//                    std::vector<double> adds;
                     auto p = bestp;
-                    double maxadd = 0;
+                    double bestv = 0;
                     for(index k=0; k<as.num(); k++)
                     {
                         if(as.isfeasible(k,j))
                         {
                             p[j] = k;
-                            statcounter cs = problem.evaluateraw( s0ind, {p}, accuracy / 2.0, params.fnestedparams);
-                            auto c = this->fcrit(cs.dist).x;
-
-                            auto lambda = findiota(problem,p,c,finitevaluefunction(*this,0), s0ind, accuracy, params.fnestedparams);
-                            double addition = 2 * this->maxreward() * this->frmlipshitzfactor * (this->fcrit.getparam() - fabs(lambda-iota) );
-                            adds.push_back(addition);
-                            if(addition > maxadd)
-                                maxadd = addition;
+                            statcounter cs = problem.evaluateraw( s0ind, p, accuracy / 2.0, params.fnestedparams);
+                            auto thisv = this->fcrit(cs.dist).x;
+                            if(thisv > bestv)
+                            {
+                                bestv = thisv;
+                                bestp = p;
+                            }
                         }
-                        else
-                            adds.push_back(0); // not used anywqy
                     }
-                    if(sys::loglevel() >= 1)
+/*                    if(sys::loglevel() >= 1)
                     {
                         sys::logline(1) << "Penalizations:";
                         for(unsigned i=0; i<adds.size(); i++)
@@ -321,13 +317,13 @@ public:
 
                     initV = vires.v;
                     bestp = vires.p;
-
+*/
                     sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota
                                    << " p:" << bestp
-                                   << " penalized crit=" << vires.v[s0ind]
+                                   << " crit=" << bestv
                                    << std::endl;
                 }
-                auto crit = this->evaluatecrit( s0ind, {bestp}, accuracy / 2.0, params);
+                auto crit = this->evaluatecrit( s0ind, bestp, accuracy / 2.0, params);
                 double valueofcrit = crit.x ;
                 sys::logline() << "iteration " << i << " iota=" << iota
                                << " p:" << bestp
@@ -391,15 +387,25 @@ public:
         return res;
     }
 
-    struct pgdresult
+
+    struct heteropolicy
     {
-        valuewitherror<double> v;
+        orpp::index p0;
         std::vector<finitepolicy> ps;
     };
 
+
+    struct pgdresult
+    {
+        valuewitherror<double> v;
+        heteropolicy p;
+    };
+
+
+//    template <bool bindp0>
     pgdresult pseudogradientdescent(
                           orpp::index s0ind,
-                          const std::vector<finitepolicy>& ps,
+                          const heteropolicy& initps,
                           double accuracy,
                           const computationparams& params
                            )
@@ -409,42 +415,45 @@ public:
         unsigned horizon = this->requiredhorizon(accuracy / 2);
 
         sys::log() << "Required horizon: " << horizon << std::endl;
-        auto bestv = this->evaluatecrit(s0ind, ps, accuracy,params);
+        auto bestv = this->evaluatecrit(s0ind, initps.p0, initps.ps, accuracy,params);
 
-        std::vector<finitepolicy> bestps = ps;
-        std::vector<finitepolicy> oldps = ps;
+        heteropolicy bestps = initps;
+        heteropolicy oldps = initps;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
-            sys::logline() << "iteration " << i << " value=" << bestv.x << " ";
-            for(unsigned x=0; x<ps.size(); x++)
-                sys::log() << ps[x] << ",";
+            sys::logline() << "iteration " << i << " value=" << bestv.x
+                           << " p:" << bestps.p0;
+            for(unsigned x=0; x<bestps.ps.size(); x++)
+                sys::log() <<  "," << bestps.ps[x];
             sys::log() << std::endl;
-            for(unsigned j=0; j<ps.size(); j++)
+            for(unsigned j=0; j<=bestps.ps.size(); j++)
             {
                 sys::logline() << "time=" << j << std::endl;
-                for(unsigned k=0; k<ps[j].size(); k++)
+                unsigned k= j==0 ? s0ind : 0;
+                for(; ; k++)
                 {
                     for(unsigned n = 0; n <= 1; n++ )
                     {
-                        std::vector<finitepolicy> p = ps;
-                        if(n == 0 && p[j][k]>0)
-                            p[j][k]--;
-                        else if(n == 1 && p[j][k] < this->fconstraint.num()-1)
-                            p[j][k]++;
+                        heteropolicy p = bestps;
+                        orpp::index& e = j==0 ? p.p0 : p.ps[j-1][k];
+
+                        if(n == 0 && e >0)
+                            e--;
+                        else if(n == 1 && e < this->fconstraint.num()-1)
+                            e++;
                         else
                             continue;
                         sys::logline() << "k=" << k << "," << "p:";
-                        if(!this->fconstraint.isfeasible(p[j][k],k))
+                        if(!this->fconstraint.isfeasible(e,k))
                         {
-                            for(unsigned x=0; x<ps.size(); x++)
-                              sys::log() <<  p[x] << ",";
                             sys::log() << " infeasible" << std::endl;
                             continue;
                         }
-                        auto v = this->evaluatecrit(s0ind, p, accuracy,params);
+                        auto v = this->evaluatecrit(s0ind, p.p0, p.ps, accuracy,params);
 
-                        for(unsigned x=0; x<ps.size(); x++)
-                            sys::log() <<  p[x] << ",";
+                        sys::log() << " p:" << p.p0;
+                        for(unsigned x=0; x<p.ps.size(); x++)
+                            sys::log() <<  "," << p.ps[x];
                         sys::log() << " = " << v.x << "(" << v.sd << ")";
 
                         if(v.x > bestv.x + bestv.sd)
@@ -456,24 +465,29 @@ public:
 
                         sys::log() << std::endl;
                     }
+                    if(j==0)
+                        break;
+                    if(k==bestps.ps[j-1].size()-1)
+                        break;
                 }
             }
-            bool differs = false;
-            for(unsigned j=0; j<ps.size(); j++)
-            {
-                if(!(oldps[j] == bestps[j]))
+            bool differs = oldps.p0 != bestps.p0;
+            if(!differs)
+                for(unsigned j=0; j<bestps.ps.size(); j++)
                 {
-                    differs = true;
-                    break;
+                    if(!(oldps.ps[j] == bestps.ps[j]))
+                    {
+                        differs = true;
+                        break;
+                    }
                 }
-            }
             if(!differs)
                 break;
             oldps = bestps; 
             sys::log() << "bestv=" << bestv.x << std::endl;
         }
         pgdresult res;
-        res.ps = bestps;
+        res.p = bestps;
         res.v = bestv;
         return res;
     }

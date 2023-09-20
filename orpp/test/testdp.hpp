@@ -23,6 +23,7 @@ template <bool raw, typename Problem>
 inline accuracytestresult testevaluate(
                      const Problem& problem,
                      index s0index,
+                     orpp::index p0,
                      const std::vector<finitepolicy>& p,
                      double accuracy,
                      const typename Problem::computationparams& params,
@@ -49,7 +50,7 @@ inline accuracytestresult testevaluate(
         }
         else
         {
-           auto res = problem.evaluatecrit(s0index,p,accuracy,params);
+           auto res = problem.evaluatecrit(s0index,p0,p,accuracy,params);
            r = res.x;
            e = res.sd;
            num = 1;
