@@ -399,7 +399,7 @@ public:
 
     pgdresult pseudogradientdescent(
                           orpp::index s0ind,
-                          std::vector<finitepolicy>& ps,
+                          const std::vector<finitepolicy>& ps,
                           double accuracy,
                           const computationparams& params
                            )
@@ -412,6 +412,7 @@ public:
         auto bestv = this->evaluatecrit(s0ind, ps, accuracy,params);
 
         std::vector<finitepolicy> bestps = ps;
+        std::vector<finitepolicy> oldps = ps;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
             sys::logline() << "iteration " << i << " value=" << bestv.x << " ";
@@ -460,7 +461,7 @@ public:
             bool differs = false;
             for(unsigned j=0; j<ps.size(); j++)
             {
-                if(!(ps[j] == bestps[j]))
+                if(!(oldps[j] == bestps[j]))
                 {
                     differs = true;
                     break;
@@ -468,7 +469,7 @@ public:
             }
             if(!differs)
                 break;
-
+            oldps = bestps; 
             sys::log() << "bestv=" << bestv.x << std::endl;
         }
         pgdresult res;
