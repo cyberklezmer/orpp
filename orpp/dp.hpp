@@ -49,6 +49,8 @@ public:
     double gamma() const { return fgamma; }
     const ConstrainedActionSpace& constraint() const { return fconstraint; }
     const Statespace& statespace() const { return fstatespace; }
+    const Criterion& crit() const { return fcrit; }
+    Criterion& crit() { return fcrit; }
 protected:
     Criterion fcrit;
     Statespace fstatespace;
@@ -332,7 +334,6 @@ public:
                                          const computationparams& params) const
     {
         statcounter sc = this->evaluateraw(s0ind, ps, accuracy, params);
-
         return this->fcrit(sc.dist);
     }
 private:
@@ -355,7 +356,7 @@ private:
                 c.s = this->fstatespace[sindex];
                 c.a = i<p.size() ? p[i][sindex] : p[p.size()-1][sindex];
                 sum += discount * this->freward(c);
-//sindex = n % 5;//    
+//sindex = n % 5;//
                 sindex = this->ftransition.draw(c);
                 if(sindex >= p[0].size())
                 {
@@ -375,7 +376,7 @@ private:
         for(;;)
         {
             observerrecord r;
-            
+
             r.t = sys().timems();
             r.ns = *ns;
             r.final = final;
@@ -481,6 +482,9 @@ if(foofoo)
            sys::logline(2) << "dpproblem::evaluateraw ended: n="
                       << sc.num << ", stdev=" << sc.averagestdev() << std::endl;
         }
+//std::cout << "Evaluateraw: s="
+//            << p.size() << " p=" << p[0] << " ave=" << sc.average() << std::endl;
+
         return sc;
     }
 
@@ -746,4 +750,3 @@ public:
 } // namespace
 
 #endif // DP_HPP
-

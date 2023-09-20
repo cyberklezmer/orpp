@@ -1,7 +1,8 @@
-#include "orpp/overallriskdp.hpp"
 #include <fstream>
 #include "orpp/boostdist.hpp"
+#include "orpp/overallriskdp.hpp"
 #include "orpp/test/testdp.hpp"
+#include "orpp/test/testoverallriskdp.hpp"
 
 using namespace orpp;
 
@@ -100,7 +101,7 @@ accuracytestresult testoverall(const testproblem& problem,
                                const typename testproblem::computationparams& params)
 {
     sys::log() << "testoverall" << std::endl;
-    return testevaluate<false>(problem, s0ind, ps ,accuracy, params, testiters);
+    return testevaluate<false>(problem, s0ind, ps, accuracy, params, testiters);
 }
 
 class testhomoproblem: public testproblem::nestedproblem
@@ -110,9 +111,8 @@ public:
 //        overallriskproblem<testcrit, teststatespace,
 //                    testactionspace, testtransition, testreward>
           testproblem::nestedproblem(testcrit(iota),teststatespace(), testactionspace(),
-           testtransition(pincrease), testreward(), gamma,1)
+           testtransition(pincrease), testreward(), gamma, 1)
     {
-
     }
 };
 
@@ -158,7 +158,6 @@ void test(double kappa, double pincrease, double gamma,
 
 void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
 {
-
     double pincrease = 0.7;
     orpp::index s0ind = 1;
     unsigned testiters = 10;
@@ -172,6 +171,61 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
 
     testproblem problem(kappa,pincrease,gamma);
 
+    std::vector<orpp::index>  foop = {0,0,0,1,1,1,1,1,1,1};
+    finitepolicy foopp(foop);
+
+//    if(!testlipshitzproperty(problem,s0ind,foopp,accuracy,pars,2))
+//       throw exception("nonlipschitz or nonomonotonous problem");
+
+/* std::vector<orpp::index>  foop = {0,0,0,1,1,1,1,1,1,1};
+finitepolicy foopp(foop);
+auto res = problem.evaluatecrit(s0ind,{foop}, accuracy / 2, pars);
+
+sys::log() << " first " << res.x << " (" << res.sd << ")" << std::endl;
+
+std::vector<orpp::index>  poop = {0,0,0,0,1,1,1,1,1,1};
+finitepolicy poopp(poop);
+res = problem.evaluatecrit(s0ind,{poopp}, accuracy / 2, pars);
+
+sys::log() << " sec " << res.x << " (" << res.sd << ")" << std::endl;
+*/
+
+/*        Pfinitepolicy besthomo(problem);
+    double besthomov = 0;
+    for(unsigned i=1; i< pow(2,teststatespace::nstates); i++)
+    {
+        finitepolicy policy(problem,0);
+        auto decimal = i;
+        unsigned k=0;
+        bool feasible = true;
+        while (decimal != 0) {
+            unsigned int p = decimal % 2;
+            if(!problem.constraint().feasible(p,k))
+                feasible = false;
+            assert(k < policy.size());
+            policy[k++] = p;
+            decimal = decimal / 2;
+          }
+        sys::logline() << i << ": "  << policy;
+        if(!feasible)
+        {
+            sys::log() << " infeasible" << std::endl;
+            continue;
+        }
+
+        auto res = problem.evaluatecrit(s0ind,{policy}, accuracy / 2, pars);
+        if(res.x > besthomov)
+        {
+            besthomov = res.x;
+            besthomo = policy;
+            sys::log() << "*";
+        }
+
+        sys::log() << " " << res.x << " (" << res.sd << ")";
+        sys::log() << std::endl;
+    }
+
+*/
     report << kappa << "," << gamma << "," << accuracy << ",";
 
     unsigned tstart = sys::timems();
@@ -181,12 +235,13 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
            << gdres.v << "," << gdres.iota << ","
            << gdend - tstart << ",";
 
-    testproblem::heuristicresult hres = problem.heuristic<false>(s0ind,accuracy,pars);
+//    testproblem::heuristicresult hres = problem.heuristic<false>(s0ind,accuracy,pars);
     unsigned hend = sys::timems();
-    report << hres.p << ","
+/*    report << hres.p << ","
            << hres.v << "," << hres.iota << ","
            << hend - gdend << ",";
-
+*/
+throw;testproblem::heuristicresult gres = gdres;
 
 
     testhomoproblem hp(0, pincrease,gamma);
@@ -213,7 +268,7 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
             break;
         report << "-";
     }
-    report << respg.v.x << "," << pgend - eend; ;
+    report << "," <<respg.v.x << "," << pgend - eend; ;
 
 
     // Calculating total time taken by the program.

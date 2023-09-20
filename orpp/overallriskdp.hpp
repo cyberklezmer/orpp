@@ -113,7 +113,8 @@ public:
               double rmlipshitzfactor) :
         finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
                          Transition,Reward>
-          (crit, state, constraint, transition, reward, gamma, maxreward)
+          (crit, state, constraint, transition, reward, gamma, maxreward),
+           frmlipshitzfactor(rmlipshitzfactor)
     {}
 
 private:
@@ -236,19 +237,22 @@ public:
     }
 
     template <bool gradientdescent=false>
-    heuristicresult heuristic(index s0ind, double accuracy, const computationparams& params) const
+    heuristicresult heuristic(index s0ind, double accuracy,
+                              const computationparams& params) const
     {
         sys::logline() << "overallriskproblem::heuristic" << std::endl;
 
         double iota = this->fcrit.getparam();
 
-        double valueofcrit = 0;
         finitepolicy bestp(this->fstatespace.num());
+        finitepolicy lastp = bestp;
         finitevaluefunction initV(this->fstatespace.num(),0);
 
         double error;
-        double lastvalue = 0;
-        for(unsigned i=0; i<params.fheuristicmaxiters; i++)
+        double lastvalueofcrit = 0;
+        double resultingvalueofcrit = 0;
+
+        for(unsigned i=0; ; i++)
         {
             nestedproblem problem(this->fcrit,
                                   this->fstatespace,
@@ -261,14 +265,17 @@ public:
             {
                 if(i==0)
                 {
-                   sys::logline() << "Initial iteration" << std::endl;
                    problem.setriskaversion(iota);
                    auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
                    bestp = vires.p;
                    initV = vires.v;
                    statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
-                   valueofcrit = this->fcrit(cs.dist).x;
-                   iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
+                   double valueofcrit = this->fcrit(cs.dist).x;
+                   iota = findiota(problem,vires.p,valueofcrit,finitevaluefunction(*this,0), s0ind, accuracy, params.fnestedparams);
+                   sys::logline() << "Initial iteration iota=" << iota
+                                  << " homocrit=" << vires.v[s0ind]
+                                  << " crit=" << valueofcrit
+                                  << " p:" << bestp << std::endl;
                 }
 
                 for(unsigned j=0; j<this->fstatespace.num(); j++)
@@ -285,14 +292,21 @@ public:
                             statcounter cs = problem.evaluateraw( s0ind, {p}, accuracy / 2.0, params.fnestedparams);
                             auto c = this->fcrit(cs.dist).x;
 
-                            auto lambda = findiota(problem,p,c,initV, s0ind, accuracy, params.fnestedparams);
+                            auto lambda = findiota(problem,p,c,finitevaluefunction(*this,0), s0ind, accuracy, params.fnestedparams);
                             double addition = 2 * this->maxreward() * this->frmlipshitzfactor * (this->fcrit.getparam() - fabs(lambda-iota) );
                             adds.push_back(addition);
                             if(addition > maxadd)
                                 maxadd = addition;
                         }
                         else
-                            adds.push_back(0);
+                            adds.push_back(0); // not used anywqy
+                    }
+                    if(sys::loglevel() >= 1)
+                    {
+                        sys::logline(1) << "Penalizations:";
+                        for(unsigned i=0; i<adds.size(); i++)
+                            sys::log() << " " << adds[i];
+                        sys::log() << std::endl;
                     }
                     onedreward r(adds);
                     nestedonedproblem onedproblem(this->fcrit,
@@ -305,57 +319,71 @@ public:
 
                     auto vires = onedproblem.valueiteration(initV,accuracy/3,params.fnestedonedparams);
 
-
                     initV = vires.v;
                     bestp = vires.p;
 
-                    sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " crit=" << valueofcrit
-                                 << " p:" << bestp[i] << std::endl;
-
-                    statcounter cs = onedproblem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedonedparams);
-                    valueofcrit = this->fcrit(cs.dist).x;
+                    sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota
+                                   << " p:" << bestp
+                                   << " penalized crit=" << vires.v[s0ind]
+                                   << std::endl;
                 }
+                auto crit = this->evaluatecrit( s0ind, {bestp}, accuracy / 2.0, params);
+                double valueofcrit = crit.x ;
+                sys::logline() << "iteration " << i << " iota=" << iota
+                               << " p:" << bestp
+                               << " crit=" << valueofcrit
+                               << std::endl;
+
+//                if(i>0)
+//                    if(valueofcrit < lastvalueofcrit - 2 * accuracy)
+//                        throw exception("Internal error - coordinate descent not descending!");
                 if(i > 0)
                 {
-                    error  = valueofcrit - lastvalue;
-                    if(error < accuracy)
+                    if(lastp == bestp || i==params.fheuristicmaxiters-1)
                     {
+                        resultingvalueofcrit = valueofcrit;
                         break;
                     }
                 }
-
-                lastvalue = valueofcrit;
-
-                iota = findiota(problem,bestp,valueofcrit,initV, s0ind, accuracy, params.fnestedparams);
+                lastp=bestp;
+                lastvalueofcrit = valueofcrit;
+                iota = findiota(problem,bestp,valueofcrit,finitevaluefunction(*this,0), s0ind, accuracy, params.fnestedparams);
             }
-            else //constexpr !gradientdescent
+            else //constexpr gradientdescent
             {
                 problem.setriskaversion(iota);
-                sys::logline() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
 
                 auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
 
                 initV = vires.v;
-                bestp = vires.p;
 
                 statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
 
-                valueofcrit = this->fcrit(cs.dist).x;
+                double valueofcrit = this->fcrit(cs.dist).x;
+
+                sys::logline() << "iteration " << i << " iota=" << iota << ", p="
+                               << vires.p << ", crit=" << valueofcrit << std::endl;
+
 
                 if(i > 0)
                 {
-                    error  = valueofcrit - lastvalue;
-                    if(error < accuracy)
+                    if(valueofcrit <= lastvalueofcrit + accuracy
+                            || i==params.fheuristicmaxiters-1)
+                    {
+                        resultingvalueofcrit = lastvalueofcrit;
+                        bestp = lastp;
                         break;
+                    }
                 }
+                lastp=vires.p;
+                lastvalueofcrit = valueofcrit;
 
-                lastvalue = valueofcrit;
                 iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
             }
         }
         heuristicresult res(*this);
         res.p = bestp;
-        res.v = valueofcrit;
+        res.v = resultingvalueofcrit;
         res.e = accuracy;
         res.iota = iota;
         sys::logline() << "huristic ended: ";
@@ -448,6 +476,11 @@ public:
         res.v = bestv;
         return res;
     }
+    double lipschitzconstant() const
+    {
+        return frmlipshitzfactor * this->maxreward() / (1 - this->gamma());
+    }
+    void setriskaversion(double ra) { this->crit().setparam(ra); }
 
 private:
     double frmlipshitzfactor;
