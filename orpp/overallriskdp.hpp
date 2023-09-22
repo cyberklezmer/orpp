@@ -242,12 +242,12 @@ public:
 
         double iota = this->fcrit.getparam();
 
-        double valueofcrit = 0;
         finitepolicy bestp(this->fstatespace.num());
+        finitepolicy lastp = bestp;
         finitevaluefunction initV(this->fstatespace.num(),0);
 
         double error;
-        double lastvalue = 0;
+        double valueofcrit = 0;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
             nestedproblem problem(this->fcrit,
@@ -305,30 +305,31 @@ public:
 
                     auto vires = onedproblem.valueiteration(initV,accuracy/3,params.fnestedonedparams);
 
+                    statcounter cs = onedproblem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedonedparams);
+                    valueofcrit = this->fcrit(cs.dist).x ;
 
+                    valueofcrit = valueofcrit;
                     initV = vires.v;
                     bestp = vires.p;
 
-                    sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota << " crit=" << valueofcrit
-                                 << " p:" << bestp[i] << std::endl;
+                    sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota
+                                   << " np=" << vires.v[s0ind]
+                                   << " pen(v)=" << vires.v[s0ind]
+                                   << " pen(c)=" << valueofcrit + adds[j]
+                                   << " crit=" << valueofcrit
+                                 << " p:" << bestp << std::endl;
 
-                    statcounter cs = onedproblem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedonedparams);
-                    valueofcrit = this->fcrit(cs.dist).x;
                 }
                 if(i > 0)
                 {
-                    error  = valueofcrit - lastvalue;
-                    if(error < accuracy)
-                    {
+                    if(lastp == bestp)
                         break;
-                    }
                 }
-
-                lastvalue = valueofcrit;
+                lastp=bestp;
 
                 iota = findiota(problem,bestp,valueofcrit,initV, s0ind, accuracy, params.fnestedparams);
             }
-            else //constexpr !gradientdescent
+            else //constexpr gradientdescent
             {
                 problem.setriskaversion(iota);
                 sys::logline() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
@@ -344,12 +345,11 @@ public:
 
                 if(i > 0)
                 {
-                    error  = valueofcrit - lastvalue;
-                    if(error < accuracy)
+                    if(lastp == bestp)
                         break;
                 }
+                lastp=bestp;
 
-                lastvalue = valueofcrit;
                 iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
             }
         }
@@ -371,7 +371,7 @@ public:
 
     pgdresult pseudogradientdescent(
                           orpp::index s0ind,
-                          const std::vector<finitepolicy>& ps,
+                          std::vector<finitepolicy>& ps,
                           double accuracy,
                           const computationparams& params
                            )
@@ -384,7 +384,6 @@ public:
         auto bestv = this->evaluatecrit(s0ind, ps, accuracy,params);
 
         std::vector<finitepolicy> bestps = ps;
-        std::vector<finitepolicy> oldps = ps;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
             sys::logline() << "iteration " << i << " value=" << bestv.x << " ";
@@ -433,7 +432,7 @@ public:
             bool differs = false;
             for(unsigned j=0; j<ps.size(); j++)
             {
-                if(!(oldps[j] == bestps[j]))
+                if(!(ps[j] == bestps[j]))
                 {
                     differs = true;
                     break;
@@ -441,7 +440,7 @@ public:
             }
             if(!differs)
                 break;
-            oldps = bestps; 
+
             sys::log() << "bestv=" << bestv.x << std::endl;
         }
         pgdresult res;
@@ -461,3 +460,4 @@ private:
 } // namespace
 
 #endif // OVERALLRISKDP_HPP
+
