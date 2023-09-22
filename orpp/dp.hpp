@@ -139,6 +139,40 @@ public:
         }
         return false;
     }
+    bool previousfeasible(AElement& e, const SElement& c) const
+    {
+        AElement x;
+        if(firstfeasible(x, c))
+        {
+            for(;;)
+            {
+                AElement prev = x;
+                if(!nextfeasible(x,c))
+                    return false;
+                if(x == e)
+                {
+                    e = prev;
+                    return true;
+                }
+            }
+        }
+        else
+            return false;
+    }
+    bool lastfeasible(AElement& e, const SElement& c) const
+    {
+        if(firstfeasible(e, c))
+        {
+            for(;;)
+            {
+                if(!nextfeasible(e,c))
+                    return true;
+            }
+            return false; //shouldnot get here
+        }
+        else
+            return false;
+    }
     bool feasible(const AElement& a, const SElement& s) const
     {
         return isfeasible(a,s);
@@ -268,6 +302,8 @@ public:
         : std::vector<double>(p.statespace().num(),initial) {}
     finitevaluefunction(unsigned num, index initial = 0 )
         : std::vector<double>(num,initial) {}
+    finitevaluefunction(const finitevaluefunction& v)
+        : std::vector<double>(v) {}
 };
 
 

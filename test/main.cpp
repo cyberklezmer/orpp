@@ -164,15 +164,15 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
     unsigned testiters = 10;
 
     testproblem::computationparams pars;
-    pars.fthreadstouse = pars.fnestedonedparams.fthreadstouse
-            = pars.fnestedparams.fthreadstouse = 48;
-    pars.fthreadbatch = pars.fnestedonedparams.fthreadbatch
+    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
+            = pars.fnestedparams.fthreadstouse = 8;
+    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
             = pars.fnestedparams.fthreadbatch = 3000;
     pars.fmaxevaliterations = 2000000;
 
     testproblem problem(kappa,pincrease,gamma);
 
-    std::vector<orpp::index>  foop = {0,0,0,1,1,1,1,1,1,1};
+    std::vector<orpp::index>  foop = {0,0,0,0,0,0,0,0,0,0};
     finitepolicy foopp(foop);
 
     if constexpr(test)
@@ -223,18 +223,18 @@ void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
 
     unsigned tstart = sys::timems();
 
-    testproblem::heuristicresult gdres = problem.heuristic<true>(s0ind,accuracy,pars);
+//    testproblem::heuristicresult gdres = problem.heuristic<false>(s0ind,accuracy,pars);
     unsigned gdend = sys::timems();
-    report << gdres.p << ","
-           << gdres.v << "," << gdres.iota << ","
-           << gdend - tstart << ",";
+//    report << gdres.p << ","
+//           << gdres.v << "," << gdres.iota << ","
+//           << gdend - tstart << ",";
 
-    testproblem::heuristicresult hres = problem.heuristic<false>(s0ind,accuracy,pars);
+    testproblem::heuristicresult hres = problem.taylorheuristic(s0ind,accuracy,foopp,pars);
     unsigned hend = sys::timems();
      report << hres.p << ","
            << hres.v << "," << hres.iota << ","
            << hend - gdend << ",";
-
+throw;
     testhomoproblem hp(0, pincrease,gamma);
     finitevaluefunction initV(hp,0);
     testhomoproblem::viresult vires = hp.valueiteration(initV,accuracy,pars.fnestedparams);
