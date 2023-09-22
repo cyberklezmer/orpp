@@ -123,8 +123,10 @@ public:
     class onedactionspace : public ConstrainedActionSpace
     {
     public:
-        onedactionspace(const finitepolicy& maskpolicy, index freeindex)
-            : ffreeindex(freeindex), fmaskpolicy(maskpolicy) {}
+        onedactionspace(const finitepolicy& maskpolicy, index freeindex,
+                        const ConstrainedActionSpace& space)
+            : ConstrainedActionSpace(space),
+              ffreeindex(freeindex), fmaskpolicy(maskpolicy) {}
     private:
         index ffreeindex;
         finitepolicy fmaskpolicy;
@@ -306,7 +308,6 @@ public:
         double lastvalueofcrit = 0;
         double resultingvalueofcrit = 0;
 
-
         for(unsigned i=0; ; i++)
         {
 
@@ -334,7 +335,7 @@ public:
 
                 for(unsigned j=0; j<this->fstatespace.num(); j++)
                 {
-                    onedactionspace as(bestp,j);
+                    onedactionspace as(bestp,j,this->fconstraint);
 //                    std::vector<double> adds;
                     auto p = bestp;
                     double bestv = 0;
@@ -572,19 +573,19 @@ public:
 
         unsigned horizon = this->requiredhorizon(accuracy / 2);
 
-        sys::log() << "Required horizon: " << horizon << std::endl;
+        sys::log() << "required horizon: " << horizon << std::endl;
         auto bestv = this->evaluatecrit(s0ind, initps.p0, initps.ps, accuracy,params);
 
         heteropolicy bestps = initps;
-        heteropolicy oldps = initps;
+        heteropolicy iterps = initps;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
             sys::logline() << "iteration " << i << " value=" << bestv.x
-                           << " p:" << bestps.p0;
+                           << " p:" << iterps.p0;
             for(unsigned x=0; x<bestps.ps.size(); x++)
-                sys::log() <<  "," << bestps.ps[x];
+                sys::log() <<  "," << iterps.ps[x];
             sys::log() << std::endl;
-            for(unsigned j=0; j<=bestps.ps.size(); j++)
+            for(unsigned j=0; j<=iterps.ps.size(); j++)
             {
                 sys::logline() << "time=" << j << std::endl;
                 unsigned k= j==0 ? s0ind : 0;
@@ -592,24 +593,22 @@ public:
                 {
                     for(unsigned n = 0; n <= 1; n++ )
                     {
-                        heteropolicy p = bestps;
+                        heteropolicy p = iterps;
                         orpp::index& e = j==0 ? p.p0 : p.ps[j-1][k];
 
-                        if(n == 0 && e >0)
-                            e--;
-                        else if(n == 1 && e < this->fconstraint.num()-1)
-                            e++;
-                        else
-                            continue;
-                        sys::logline() << "k=" << k << "," << "p:";
-                        if(!this->fconstraint.isfeasible(e,k))
+                        if(n == 0)
                         {
-                            sys::log() << " infeasible" << std::endl;
-                            continue;
+                            if(!this->fconstraint.previousfeasible(e,k))
+                                continue;
+                        }
+                        else
+                        {
+                            if(!this->fconstraint.nextfeasible(e,k))
+                                continue;
                         }
                         auto v = this->evaluatecrit(s0ind, p.p0, p.ps, accuracy,params);
 
-                        sys::log() << " p:" << p.p0;
+                        sys::logline() << "k=" << k << "," << "p:" << p.p0;
                         for(unsigned x=0; x<p.ps.size(); x++)
                             sys::log() <<  "," << p.ps[x];
                         sys::log() << " = " << v.x << "(" << v.sd << ")";
@@ -629,11 +628,11 @@ public:
                         break;
                 }
             }
-            bool differs = oldps.p0 != bestps.p0;
+            bool differs = iterps.p0 != bestps.p0;
             if(!differs)
                 for(unsigned j=0; j<bestps.ps.size(); j++)
                 {
-                    if(!(oldps.ps[j] == bestps.ps[j]))
+                    if(!(iterps.ps[j] == bestps.ps[j]))
                     {
                         differs = true;
                         break;
@@ -641,9 +640,13 @@ public:
                 }
             if(!differs)
                 break;
-            oldps = bestps; 
-            sys::log() << "bestv=" << bestv.x << std::endl;
-        }
+            iterps = bestps;
+            }
+
+        sys::logline() << "bestp:" << bestps.p0;
+        for(unsigned x=0; x<bestps.ps.size(); x++)
+            sys::log() << "," << bestps.ps[x];
+        sys::log() << " crit=" << bestv.x << std::endl;
         pgdresult res;
         res.p = bestps;
         res.v = bestv;

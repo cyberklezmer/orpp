@@ -10,21 +10,19 @@ class testactionspace :
         public integerspace, public constrainedspace<unsigned int,unsigned int>
 {
 public:
-    testactionspace() : integerspace(0,1) {}
+    testactionspace(unsigned amaxcons) : integerspace(0,amaxcons) {}
+    unsigned maxcons() const { return num()-1; }
     virtual bool isfeasible(const unsigned int& e, const unsigned int& c) const
     {
-        if(c == 0 && e==1)
-            return false;
-        else
-            return true;
+        return e<=maxcons() && e <= c;
     }
 };
 
 class teststatespace : public integerspace
 {
 public:
-    static constexpr int nstates = 10;
-    teststatespace() : integerspace(0,nstates-1) {}
+    int nstates() const { return num(); }
+    teststatespace(unsigned anstates) : integerspace(0,anstates-1)  {}
 };
 
 class testreward : public dpreward<teststatespace, testactionspace>
@@ -37,19 +35,19 @@ public:
 class testtransition: public finitetransition<teststatespace,testactionspace>
 {
 public:
-    testtransition(probability ap) : fp(ap) {}
+    testtransition(probability ap, unsigned nstates)
+        : fp(ap), fnstates(nstates) {}
 private:
     virtual unsigned natoms_is(const dpcondition<unsigned int,unsigned int>&) const
-    { return teststatespace::nstates; }
+    { return fnstates; }
     virtual atom<unsigned int> atom_is(unsigned int i, const dpcondition<unsigned int,unsigned int>& c) const
     {
-        assert(i < teststatespace::nstates);
-        assert(c.s < teststatespace::nstates);
+        assert(i < fnstates);
+        assert(c.s < fnstates);
 //std::cout << "atom " << i << " = ";
-        assert(!(c.s == 0 && c.a==1));
-        assert(c.a <= 1);
-        assert(i < teststatespace::nstates);
-        auto s = c.s - c.a;
+        assert(c.a <= c.s);
+        assert(i < fnstates);
+        auto s = static_cast<int>(c.s) - static_cast<int>(c.a);
         if(s==0)
         {
             if(i==0)
@@ -65,11 +63,11 @@ private:
 //        int bincensorship = teststatespace::nstates - 1 - s;
 //        assert(bincensorship>=0);
         boost::math::binomial d(s,fp);
-        if(i < teststatespace::nstates - 1)
+        if(i < fnstates - 1)
             return { i,  boost::math::pdf( d, i - s ) };
         else
         {
-            assert(i == teststatespace::nstates - 1);
+            assert(i == fnstates - 1);
             double p = 0;
             for(int j=i-s; j<=s; j++)
                 p +=  boost::math::pdf( d, j);
@@ -78,6 +76,7 @@ private:
     }
     virtual bool is_sorted() const { return true; }
     probability fp;
+    unsigned fnstates;
 };
 
 using testcrit = CVaR<ldistribution<double>,true>;
@@ -86,11 +85,11 @@ class testproblem : public overallriskproblem<testcrit,
         teststatespace, testactionspace, testtransition, testreward>
 {
 public:
-    testproblem(probability alpha, probability pincrease, double gamma) :
+    testproblem(unsigned nstates, unsigned maxcons, probability alpha, probability pincrease, double gamma) :
         overallriskproblem<testcrit, teststatespace,
                     testactionspace, testtransition, testreward>
-          (testcrit(alpha),teststatespace(), testactionspace(),
-           testtransition(pincrease), testreward(), gamma,1,2.0 / (1-alpha)) {}
+          (testcrit(alpha),teststatespace(nstates), testactionspace(maxcons),
+           testtransition(pincrease,nstates), testreward(), gamma,1,2.0 / (1-alpha)) {}
 };
 
 
@@ -108,11 +107,13 @@ accuracytestresult testoverall(const testproblem& problem,
 class testhomoproblem: public testproblem::nestedproblem
 {
 public:
-    testhomoproblem(double iota, double pincrease, double gamma) :
+    testhomoproblem(unsigned nstates, unsigned maxcons,
+                    double iota, double pincrease, double gamma) :
 //        overallriskproblem<testcrit, teststatespace,
 //                    testactionspace, testtransition, testreward>
-          testproblem::nestedproblem(testcrit(iota),teststatespace(), testactionspace(),
-           testtransition(pincrease), testreward(), gamma, 1)
+          testproblem::nestedproblem(testcrit(iota),teststatespace(nstates),
+                                     testactionspace(maxcons),
+           testtransition(pincrease,nstates), testreward(), gamma, 1)
     {
     }
 };
@@ -142,123 +143,176 @@ void testhomotime(const testhomoproblem& problem,
 }
 
 
-void test(double kappa, double pincrease, double gamma,
+void test(unsigned nstates, unsigned maxcons,
+            double kappa, double pincrease, double gamma,
              orpp::index s0ind, double accuracy,
              unsigned testiters,
              const testproblem::computationparams& params)
 {
-   testproblem problem(kappa,pincrease,gamma);
+   testproblem problem(nstates, maxcons, kappa,pincrease,gamma);
 
    testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
    testoverall(problem,res.p[s0ind],{res.p},s0ind,accuracy,testiters,params);
 
-   testhomoproblem hp(res.iota, pincrease,gamma);
+   testhomoproblem hp(nstates, maxcons, res.iota, pincrease,gamma);
    testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
 }
 
-template <bool enumerate = false, bool test=false>
-void examine(double kappa, double gamma,  double accuracy, std::ostream& report)
-{
-    double pincrease = 0.7;
-    orpp::index s0ind = 1;
-    unsigned testiters = 10;
-
-    testproblem::computationparams pars;
-    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
-            = pars.fnestedparams.fthreadstouse = 8;
-    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
-            = pars.fnestedparams.fthreadbatch = 3000;
-    pars.fmaxevaliterations = 2000000;
-
-    testproblem problem(kappa,pincrease,gamma);
-
-    std::vector<orpp::index>  foop = {0,0,0,0,0,0,0,0,0,0};
-    finitepolicy foopp(foop);
-
-    if constexpr(test)
+/* tbd
+ *
+ *     if constexpr(test)
     {
         if(!testlipshitzproperty(problem,s0ind,foopp,accuracy,pars,2))
            throw exception("nonlipschitz or nonomonotonous problem");
     }
+*/
+
+struct examineprogram
+{
+    unsigned nstates;
+    unsigned maxcons;
+    double kappa;
+    double gamma;
+    double accuracy;
+    double pincrease = 0.7;
+    orpp::index s0ind = 1;
+//    unsigned testiters = 10;
+    bool heuristic = false;
+    bool taylorheuristic = false;
+    bool coordinatedescent = false;
+    bool riskneutral = false;
+//    bool pesudogradient = false;
+    bool pseudogradienthetero = false;
+    bool enumerate = false;
+    testproblem::computationparams pars;
+
+};
+
+void examine(examineprogram p, std::ostream& report)
+{
+    report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << "," << p.accuracy << ",";
+
+    testproblem problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma);
+
+    finitepolicy startingp(problem,0);
 
     // enumeration
-    if constexpr(enumerate) // tbd still only to log
+    unsigned tstart = sys::timems();
+
+    if(p.riskneutral)
     {
+         testhomoproblem hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma);
+         finitevaluefunction initV(hp,0);
+         testhomoproblem::viresult vires = hp.valueiteration(initV,p.accuracy,p.pars.fnestedparams);
+         report << vires.p << "," << vires.v[p.s0ind] << ",";
+    }
+    else
+        report << ",,";
+    unsigned rnend = sys::timems();
+
+    report << rnend - tstart << ",";
+
+
+    if(p.heuristic)
+    {
+        testproblem::heuristicresult hres = problem.heuristic<false>(p.s0ind,p.accuracy,p.pars);
+        report << hres.p << "," << hres.v << "," << hres.iota << ",";
+    }
+    else
+        report << ",,,";
+    unsigned hend = sys::timems();
+    report  << hend - rnend << ",";
+
+    if(p.taylorheuristic)
+    {
+        testproblem::heuristicresult hres = problem.taylorheuristic(p.s0ind,p.accuracy,startingp,p.pars);
+        report << hres.p << ","
+               << hres.v << "," << hres.iota << ",";
+    }
+    else
+        report << ",,,";
+    unsigned tend = sys::timems();
+    report << tend - hend << ",";
+
+
+    if(p.coordinatedescent)
+    {
+        testproblem::heuristicresult hres = problem.heuristic<true>(p.s0ind,p.accuracy,p.pars);
+        report << hres.p << "," << hres.v << "," << hres.iota << ",";
+    }
+    else
+        report << ",,,";
+    unsigned cdend = sys::timems();
+    report << cdend - rnend << ",";
+
+    if(p.enumerate) // tbd still only to log
+    {
+        sys::logline() << "enumerate" << std::endl;
         finitepolicy besthomo(problem);
         double besthomov = 0;
-        for(unsigned i=1; i< pow(2,teststatespace::nstates); i++)
+        for(unsigned i=1; i< pow(p.maxcons+1,p.nstates); i++)
         {
             finitepolicy policy(problem,0);
             auto decimal = i;
             unsigned k=0;
             bool feasible = true;
             while (decimal != 0) {
-                unsigned int p = decimal % 2;
-                if(!problem.constraint().feasible(p,k))
+                unsigned int z = decimal % (p.maxcons+1);
+                if(!problem.constraint().feasible(z,k))
                     feasible = false;
                 assert(k < policy.size());
-                policy[k++] = p;
-                decimal = decimal / 2;
+                policy[k++] = z;
+                decimal = decimal / (p.maxcons+1);
               }
-            sys::logline() << i << ": "  << policy;
             if(!feasible)
             {
-                sys::log() << " infeasible" << std::endl;
+                sys::logline() << i << ": "  << policy << " infeasible" << std::endl;
                 continue;
             }
 
-            auto res = problem.evaluatecrit(s0ind,policy, accuracy / 2, pars);
+            auto res = problem.evaluatecrit(p.s0ind,policy, p.accuracy / 2, p.pars);
+            sys::logline() << i << ": "  << policy << " " <<res.x << "(" << res.sd << ")";
             if(res.x > besthomov)
             {
                 besthomov = res.x;
                 besthomo = policy;
                 sys::log() << "*";
             }
-
-            sys::log() << " " << res.x << " (" << res.sd << ")";
             sys::log() << std::endl;
         }
+        sys::log() << "best of enumerate:" << besthomo << " "
+                   << besthomov << std::endl;
+        report << besthomo << "," << besthomov << ","; ;
     }
-    report << kappa << "," << gamma << "," << accuracy << ",";
-
-    unsigned tstart = sys::timems();
-
-//    testproblem::heuristicresult gdres = problem.heuristic<false>(s0ind,accuracy,pars);
-    unsigned gdend = sys::timems();
-//    report << gdres.p << ","
-//           << gdres.v << "," << gdres.iota << ","
-//           << gdend - tstart << ",";
-
-    testproblem::heuristicresult hres = problem.taylorheuristic(s0ind,accuracy,foopp,pars);
-    unsigned hend = sys::timems();
-     report << hres.p << ","
-           << hres.v << "," << hres.iota << ","
-           << hend - gdend << ",";
-throw;
-    testhomoproblem hp(0, pincrease,gamma);
-    finitevaluefunction initV(hp,0);
-    testhomoproblem::viresult vires = hp.valueiteration(initV,accuracy,pars.fnestedparams);
+    else
+        report << ",,";
 
     unsigned eend = sys::timems();
 
-    report << vires.p << ","
-           << vires.v[s0ind] << ","
-           << eend - hend << ",";
+    report << eend-cdend<< ",";
 
-    testproblem::heteropolicy heterop = { hres.p[s0ind], {hres.p, hres.p} };
 
-    testproblem::pgdresult respg = problem.pseudogradientdescent(s0ind, heterop, accuracy, pars);
+    if(p.pseudogradienthetero)
+    {
+        testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp, startingp} };
+
+        testproblem::pgdresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
+        report << respg.p.p0;
+        for(unsigned k=0;k < respg.p.ps.size(); k++)
+        {
+            report << "-";
+            report << respg.p.ps[k];
+        }
+        report << "," <<respg.v.x << ",";
+    }
+    else
+        report << ",,";
 
     unsigned pgend = sys::timems();
+    report << pgend - eend << ",";
 
-    report << respg.p.p0;
-    for(unsigned k=0;k < respg.p.ps.size(); k++)
-    {
-        report << "-";
-        report << respg.p.ps[k];
-    }
-    report << "," <<respg.v.x << "," << pgend - eend; ;
 
+    report << std::endl;
 
     // Calculating total time taken by the program.
     double time_taken = (pgend - tstart) / 1000.0;
@@ -266,7 +320,6 @@ throw;
         << time_taken << std::setprecision(5);
     sys::log() << " sec " << std::endl;
 
-    report << std::endl;
 }
 
 
@@ -275,16 +328,50 @@ int main()
     sys::setlog(std::cout);
     sys::setloglevel(0);
      std::ostringstream report;
-     report << "kappa,gamma,"
-           << "gdpolicy,gdcrit,accuracygdlambda,gdtime,"
+
+    testproblem::computationparams pars;
+
+    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
+             = pars.fnestedparams.fthreadstouse = 8;
+    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
+             = pars.fnestedparams.fthreadbatch = 3000;
+    pars.fmaxevaliterations = 2000000;
+
+    examineprogram p;
+    p.pars = pars;
+
+
+    p.pincrease = 0.7;
+    p.s0ind = 1;
+//    unsigned testiters = 10;
+    p.riskneutral = false;
+    p.heuristic = true;
+    p.taylorheuristic = false;
+    p.coordinatedescent = false;
+    p.enumerate = false;
+    p.pseudogradienthetero = true;
+
+
+     report << "rnpolicy,rncrit,rntime,"
+           << "nsatates,maxcons,kappa,gamma,accuracy"
            << "hpolicy,hcrit,hlambda,htime,"
-           << "epolicy,ecrit,etime,"
-           << "pgpolicy,pgcrit,pgtime" << std::endl;
-    report << std::setprecision(5);
+           << "tpolicy,tcrit,tlambda,ttime,"
+           << "cdolicy,cdcrit,cdlambda,cdtime,"
+           << "pgpolicy,pgcrit,pgtime"
+           << "egpolicy,egcrit,egtime"
+           << std::endl;
+
+     report << std::setprecision(5);
     std::vector<double> kappas = { 0.6, 0.75, 0.9 };
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
-    examine(kappas[2],gammas[1], 0.05, report); // tbd
+    p.nstates = 5;
+    p.maxcons = 3;
+    p.kappa = kappas[2];
+    p.gamma = gammas[1];
+    p.accuracy = 0.02;
+
+    examine(p, report); // tbd
     std::cout << report.str() << std::endl;
     return 0;
 }
