@@ -56,6 +56,59 @@ public:
     using nestedproblem = nestedproblembase<ConstrainedActionSpace,Reward>;
 
 
+    class taylorreward : public Reward
+    {
+    public:
+        taylorreward(const finitepolicy& base,
+                     const std::vector<double>& gradient) :
+            fbase(base), fgradient(gradient)
+        {
+            assert(fbase.size() == fgradient.size());
+        }
+        double operator() (const dpcondition<unsigned int,
+                                        typename ConstrainedActionSpace::Element_t>& x) const
+        {
+            assert(x.s < fgradient.size());
+            assert(x.s < fbase.size());
+            return std::max(0.0,Reward::operator()(x)+(x.a-fbase[x.s]) * fgradient[x.s]);
+        }
+        double maxgradadd(const ConstrainedActionSpace& space) const
+        {
+            double m = 0;
+            for(unsigned i=0; i<fgradient.size(); i++)
+            {
+                double x = 0;
+                if(fgradient[i] < 0)
+                {
+                    typename ConstrainedActionSpace::Element_t a;
+                    bool exists = space.firstfeasible(a,i);
+                    assert(exists);
+                    if(!exists)
+                        throw exception("maxgradadd: At least one feasible element needed");
+                    assert(a <= fbase[i]);
+                    x = - (fbase[i]-a) * fgradient[i];
+                }
+                else if(fgradient[i] > 0)
+                {
+                    typename ConstrainedActionSpace::Element_t a;
+                    bool exists = space.lastfeasible(a,i);
+                    assert(exists);
+                    if(!exists)
+                        throw exception("maxgradadd: At least one feasible element needed");
+                    assert(a >= fbase[i]);
+                    x = (fbase[i]-a) * fgradient[i];
+                }
+                m = std::max(m,x);
+            }
+            return m;
+        }
+
+    private:
+        finitepolicy fbase;
+        std::vector<double> fgradient;
+    };
+
+
     class onedreward : public Reward
     {
     public:
@@ -70,8 +123,10 @@ public:
     class onedactionspace : public ConstrainedActionSpace
     {
     public:
-        onedactionspace(const finitepolicy& maskpolicy, index freeindex)
-            : ffreeindex(freeindex), fmaskpolicy(maskpolicy) {}
+        onedactionspace(const finitepolicy& maskpolicy, index freeindex,
+                        const ConstrainedActionSpace& space)
+            : ConstrainedActionSpace(space),
+              ffreeindex(freeindex), fmaskpolicy(maskpolicy) {}
     private:
         index ffreeindex;
         finitepolicy fmaskpolicy;
@@ -89,6 +144,7 @@ public:
 
     using nestedonedproblem = nestedproblembase<onedactionspace,onedreward>;
 
+    using nestedtaylorproblem = nestedproblembase<ConstrainedActionSpace,taylorreward>;
 
     struct computationparams:
           public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
@@ -96,6 +152,7 @@ public:
     {
         computationparams() : fpseudogradientmaxiters(100),
             fheuristicmaxiters(100) {}
+        typename nestedtaylorproblem::computationparams fnestedtaylorparams;
         typename nestedproblem::computationparams fnestedparams;
         typename nestedonedproblem::computationparams fnestedonedparams;
         unsigned fpseudogradientmaxiters;
@@ -113,7 +170,8 @@ public:
               double rmlipshitzfactor) :
         finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
                          Transition,Reward>
-          (crit, state, constraint, transition, reward, gamma, maxreward)
+          (crit, state, constraint, transition, reward, gamma, maxreward),
+           frmlipshitzfactor(rmlipshitzfactor)
     {}
 
 private:
@@ -235,8 +293,9 @@ public:
             throw exception("Error finding nested r.a. parameter: from > to");
     }
 
-    template <bool gradientdescent=false>
-    heuristicresult heuristic(index s0ind, double accuracy, const computationparams& params) const
+    template <bool coordinatedescent=false>
+    heuristicresult heuristic(index s0ind, double accuracy,
+                              const computationparams& params) const
     {
         sys::logline() << "overallriskproblem::heuristic" << std::endl;
 
@@ -246,10 +305,12 @@ public:
         finitepolicy lastp = bestp;
         finitevaluefunction initV(this->fstatespace.num(),0);
 
-        double error;
-        double valueofcrit = 0;
-        for(unsigned i=0; i<params.fheuristicmaxiters; i++)
+        double lastvalueofcrit = 0;
+        double resultingvalueofcrit = 0;
+
+        for(unsigned i=0; ; i++)
         {
+
             nestedproblem problem(this->fcrit,
                                   this->fstatespace,
                                   this->fconstraint,
@@ -257,42 +318,47 @@ public:
                                   this->fgamma,
                                   this->fmaxreward);
 
-            if constexpr(gradientdescent)
+            if constexpr(coordinatedescent)
             {
                 if(i==0)
                 {
-                   sys::logline() << "Initial iteration" << std::endl;
                    problem.setriskaversion(iota);
                    auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
                    bestp = vires.p;
-                   initV = vires.v;
-                   statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
-                   valueofcrit = this->fcrit(cs.dist).x;
-                   iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
+                   statcounter cs = problem.evaluateraw( s0ind, vires.p, accuracy / 2.0, params.fnestedparams);
+                   double valueofcrit = this->fcrit(cs.dist).x;
+                   sys::logline() << "Initial iteration iota=" << iota
+                                  << " homocrit=" << vires.v[s0ind]
+                                  << " crit=" << valueofcrit
+                                  << " p:" << bestp << std::endl;
                 }
 
                 for(unsigned j=0; j<this->fstatespace.num(); j++)
                 {
-                    onedactionspace as(bestp,j);
-                    std::vector<double> adds;
+                    onedactionspace as(bestp,j,this->fconstraint);
+//                    std::vector<double> adds;
                     auto p = bestp;
-                    double maxadd = 0;
+                    double bestv = 0;
                     for(index k=0; k<as.num(); k++)
                     {
                         if(as.isfeasible(k,j))
                         {
                             p[j] = k;
-                            statcounter cs = problem.evaluateraw( s0ind, {p}, accuracy / 2.0, params.fnestedparams);
-                            auto c = this->fcrit(cs.dist).x;
-
-                            auto lambda = findiota(problem,p,c,initV, s0ind, accuracy, params.fnestedparams);
-                            double addition = 2 * this->maxreward() * this->frmlipshitzfactor * (this->fcrit.getparam() - fabs(lambda-iota) );
-                            adds.push_back(addition);
-                            if(addition > maxadd)
-                                maxadd = addition;
+                            statcounter cs = problem.evaluateraw( s0ind, p, accuracy / 2.0, params.fnestedparams);
+                            auto thisv = this->fcrit(cs.dist).x;
+                            if(thisv > bestv)
+                            {
+                                bestv = thisv;
+                                bestp = p;
+                            }
                         }
-                        else
-                            adds.push_back(0);
+                    }
+/*                    if(sys::loglevel() >= 1)
+                    {
+                        sys::logline(1) << "Penalizations:";
+                        for(unsigned i=0; i<adds.size(); i++)
+                            sys::log() << " " << adds[i];
+                        sys::log() << std::endl;
                     }
                     onedreward r(adds);
                     nestedonedproblem onedproblem(this->fcrit,
@@ -305,57 +371,71 @@ public:
 
                     auto vires = onedproblem.valueiteration(initV,accuracy/3,params.fnestedonedparams);
 
-                    statcounter cs = onedproblem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedonedparams);
-                    valueofcrit = this->fcrit(cs.dist).x ;
-
-                    valueofcrit = valueofcrit;
                     initV = vires.v;
                     bestp = vires.p;
-
+*/
                     sys::logline() << "iteration " << i << "(" << j << ") " << " iota=" << iota
-                                   << " np=" << vires.v[s0ind]
-                                   << " pen(v)=" << vires.v[s0ind]
-                                   << " pen(c)=" << valueofcrit + adds[j]
-                                   << " crit=" << valueofcrit
-                                 << " p:" << bestp << std::endl;
-
+                                   << " p:" << bestp
+                                   << " crit=" << bestv
+                                   << std::endl;
                 }
+                auto crit = this->evaluatecrit( s0ind, bestp, accuracy / 2.0, params);
+                double valueofcrit = crit.x ;
+                sys::logline() << "iteration " << i << " iota=" << iota
+                               << " p:" << bestp
+                               << " crit=" << valueofcrit
+                               << std::endl;
+
+//                if(i>0)
+//                    if(valueofcrit < lastvalueofcrit - 2 * accuracy)
+//                        throw exception("Internal error - coordinate descent not descending!");
                 if(i > 0)
                 {
-                    if(lastp == bestp)
+                    if(lastp == bestp || i==params.fheuristicmaxiters-1)
+                    {
+                        resultingvalueofcrit = valueofcrit;
                         break;
+                    }
                 }
                 lastp=bestp;
-
-                iota = findiota(problem,bestp,valueofcrit,initV, s0ind, accuracy, params.fnestedparams);
+                lastvalueofcrit = valueofcrit;
+                iota = findiota(problem,bestp,valueofcrit,finitevaluefunction(*this,0), s0ind, accuracy, params.fnestedparams);
             }
             else //constexpr gradientdescent
             {
                 problem.setriskaversion(iota);
-                sys::logline() << "iteration " << i << " iota=" << iota << " cirt=" << valueofcrit << std::endl;
 
                 auto vires = problem.valueiteration(initV,accuracy/3,params.fnestedparams);
 
                 initV = vires.v;
-                bestp = vires.p;
 
                 statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
 
-                valueofcrit = this->fcrit(cs.dist).x;
+                double valueofcrit = this->fcrit(cs.dist).x;
+
+                sys::logline() << "iteration " << i << " iota=" << iota << ", p="
+                               << vires.p << ", crit=" << valueofcrit << std::endl;
+
 
                 if(i > 0)
                 {
-                    if(lastp == bestp)
+                    if(valueofcrit <= lastvalueofcrit + accuracy
+                            || i==params.fheuristicmaxiters-1)
+                    {
+                        resultingvalueofcrit = lastvalueofcrit;
+                        bestp = lastp;
                         break;
+                    }
                 }
-                lastp=bestp;
+                lastp=vires.p;
+                lastvalueofcrit = valueofcrit;
 
                 iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
             }
         }
         heuristicresult res(*this);
         res.p = bestp;
-        res.v = valueofcrit;
+        res.v = resultingvalueofcrit;
         res.e = accuracy;
         res.iota = iota;
         sys::logline() << "huristic ended: ";
@@ -363,15 +443,128 @@ public:
         return res;
     }
 
-    struct pgdresult
+    heuristicresult taylorheuristic(index s0ind, double accuracy,
+                                    finitepolicy& initp,
+                              const computationparams& params) const
     {
-        valuewitherror<double> v;
+        sys::logline() << "overallriskproblem::taylorheuristic" << std::endl;
+
+        finitepolicy candp(initp);
+        finitepolicy lastp(initp);
+        finitevaluefunction initV(*this,0);
+        finitevaluefunction taylorinitV(*this,0);
+        double lastvalueofcrit = 0;
+        double iota;
+        for(unsigned i=0; ; i++)
+        {
+            nestedproblem nproblem(this->fcrit,
+                                  this->fstatespace,
+                                  this->fconstraint,
+                                  this->ftransition,
+                                  this->freward,
+                                  this->fgamma,
+                                  this->fmaxreward);
+
+            double valueofcrit =  this->evaluatecrit( s0ind, candp, accuracy / 2.0, params).x;
+
+            iota = findiota(nproblem,candp,valueofcrit,initV, s0ind, accuracy, params.fnestedparams);
+
+            sys::logline() << "iteration " << i << " iota=" << iota << ", p="
+                         << candp << ", crit=" << valueofcrit << std::endl;
+
+            if((i>0 && valueofcrit <= lastvalueofcrit + accuracy)
+                    || i==params.fheuristicmaxiters-1)
+                break;
+
+            nproblem.setriskaversion(iota);
+
+            std::vector<double> grad;
+            for(unsigned s=0; s<candp.size(); s++)
+            {
+                auto p=candp;
+                typename ConstrainedActionSpace::Element_t a0 = p[s];
+                typename ConstrainedActionSpace::Element_t a1 = a0;
+                if(this->fconstraint.nextfeasible(a1,s))
+                {
+                    assert(a1 > a0);
+                }
+                else if(this->fconstraint.previousfeasible(a1,s))
+                {
+                    assert(a1 < a0);
+                }
+                else
+                {
+                    grad.push_back(0);
+                    continue;
+                }
+                assert(a0 != a1);
+                p[s] = a1;
+                double rhoalpha = this->evaluatecrit( s0ind, p, accuracy / 2.0, params).x;
+                auto taylorV = nproblem.evaluate(initV,p,accuracy / 2, params.fnestedparams).x;
+                double rhoeta = taylorV[s0ind];
+ //std::cout << "s=" << s << " r0=" << rhoeta << " r1=" << rhoalpha
+//          << " d=" << (static_cast<double>(a1) - static_cast<double>(a0))
+//          << " p:" << p << std::endl;
+                grad.push_back((1-this->fgamma)*(rhoalpha-rhoeta) / (a1 - a0));
+                taylorinitV = taylorV;
+            }
+            taylorreward r(candp,grad);
+            double addition = (1-this->fgamma) * r.maxgradadd(this->fconstraint);
+
+            sys::logline(0) << "grad=";
+            for(unsigned k=0; k<grad.size(); k++)
+                sys::log() << grad[k] << " ";
+            sys::log() << std::endl;
+
+            nestedtaylorproblem taylorproblem(this->fcrit,
+                                  this->fstatespace,
+                                  this->fconstraint,
+                                  this->ftransition,r,
+                                  this->fgamma,
+                                  this->fmaxreward + addition); // should be reset
+
+            taylorproblem.setriskaversion(iota);
+
+            auto vires = taylorproblem.valueiteration(initV,accuracy/3,params.fnestedtaylorparams);
+
+
+
+
+            lastp = candp;
+            candp = vires.p;
+            taylorinitV = vires.v;
+            lastvalueofcrit = valueofcrit;
+
+        }
+        heuristicresult res(*this);
+        res.p = lastp;
+        res.v = lastvalueofcrit;
+        res.e = accuracy;
+        res.iota = iota;
+        sys::logline() << "taylor huristic ended: ";
+        res.output(sys::log());
+        return res;
+    }
+
+
+    struct heteropolicy
+    {
+        orpp::index p0;
         std::vector<finitepolicy> ps;
     };
 
+
+    struct pgdresult
+    {
+        valuewitherror<double> v;
+        heteropolicy p;
+    };
+
+
+//    template <bool bindp0>
     pgdresult pseudogradientdescent(
                           orpp::index s0ind,
-                          std::vector<finitepolicy>& ps,
+                          const heteropolicy& initps,
                           double accuracy,
                           const computationparams& params
                            )
@@ -380,42 +573,44 @@ public:
 
         unsigned horizon = this->requiredhorizon(accuracy / 2);
 
-        sys::log() << "Required horizon: " << horizon << std::endl;
-        auto bestv = this->evaluatecrit(s0ind, ps, accuracy,params);
+        sys::log() << "required horizon: " << horizon << std::endl;
+        auto bestv = this->evaluatecrit(s0ind, initps.p0, initps.ps, accuracy,params);
 
-        std::vector<finitepolicy> bestps = ps;
+        heteropolicy bestps = initps;
+        heteropolicy iterps = initps;
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
-            sys::logline() << "iteration " << i << " value=" << bestv.x << " ";
-            for(unsigned x=0; x<ps.size(); x++)
-                sys::log() << ps[x] << ",";
+            sys::logline() << "iteration " << i << " value=" << bestv.x
+                           << " p:" << iterps.p0;
+            for(unsigned x=0; x<bestps.ps.size(); x++)
+                sys::log() <<  "," << iterps.ps[x];
             sys::log() << std::endl;
-            for(unsigned j=0; j<ps.size(); j++)
+            for(unsigned j=0; j<=iterps.ps.size(); j++)
             {
                 sys::logline() << "time=" << j << std::endl;
-                for(unsigned k=0; k<ps[j].size(); k++)
+                unsigned k= j==0 ? s0ind : 0;
+                for(; ; k++)
                 {
                     for(unsigned n = 0; n <= 1; n++ )
                     {
-                        std::vector<finitepolicy> p = ps;
-                        if(n == 0 && p[j][k]>0)
-                            p[j][k]--;
-                        else if(n == 1 && p[j][k] < this->fconstraint.num()-1)
-                            p[j][k]++;
-                        else
-                            continue;
-                        sys::logline() << "k=" << k << "," << "p:";
-                        if(!this->fconstraint.isfeasible(p[j][k],k))
-                        {
-                            for(unsigned x=0; x<ps.size(); x++)
-                              sys::log() <<  p[x] << ",";
-                            sys::log() << " infeasible" << std::endl;
-                            continue;
-                        }
-                        auto v = this->evaluatecrit(s0ind, p, accuracy,params);
+                        heteropolicy p = iterps;
+                        orpp::index& e = j==0 ? p.p0 : p.ps[j-1][k];
 
-                        for(unsigned x=0; x<ps.size(); x++)
-                            sys::log() <<  p[x] << ",";
+                        if(n == 0)
+                        {
+                            if(!this->fconstraint.previousfeasible(e,k))
+                                continue;
+                        }
+                        else
+                        {
+                            if(!this->fconstraint.nextfeasible(e,k))
+                                continue;
+                        }
+                        auto v = this->evaluatecrit(s0ind, p.p0, p.ps, accuracy,params);
+
+                        sys::logline() << "k=" << k << "," << "p:" << p.p0;
+                        for(unsigned x=0; x<p.ps.size(); x++)
+                            sys::log() <<  "," << p.ps[x];
                         sys::log() << " = " << v.x << "(" << v.sd << ")";
 
                         if(v.x > bestv.x + bestv.sd)
@@ -427,27 +622,41 @@ public:
 
                         sys::log() << std::endl;
                     }
+                    if(j==0)
+                        break;
+                    if(k==bestps.ps[j-1].size()-1)
+                        break;
                 }
             }
-            bool differs = false;
-            for(unsigned j=0; j<ps.size(); j++)
-            {
-                if(!(ps[j] == bestps[j]))
+            bool differs = iterps.p0 != bestps.p0;
+            if(!differs)
+                for(unsigned j=0; j<bestps.ps.size(); j++)
                 {
-                    differs = true;
-                    break;
+                    if(!(iterps.ps[j] == bestps.ps[j]))
+                    {
+                        differs = true;
+                        break;
+                    }
                 }
-            }
             if(!differs)
                 break;
+            iterps = bestps;
+            }
 
-            sys::log() << "bestv=" << bestv.x << std::endl;
-        }
+        sys::logline() << "bestp:" << bestps.p0;
+        for(unsigned x=0; x<bestps.ps.size(); x++)
+            sys::log() << "," << bestps.ps[x];
+        sys::log() << " crit=" << bestv.x << std::endl;
         pgdresult res;
-        res.ps = bestps;
+        res.p = bestps;
         res.v = bestv;
         return res;
     }
+    double lipschitzconstant() const
+    {
+        return frmlipshitzfactor * this->maxreward() / (1 - this->gamma());
+    }
+    void setriskaversion(double ra) { this->crit().setparam(ra); }
 
 private:
     double frmlipshitzfactor;

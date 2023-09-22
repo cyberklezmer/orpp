@@ -49,6 +49,8 @@ public:
     double gamma() const { return fgamma; }
     const ConstrainedActionSpace& constraint() const { return fconstraint; }
     const Statespace& statespace() const { return fstatespace; }
+    const Criterion& crit() const { return fcrit; }
+    Criterion& crit() { return fcrit; }
 protected:
     Criterion fcrit;
     Statespace fstatespace;
@@ -136,6 +138,40 @@ public:
                 return true;
         }
         return false;
+    }
+    bool previousfeasible(AElement& e, const SElement& c) const
+    {
+        AElement x;
+        if(firstfeasible(x, c))
+        {
+            for(;;)
+            {
+                AElement prev = x;
+                if(!nextfeasible(x,c))
+                    return false;
+                if(x == e)
+                {
+                    e = prev;
+                    return true;
+                }
+            }
+        }
+        else
+            return false;
+    }
+    bool lastfeasible(AElement& e, const SElement& c) const
+    {
+        if(firstfeasible(e, c))
+        {
+            for(;;)
+            {
+                if(!nextfeasible(e,c))
+                    return true;
+            }
+            return false; //shouldnot get here
+        }
+        else
+            return false;
     }
     bool feasible(const AElement& a, const SElement& s) const
     {
@@ -266,6 +302,8 @@ public:
         : std::vector<double>(p.statespace().num(),initial) {}
     finitevaluefunction(unsigned num, index initial = 0 )
         : std::vector<double>(num,initial) {}
+    finitevaluefunction(const finitevaluefunction& v)
+        : std::vector<double>(v) {}
 };
 
 
@@ -327,16 +365,25 @@ public:
     }
 
     valuewitherror<double> evaluatecrit(index s0ind,
+                                         typename ConstrainedActionSpace::Element_t p0,
                                          const std::vector<finitepolicy>& ps,
                                          double accuracy,
                                          const computationparams& params) const
     {
-        statcounter sc = this->evaluateraw(s0ind, ps, accuracy, params);
-
+        statcounter sc = this->evaluateraw(s0ind, p0, ps, accuracy, params);
+        return this->fcrit(sc.dist);
+    }
+    valuewitherror<double> evaluatecrit(index s0ind,
+                                         const finitepolicy& p,
+                                         double accuracy,
+                                         const computationparams& params) const
+    {
+        statcounter sc = this->evaluateraw(s0ind, p[s0ind], {p}, accuracy, params);
         return this->fcrit(sc.dist);
     }
 private:
      void computepath(orpp::index s0index,
+                     typename ConstrainedActionSpace::Element_t p0,
                      const std::vector<finitepolicy>& p,
                      unsigned timehorizon,
                       std::vector<double>* results,
@@ -353,7 +400,12 @@ private:
             {
                 dpcondition<unsigned int,unsigned int> c;
                 c.s = this->fstatespace[sindex];
-                c.a = i<p.size() ? p[i][sindex] : p[p.size()-1][sindex];
+                if(i==0)
+                    c.a = p0;
+                else if(i<p.size())
+                    c.a = p[i][sindex];
+                else
+                    c.a = p[p.size()-1][sindex];
                 sum += discount * this->freward(c);
 //sindex = n % 5;//
                 sindex = this->ftransition.draw(c);
@@ -387,6 +439,15 @@ private:
     }
 public:
     statcounter evaluateraw(index s0index,
+                         const finitepolicy& p,
+                         double accuracy,
+                         const computationparams& params) const
+    {
+        return evaluateraw(s0index,p[s0index],{p}, accuracy, params);
+    }
+
+    statcounter evaluateraw(index s0index,
+                         typename ConstrainedActionSpace::Element_t p0,
                          const std::vector<finitepolicy>& p,
                          double accuracy,
                          const computationparams& params) const
@@ -408,7 +469,7 @@ public:
             {
                 std::vector<double> sum(1);
                 unsigned foocnt;
-                computepath(s0index,p, timehorizon, &sum,&foocnt);
+                computepath(s0index,p0, p, timehorizon, &sum,&foocnt);
                 sc.add(sum[0]);
                 j++;
             }
@@ -423,7 +484,7 @@ public:
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     ts.push_back(std::thread(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
                                     Transition,Reward>::computepath,
-                                 this, s0index,p, timehorizon, &rs[k], &ns[k]));
+                                 this, s0index,p0, p, timehorizon, &rs[k], &ns[k]));
                 bool semaphor = false;
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting the observing thread" << std::endl;
@@ -481,6 +542,9 @@ if(foofoo)
            sys::logline(2) << "dpproblem::evaluateraw ended: n="
                       << sc.num << ", stdev=" << sc.averagestdev() << std::endl;
         }
+//std::cout << "Evaluateraw: s="
+//            << p.size() << " p=" << p[0] << " ave=" << sc.average() << std::endl;
+
         return sc;
     }
 
