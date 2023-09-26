@@ -334,11 +334,16 @@ public:
     {
         computationparams() : fmaxevaliterations(1000000),
             fthreadstouse(0), fthreadbatch(1000),
-            fevaltimelimit(std::numeric_limits<timems>::max()) {}
+            fevaltimelimit(std::numeric_limits<timems>::max()),
+            fpseudogradientmaxiters(1000000),
+            fpseudogradienttimelimit(std::numeric_limits<timems>::max())
+          {}
         unsigned fmaxevaliterations;
         unsigned fthreadstouse;
         unsigned fthreadbatch;
         timems fevaltimelimit;
+        unsigned fpseudogradientmaxiters;
+        timems fpseudogradienttimelimit;
     };
 
     finitedpproblem(const Criterion& crit,
@@ -558,6 +563,156 @@ if(foofoo)
 
 
     double maxreward() const { return fmaxreward; }
+
+
+    struct heteropolicy
+    {
+        orpp::index p0;
+        std::vector<finitepolicy> ps;
+    };
+
+
+    struct pgdheteroresult
+    {
+        valuewitherror<double> v;
+        heteropolicy p;
+    };
+
+
+    template <bool bindp0 = false>
+    pgdheteroresult pseudogradientdescent(
+                          orpp::index s0ind,
+                          const heteropolicy& initps,
+                          double accuracy,
+                          const computationparams& params,
+                          unsigned initialstep = std::numeric_limits<unsigned>::max()
+                           )
+    {
+        sys::logline() << "overallriskproblem::pseudogradientdescent,";
+
+        unsigned horizon = this->requiredhorizon(accuracy / 2);
+
+        sys::log() << "required horizon: " << horizon << std::endl;
+        auto bestv = this->evaluatecrit(s0ind, initps.p0, initps.ps, accuracy,params);
+
+        heteropolicy bestps = initps;
+        heteropolicy iterps = initps;
+
+        auto st = sys::gettimems();
+
+        unsigned step = std::max(1U,std::min(initialstep,this->fconstraint.num() / 2 -1));
+
+        for(unsigned i=0; i<params.fpseudogradientmaxiters; i++)
+        {
+            sys::logline() << "iteration " << i << " step " << step <<" value=" << bestv.x
+                           << " p:" << iterps.p0;
+            for(unsigned x=0; x<bestps.ps.size(); x++)
+                sys::log() <<  "," << iterps.ps[x];
+            sys::log() << std::endl;
+            for(unsigned j= bindp0 ? 1 : 0; j<=iterps.ps.size(); j++)
+            {
+                sys::logline() << "time=" << j << std::endl;
+                unsigned k= j==0 ? s0ind : 0;
+                for(; ; k++)
+                {
+                    for(unsigned n = 0; n <= 1; n++ )
+                    {
+                        heteropolicy p = iterps;
+                        orpp::index& e = j==0 ? p.p0 : p.ps[j-1][k];
+
+                        bool atleastone = false;
+                        for(unsigned m=0; m<step; m++)
+                        {
+                            auto f=e;
+                            if(n==0 ? this->fconstraint.previousfeasible(f,k)
+                                    : this->fconstraint.nextfeasible(f,k))
+                            {
+                                e = f;
+                                atleastone = true;
+                            }
+                            else
+                                break;
+                        }
+                        if(!atleastone)
+                            continue;
+                        if constexpr(bindp0)
+                        {
+                           if(j==1 && k==s0ind)
+                                p.p0 = p.ps[0][s0ind];
+                        }
+                        auto v = this->evaluatecrit(s0ind, p.p0, p.ps, accuracy,params);
+
+                        sys::logline() << "k=" << k << "," << "p:" << p.p0;
+                        for(unsigned x=0; x<p.ps.size(); x++)
+                            sys::log() <<  "," << p.ps[x];
+                        sys::log() << " = " << v.x << "(" << v.sd << ")";
+
+                        if(v.x > bestv.x + bestv.sd)
+                        {
+                            sys::log() << "*";
+                            bestv = v;
+                            bestps = p;
+                        }
+
+                        sys::log() << std::endl;
+                    }
+                    if(j==0)
+                        break;
+                    if(k==bestps.ps[j-1].size()-1)
+                        break;
+                }
+            }
+            if(step == 1)
+            {
+                bool differs = iterps.p0 != bestps.p0;
+                if(!differs)
+                    for(unsigned j=0; j<bestps.ps.size(); j++)
+                    {
+                        if(!(iterps.ps[j] == bestps.ps[j]))
+                        {
+                            differs = true;
+                            break;
+                        }
+                    }
+                if(!differs)
+                    break;
+            }
+            iterps = bestps;
+            auto t = sys::gettimems();
+            if(t - st > params.fpseudogradienttimelimit)
+                throw timelimitexception(params.fpseudogradienttimelimit);
+            step = std::max(1U,step/2);
+        }
+
+        sys::logline() << "bestp:" << bestps.p0;
+        for(unsigned x=0; x<bestps.ps.size(); x++)
+            sys::log() << "," << bestps.ps[x];
+        sys::log() << " crit=" << bestv.x << std::endl;
+        pgdheteroresult res;
+        res.p = bestps;
+        res.v = bestv;
+        return res;
+    }
+
+    struct pgdhomoresult
+    {
+        valuewitherror<double> v;
+        finitepolicy p;
+    };
+
+    pgdhomoresult pseudogradientdescent(
+                          orpp::index s0ind,
+                          const finitepolicy& initp,
+                          double accuracy,
+                          const computationparams& params,
+                          unsigned initialstep = std::numeric_limits<unsigned>::max()
+                           )
+    {
+        heteropolicy hp { initp[s0ind], {initp} };
+        auto res = pseudogradientdescent<true>(s0ind,
+                                  hp,accuracy, params,initialstep);
+        return { res.v, res.p.ps[0]};
+    }
 protected:
     double fmaxreward;
 

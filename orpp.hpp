@@ -42,6 +42,8 @@ public:
     exception(const std::ostringstream& s) : std::runtime_error(s.str()) {}
 };
 
+using timems = unsigned;
+
 class sys
 {
     static sys& self()
@@ -115,8 +117,8 @@ public:
     }
     static std::ostream& logline(unsigned level=0)
     {
-        auto tm = timems();
-        log() << timems() << "," << tm - self().flastlinetime << ",";
+        auto tm = gettimems();
+        log() << tm << "," << tm - self().flastlinetime << ",";
         self().flastlinetime = tm;
         for(unsigned i=0; i<level; i++)
         {
@@ -144,12 +146,12 @@ public:
         return self().ftmpfolder;
     }
 
-    static unsigned timems()
+    static timems gettimems()
     {
         return abstimems() - self().fstarttime;
     }
 
-    static unsigned abstimems()
+    static timems abstimems()
     {
         auto now_ms = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
         auto epoch = now_ms.time_since_epoch();
@@ -212,9 +214,28 @@ private:
     std::string foutputfolder;
     std::string ftmpfolder;
     std::vector<std::pair<std::string,std::string>> fenv;
-    unsigned fstarttime;
-    unsigned flastlinetime;
+    timems  fstarttime;
+    timems  flastlinetime;
 };
+
+
+class timelimitexception : public exception
+{
+    static std::string message(timems limit)
+    {
+       std::ostringstream e;
+       e << "Time limit " << limit << " reached";
+       return e.str();
+    }
+public:
+    template <typename T>
+    timelimitexception(timems limit,const T& s) : exception(s), flimit(limit) {}
+    timelimitexception(timems limit) : exception(message(limit)), flimit(limit) {}
+    timems limit() const { return flimit; }
+private:
+    timems flimit;
+};
+
 
 /// Heap pointer to \p T
 template <typename T>

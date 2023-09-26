@@ -151,7 +151,7 @@ void test(unsigned nstates, unsigned maxcons,
 {
    testproblem problem(nstates, maxcons, kappa,pincrease,gamma);
 
-   testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
+   testproblem::heuristicresult res = problem.heuristic(s0ind,accuracy,params);
    testoverall(problem,res.p[s0ind],{res.p},s0ind,accuracy,testiters,params);
 
    testhomoproblem hp(nstates, maxcons, res.iota, pincrease,gamma);
@@ -179,7 +179,7 @@ struct examineprogram
 //    unsigned testiters = 10;
     bool heuristic = false;
     bool taylorheuristic = false;
-    bool coordinatedescent = false;
+    bool pseudogradienthomo = false;
     bool riskneutral = false;
 //    bool pesudogradient = false;
     bool pseudogradienthetero = false;
@@ -197,7 +197,7 @@ void examine(examineprogram p, std::ostream& report)
     finitepolicy startingp(problem,0);
 
     // enumeration
-    unsigned tstart = sys::timems();
+    unsigned tstart = sys::gettimems();
 
     if(p.riskneutral)
     {
@@ -208,19 +208,19 @@ void examine(examineprogram p, std::ostream& report)
     }
     else
         report << ",,";
-    unsigned rnend = sys::timems();
+    unsigned rnend = sys::gettimems();
 
     report << rnend - tstart << ",";
 
 
     if(p.heuristic)
     {
-        testproblem::heuristicresult hres = problem.heuristic<false>(p.s0ind,p.accuracy,p.pars);
+        testproblem::heuristicresult hres = problem.heuristic(p.s0ind,p.accuracy,p.pars);
         report << hres.p << "," << hres.v << "," << hres.iota << ",";
     }
     else
         report << ",,,";
-    unsigned hend = sys::timems();
+    unsigned hend = sys::gettimems();
     report  << hend - rnend << ",";
 
     if(p.taylorheuristic)
@@ -231,23 +231,25 @@ void examine(examineprogram p, std::ostream& report)
     }
     else
         report << ",,,";
-    unsigned tend = sys::timems();
+    unsigned tend = sys::gettimems();
     report << tend - hend << ",";
 
-
-    if(p.coordinatedescent)
+    if(p.pseudogradienthomo)
     {
-        testproblem::heuristicresult hres = problem.heuristic<true>(p.s0ind,p.accuracy,p.pars);
-        report << hres.p << "," << hres.v << "," << hres.iota << ",";
+        testproblem::pgdhomoresult respg = problem.pseudogradientdescent(p.s0ind, startingp, p.accuracy, p.pars);
+        report << respg.p;
+        report << "," <<respg.v.x << ",";
     }
     else
-        report << ",,,";
-    unsigned cdend = sys::timems();
+        report << ",,";
+
+    unsigned cdend = sys::gettimems();
     report << cdend - rnend << ",";
 
     if(p.enumerate) // tbd still only to log
     {
         sys::logline() << "enumerate" << std::endl;
+        auto st = sys::gettimems();
         finitepolicy besthomo(problem);
         double besthomov = 0;
         for(unsigned i=1; i< pow(p.maxcons+1,p.nstates); i++)
@@ -279,6 +281,10 @@ void examine(examineprogram p, std::ostream& report)
                 sys::log() << "*";
             }
             sys::log() << std::endl;
+            auto t = sys::gettimems();
+            if(t - st > p.pars.fopttimelimit)
+                throw timelimitexception(p.pars.fopttimelimit);
+
         }
         sys::log() << "best of enumerate:" << besthomo << " "
                    << besthomov << std::endl;
@@ -287,7 +293,7 @@ void examine(examineprogram p, std::ostream& report)
     else
         report << ",,";
 
-    unsigned eend = sys::timems();
+    unsigned eend = sys::gettimems();
 
     report << eend-cdend<< ",";
 
@@ -296,7 +302,7 @@ void examine(examineprogram p, std::ostream& report)
     {
         testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp, startingp} };
 
-        testproblem::pgdresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
+        testproblem::pgdheteroresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
         report << respg.p.p0;
         for(unsigned k=0;k < respg.p.ps.size(); k++)
         {
@@ -308,7 +314,7 @@ void examine(examineprogram p, std::ostream& report)
     else
         report << ",,";
 
-    unsigned pgend = sys::timems();
+    unsigned pgend = sys::gettimems();
     report << pgend - eend << ",";
 
 
@@ -332,7 +338,8 @@ int main()
     testproblem::computationparams pars;
 
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
-             = pars.fnestedparams.fthreadstouse = 8;
+             = pars.fnestedparams.fthreadstouse =
+1;// 8;
     pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
              = pars.fnestedparams.fthreadbatch = 3000;
     pars.fmaxevaliterations = 2000000;
@@ -344,13 +351,14 @@ int main()
     p.pincrease = 0.7;
     p.s0ind = 1;
 //    unsigned testiters = 10;
-    p.riskneutral = true;
+    p.riskneutral = false;
     p.heuristic = true;
-    p.taylorheuristic = true;
-    p.coordinatedescent = true;
+    p.taylorheuristic = false;
+    p.pseudogradienthomo = true;
     p.enumerate = false;
-    p.pseudogradienthetero = true;
-
+    p.pseudogradienthetero = false;
+//    p.pars.fpseudogradienttimelimit = 1000000;
+//    p.pars.fopttimelimit = 2000;
 
      report << "rnpolicy,rncrit,rntime,"
            << "nsatates,maxcons,kappa,gamma,accuracy"
@@ -366,10 +374,10 @@ int main()
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
     p.nstates = 8;
-    p.maxcons = 3;
+    p.maxcons = 5;
     p.kappa = kappas[2];
     p.gamma = gammas[1];
-    p.accuracy = 0.002;
+    p.accuracy = 0.05;
 
     examine(p, report); // tbd
     std::cout << report.str() << std::endl;
