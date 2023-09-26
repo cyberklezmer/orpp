@@ -10,6 +10,7 @@
 namespace orpp
 {
 
+
 template <typename Element>
 class space : public object
 {
@@ -332,10 +333,12 @@ public:
     struct computationparams
     {
         computationparams() : fmaxevaliterations(1000000),
-            fthreadstouse(0), fthreadbatch(1000) {}
+            fthreadstouse(0), fthreadbatch(1000),
+            fevaltimelimit(std::numeric_limits<timems>::max()) {}
         unsigned fmaxevaliterations;
         unsigned fthreadstouse;
         unsigned fthreadbatch;
+        timems fevaltimelimit;
     };
 
     finitedpproblem(const Criterion& crit,
@@ -428,7 +431,7 @@ private:
         {
             observerrecord r;
 
-            r.t = sys().timems();
+            r.t = sys().gettimems();
             r.ns = *ns;
             r.final = final;
             obs->push_back(r);
@@ -460,6 +463,7 @@ public:
                sys::log() << p[i] << ",";
            sys::log() << "}, "<< accuracy<< ", ...)" << std::endl;
         }
+        auto st = sys::gettimems();
         unsigned timehorizon = requiredhorizon(accuracy / 2);
         statcounter sc;
         std::vector<observerrecord> obss;
@@ -531,6 +535,10 @@ if(foofoo)
 }
                 break;
             }
+
+            auto t = sys::gettimems();
+            if(t - st > params.fevaltimelimit)
+                throw timelimitexception(params.fevaltimelimit);
         }
 
 

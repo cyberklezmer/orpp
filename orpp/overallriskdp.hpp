@@ -151,12 +151,13 @@ public:
             Transition, Reward>::computationparams
     {
         computationparams() : fpseudogradientmaxiters(100),
-            fheuristicmaxiters(100) {}
+            fheuristicmaxiters(100), fopttimelimit(std::numeric_limits<timems>::max()) {}
         typename nestedtaylorproblem::computationparams fnestedtaylorparams;
         typename nestedproblem::computationparams fnestedparams;
         typename nestedonedproblem::computationparams fnestedonedparams;
         unsigned fpseudogradientmaxiters;
         unsigned fheuristicmaxiters;
+        timems fopttimelimit;
     };
 
 
@@ -307,6 +308,7 @@ public:
 
         double lastvalueofcrit = 0;
         double resultingvalueofcrit = 0;
+        auto st = sys::gettimems();
 
         for(unsigned i=0; ; i++)
         {
@@ -432,6 +434,9 @@ public:
 
                 iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
             }
+            auto t = sys::gettimems();
+            if(t - st > params.fopttimelimit)
+                throw timelimitexception(params.fopttimelimit);
         }
         heuristicresult res(*this);
         res.p = bestp;
@@ -578,6 +583,7 @@ public:
 
         heteropolicy bestps = initps;
         heteropolicy iterps = initps;
+        auto st = sys::gettimems();
         for(unsigned i=0; i<params.fheuristicmaxiters; i++)
         {
             sys::logline() << "iteration " << i << " value=" << bestv.x
@@ -641,7 +647,10 @@ public:
             if(!differs)
                 break;
             iterps = bestps;
-            }
+            auto t = sys::gettimems();
+            if(t - st > params.fopttimelimit)
+                throw timelimitexception(params.fopttimelimit);
+        }
 
         sys::logline() << "bestp:" << bestps.p0;
         for(unsigned x=0; x<bestps.ps.size(); x++)
