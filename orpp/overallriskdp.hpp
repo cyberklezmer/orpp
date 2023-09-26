@@ -194,7 +194,7 @@ private:
           fproblem.setriskaversion(iota);
           auto r = fproblem.evaluate(finitvalue,fpolicy,faccuracy / 2, fparams);
           if(r.sd > faccuracy / 2)
-              throw exception("rmdifference: failed to achieve desired accuracy");
+              throw exception("rmdifference: failed to achieve desired accuracy.");
           return r.x[finitindex] - fconstant;
       }
       rmdifference(const Problem& problem,

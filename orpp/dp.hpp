@@ -593,7 +593,7 @@ public:
           public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
             Transition,Reward>::computationparams
     {
-        computationparams() : fvaluemaxiterations(100) {}
+        computationparams() : fvaluemaxiterations(100000) {}
         unsigned fvaluemaxiterations;
     };
 
@@ -694,8 +694,10 @@ public:
 
         double error = infinity<double>;
 
-        for(unsigned j=0; j<evalparams.fvaluemaxiterations; j++)
+        for(unsigned j=0; ; j++)
         {
+            if(j==evalparams.fvaluemaxiterations)
+                throw exception("finitehomodpproblem::iterate: maximum iterations reached without reaching the desired accuracy.");
     /* std::cout << error;
     for(unsigned k=0; k<V.size(); k++)
     std::cout << "," << V[k];
@@ -771,7 +773,9 @@ public:
                error *= this->fgamma;
             V = newV;
             if(error < accuracy)
+            {
                 break;
+            }
         }
         params.v = V;
         params.e = error;
@@ -810,3 +814,4 @@ public:
 } // namespace
 
 #endif // DP_HPP
+

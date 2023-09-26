@@ -344,10 +344,10 @@ int main()
     p.pincrease = 0.7;
     p.s0ind = 1;
 //    unsigned testiters = 10;
-    p.riskneutral = false;
+    p.riskneutral = true;
     p.heuristic = true;
-    p.taylorheuristic = false;
-    p.coordinatedescent = false;
+    p.taylorheuristic = true;
+    p.coordinatedescent = true;
     p.enumerate = false;
     p.pseudogradienthetero = true;
 
@@ -365,11 +365,11 @@ int main()
     std::vector<double> kappas = { 0.6, 0.75, 0.9 };
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
-    p.nstates = 5;
+    p.nstates = 8;
     p.maxcons = 3;
     p.kappa = kappas[2];
     p.gamma = gammas[1];
-    p.accuracy = 0.02;
+    p.accuracy = 0.002;
 
     examine(p, report); // tbd
     std::cout << report.str() << std::endl;
