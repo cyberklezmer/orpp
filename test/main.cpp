@@ -151,7 +151,7 @@ void test(unsigned nstates, unsigned maxcons,
 {
    testproblem problem(nstates, maxcons, kappa,pincrease,gamma);
 
-   testproblem::heuristicresult res = problem.heuristic<false>(s0ind,accuracy,params);
+   testproblem::heuristicresult res = problem.heuristic(s0ind,accuracy,params);
    testoverall(problem,res.p[s0ind],{res.p},s0ind,accuracy,testiters,params);
 
    testhomoproblem hp(nstates, maxcons, res.iota, pincrease,gamma);
@@ -179,13 +179,13 @@ struct examineprogram
 //    unsigned testiters = 10;
     bool heuristic = false;
     bool taylorheuristic = false;
-    bool coordinatedescent = false;
+    bool pseudogradienthomo = false;
     bool riskneutral = false;
 //    bool pesudogradient = false;
     bool pseudogradienthetero = false;
     bool enumerate = false;
     testproblem::computationparams pars;
-
+    unsigned fmaxstatestoenum;
 };
 
 void examine(examineprogram p, std::ostream& report)
@@ -197,7 +197,7 @@ void examine(examineprogram p, std::ostream& report)
     finitepolicy startingp(problem,0);
 
     // enumeration
-    unsigned tstart = sys::timems();
+    unsigned tstart = sys::gettimems();
 
     if(p.riskneutral)
     {
@@ -208,107 +208,121 @@ void examine(examineprogram p, std::ostream& report)
     }
     else
         report << ",,";
-    unsigned rnend = sys::timems();
+    unsigned rnend = sys::gettimems();
 
     report << rnend - tstart << ",";
 
 
     if(p.heuristic)
     {
-        testproblem::heuristicresult hres = problem.heuristic<false>(p.s0ind,p.accuracy,p.pars);
-        report << hres.p << "," << hres.v << "," << hres.iota << ",";
+        try
+        {
+            testproblem::heuristicresult hres = problem.heuristic(p.s0ind,p.accuracy,p.pars);
+            report << hres.p << "," << hres.v << "," << hres.iota << ",";
+        }
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,,";
+        }
+
     }
     else
         report << ",,,";
-    unsigned hend = sys::timems();
+    unsigned hend = sys::gettimems();
     report  << hend - rnend << ",";
 
     if(p.taylorheuristic)
     {
-        testproblem::heuristicresult hres = problem.taylorheuristic(p.s0ind,p.accuracy,startingp,p.pars);
-        report << hres.p << ","
-               << hres.v << "," << hres.iota << ",";
+        try
+        {
+            testproblem::heuristicresult hres = problem.taylorheuristic(p.s0ind,p.accuracy,startingp,p.pars);
+            report << hres.p << ","
+                   << hres.v << "," << hres.iota << ",";
+        }
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,,";
+        }
+
     }
     else
         report << ",,,";
-    unsigned tend = sys::timems();
+    unsigned tend = sys::gettimems();
     report << tend - hend << ",";
 
-
-    if(p.coordinatedescent)
+    if(p.pseudogradienthomo)
     {
-        testproblem::heuristicresult hres = problem.heuristic<true>(p.s0ind,p.accuracy,p.pars);
-        report << hres.p << "," << hres.v << "," << hres.iota << ",";
-    }
-    else
-        report << ",,,";
-    unsigned cdend = sys::timems();
-    report << cdend - rnend << ",";
-
-    if(p.enumerate) // tbd still only to log
-    {
-        sys::logline() << "enumerate" << std::endl;
-        finitepolicy besthomo(problem);
-        double besthomov = 0;
-        for(unsigned i=1; i< pow(p.maxcons+1,p.nstates); i++)
+        try
         {
-            finitepolicy policy(problem,0);
-            auto decimal = i;
-            unsigned k=0;
-            bool feasible = true;
-            while (decimal != 0) {
-                unsigned int z = decimal % (p.maxcons+1);
-                if(!problem.constraint().feasible(z,k))
-                    feasible = false;
-                assert(k < policy.size());
-                policy[k++] = z;
-                decimal = decimal / (p.maxcons+1);
-              }
-            if(!feasible)
-            {
-                sys::logline() << i << ": "  << policy << " infeasible" << std::endl;
-                continue;
-            }
-
-            auto res = problem.evaluatecrit(p.s0ind,policy, p.accuracy / 2, p.pars);
-            sys::logline() << i << ": "  << policy << " " <<res.x << "(" << res.sd << ")";
-            if(res.x > besthomov)
-            {
-                besthomov = res.x;
-                besthomo = policy;
-                sys::log() << "*";
-            }
-            sys::log() << std::endl;
+            testproblem::pgdhomoresult respg = problem.pseudogradientdescent(p.s0ind, startingp, p.accuracy, p.pars);
+            report << respg.p;
+            report << "," <<respg.v.x << ",";
         }
-        sys::log() << "best of enumerate:" << besthomo << " "
-                   << besthomov << std::endl;
-        report << besthomo << "," << besthomov << ","; ;
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,";
+        }
+
     }
     else
         report << ",,";
 
-    unsigned eend = sys::timems();
+    unsigned cdend = sys::gettimems();
+    report << cdend - rnend << ",";
+
+    if(p.enumerate) // tbd still only to log
+    {
+        if(pow(p.maxcons+1,p.nstates) > p.fmaxstatestoenum)
+        {
+            sys::logline() << "Too much states to enumerate" << std::endl;
+            report << ",toomuchstates,";
+        }
+        else try
+        {
+            testproblem::enumresult res = problem.enumeratehomo(p.s0ind, p.accuracy, p.pars);
+
+            sys::log() << "best of enumerate:" << res.p << " "
+                       << res.v.x  << std::endl;
+            report << res.p << "," << res.v.x << ",";
+        }
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,";
+        }
+    }
+    else
+        report << ",,";
+
+    unsigned eend = sys::gettimems();
 
     report << eend-cdend<< ",";
 
 
     if(p.pseudogradienthetero)
     {
-        testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp, startingp} };
-
-        testproblem::pgdresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
-        report << respg.p.p0;
-        for(unsigned k=0;k < respg.p.ps.size(); k++)
+        try
         {
-            report << "-";
-            report << respg.p.ps[k];
+            testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp, startingp} };
+
+            testproblem::pgdheteroresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
+            report << respg.p.p0;
+            for(unsigned k=0;k < respg.p.ps.size(); k++)
+            {
+                report << "-";
+                report << respg.p.ps[k];
+            }
+            report << "," <<respg.v.x << ",";
         }
-        report << "," <<respg.v.x << ",";
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,";
+        }
+
     }
     else
         report << ",,";
 
-    unsigned pgend = sys::timems();
+    unsigned pgend = sys::gettimems();
     report << pgend - eend << ",";
 
 
@@ -323,53 +337,73 @@ void examine(examineprogram p, std::ostream& report)
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
+    unsigned nthreads = 1;
+    if(argc>1)
+    {
+        try
+        {
+            nthreads = std::stoul(argv[1]);
+        }
+        catch(...)
+        {
+            std::cout << "Error converting everyn string " << argv[1] << std:: endl;
+            throw;
+        }
+    }
+
     sys::setlog(std::cout);
+    sys::logline() << "Using " << nthreads << " threads." << std::endl;
+
     sys::setloglevel(0);
      std::ostringstream report;
 
-    testproblem::computationparams pars;
 
-    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
-             = pars.fnestedparams.fthreadstouse = 8;
-    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
-             = pars.fnestedparams.fthreadbatch = 3000;
-    pars.fmaxevaliterations = 2000000;
-
-    examineprogram p;
-    p.pars = pars;
-
-
-    p.pincrease = 0.7;
-    p.s0ind = 1;
-//    unsigned testiters = 10;
-    p.riskneutral = true;
-    p.heuristic = true;
-    p.taylorheuristic = true;
-    p.coordinatedescent = true;
-    p.enumerate = false;
-    p.pseudogradienthetero = true;
-
-
-     report << "rnpolicy,rncrit,rntime,"
-           << "nsatates,maxcons,kappa,gamma,accuracy"
+     report << "nstates,maxcons,kappa,gamma,accuracy,"
+           << "rnpolicy,rncrit,rntime,"
            << "hpolicy,hcrit,hlambda,htime,"
            << "tpolicy,tcrit,tlambda,ttime,"
-           << "cdolicy,cdcrit,cdlambda,cdtime,"
-           << "pgpolicy,pgcrit,pgtime"
-           << "egpolicy,egcrit,egtime"
+           << "pghomopolicy,pghomocrit,pghomotime,"
+           << "enumgpolicy,enumgcrit,enumegtime,"
+           << "pgheteropolicy,pgheterocrit,pgheterotime,"
            << std::endl;
 
      report << std::setprecision(5);
     std::vector<double> kappas = { 0.6, 0.75, 0.9 };
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
-    p.nstates = 8;
-    p.maxcons = 3;
+    examineprogram p;
+    testproblem::computationparams pars;
+
+    p.nstates = 10;
+    p.maxcons = 4;
+
+
+
+    pars.fopttimelimit = pars.fpseudogradienttimelimit = pars.fenumtimelimit = 100000;
+
+    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
+             = pars.fnestedparams.fthreadstouse = nthreads;
+    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
+             = pars.fnestedparams.fthreadbatch = 3000;
+    pars.fmaxevaliterations = 2000000;
+
+
+
+    p.fmaxstatestoenum = 10000;
+    p.pars = pars;
+    p.pincrease = 0.7;
+    p.s0ind = 1;
+    p.riskneutral = true;
+    p.heuristic = true;
+    p.taylorheuristic = true;
+    p.pseudogradienthomo = true;
+    p.enumerate = true;
+    p.pseudogradienthetero = true;
     p.kappa = kappas[2];
     p.gamma = gammas[1];
-    p.accuracy = 0.002;
+    p.accuracy = 0.05;
 
     examine(p, report); // tbd
     std::cout << report.str() << std::endl;
