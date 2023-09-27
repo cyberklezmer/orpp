@@ -349,7 +349,10 @@ public:
             iota = findiota(problem,vires.p,valueofcrit,vires.v, s0ind, accuracy, params.fnestedparams);
             auto t = sys::gettimems();
             if(t - st > params.fopttimelimit)
+            {
+                sys::logline() << "Exiting for time reasons" << std::endl;
                 throw timelimitexception(params.fopttimelimit);
+            }
         }
         heuristicresult res(*this);
         res.p = bestp;
@@ -373,6 +376,8 @@ public:
         finitevaluefunction taylorinitV(*this,0);
         double lastvalueofcrit = 0;
         double iota;
+        auto st = sys::gettimems();
+
         for(unsigned i=0; ; i++)
         {
             nestedproblem nproblem(this->fcrit,
@@ -452,6 +457,12 @@ public:
             candp = vires.p;
             taylorinitV = vires.v;
             lastvalueofcrit = valueofcrit;
+            auto t = sys::gettimems();
+            if(t - st > params.fopttimelimit)
+            {
+                sys::logline() << "Exiting for time reasons" << std::endl;
+                throw timelimitexception(params.fopttimelimit);
+            }
 
         }
         heuristicresult res(*this);

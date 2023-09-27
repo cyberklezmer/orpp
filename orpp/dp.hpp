@@ -336,7 +336,8 @@ public:
             fthreadstouse(0), fthreadbatch(1000),
             fevaltimelimit(std::numeric_limits<timems>::max()),
             fpseudogradientmaxiters(1000000),
-            fpseudogradienttimelimit(std::numeric_limits<timems>::max())
+            fpseudogradienttimelimit(std::numeric_limits<timems>::max()),
+            fenumtimelimit(std::numeric_limits<timems>::max())
           {}
         unsigned fmaxevaliterations;
         unsigned fthreadstouse;
@@ -344,6 +345,7 @@ public:
         timems fevaltimelimit;
         unsigned fpseudogradientmaxiters;
         timems fpseudogradienttimelimit;
+        timems fenumtimelimit;
     };
 
     finitedpproblem(const Criterion& crit,
@@ -389,6 +391,63 @@ public:
         statcounter sc = this->evaluateraw(s0ind, p[s0ind], {p}, accuracy, params);
         return this->fcrit(sc.dist);
     }
+
+    struct enumresult
+    {
+        finitepolicy p;
+        valuewitherror<double> v;
+    };
+
+    enumresult enumeratehomo(index s0ind,
+                         double accuracy,
+                         const computationparams& params)
+    {
+        sys::logline() << "finitedpproblem::enumerate" << std::endl;
+        auto st = sys::gettimems();
+        finitepolicy besthomo(*this);
+        double besthomov = 0;
+        auto nstates = this->fstatespace.num();
+        auto nactions = this->fconstraint.num();
+
+        for(unsigned i=1; i< pow(nactions,nstates); i++)
+        {
+            auto t = sys::gettimems();
+            if(t - st > params.fenumtimelimit)
+            {
+                sys::logline() << "Exiting for time reasons" << std::endl;
+                throw timelimitexception(params.fenumtimelimit);
+            }
+            finitepolicy policy(*this,0);
+            auto decimal = i;
+            unsigned k=0;
+            bool feasible = true;
+            while (decimal != 0) {
+                unsigned int z = decimal % nactions;
+                if(!this->constraint().feasible(z,k))
+                    feasible = false;
+                assert(k < policy.size());
+                policy[k++] = z;
+                decimal = decimal / nactions;
+              }
+            if(!feasible)
+            {
+                sys::logline() << i << ": "  << policy << " infeasible" << std::endl;
+                continue;
+            }
+
+            auto res = this->evaluatecrit(s0ind,policy, accuracy / 2, params);
+            sys::logline() << i << ": "  << policy << " " <<res.x << "(" << res.sd << ")";
+            if(res.x > besthomov)
+            {
+                besthomov = res.x;
+                besthomo = policy;
+                sys::log() << "*";
+            }
+            sys::log() << std::endl;
+        }
+        return { besthomo, { besthomov, accuracy} };
+    }
+
 private:
      void computepath(orpp::index s0index,
                      typename ConstrainedActionSpace::Element_t p0,
@@ -543,7 +602,10 @@ if(foofoo)
 
             auto t = sys::gettimems();
             if(t - st > params.fevaltimelimit)
+            {
+                sys::logline() << "Exiting for time reasons" << std::endl;
                 throw timelimitexception(params.fevaltimelimit);
+            }
         }
 
 
@@ -680,7 +742,10 @@ if(foofoo)
             iterps = bestps;
             auto t = sys::gettimems();
             if(t - st > params.fpseudogradienttimelimit)
+            {
+                sys::logline() << "Exiting for time reasons" << std::endl;
                 throw timelimitexception(params.fpseudogradienttimelimit);
+            }
             step = std::max(1U,step/2);
         }
 
