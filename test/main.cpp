@@ -179,6 +179,7 @@ struct examineprogram
 //    unsigned testiters = 10;
     bool heuristic = false;
     bool taylorheuristic = false;
+    bool heuristicplus = false;
     bool pseudogradienthomo = false;
     bool riskneutral = false;
 //    bool pesudogradient = false;
@@ -250,11 +251,35 @@ void examine(examineprogram p, std::ostream& report)
     unsigned tend = sys::gettimems();
     report << tend - hend << ",";
 
+//
+    if(p.heuristicplus)
+    {
+        try
+        {
+            testproblem::heuristicplusresult hpres =
+            problem.heuristicplus(p.s0ind,p.accuracy,p.pars);
+            report << hpres.hres.p << ","
+                   << hpres.hres.v << "," << hpres.hres.iota << ","
+                   << hpres.pgres.p << "," << hpres.pgres.v.x << "," ;
+        }
+        catch(const timelimitexception& e)
+        {
+            report << ",,,,outoftime,";
+        }
+
+    }
+    else
+        report << ",,,,,";
+    unsigned plusend = sys::gettimems();
+    report << plusend - tend << ",";
+
+
+
     if(p.pseudogradienthomo)
     {
         try
         {
-            testproblem::pgdhomoresult respg = problem.pseudogradientdescent(p.s0ind, startingp, p.accuracy, p.pars);
+            testproblem::pgdhomoresult respg = problem.pseudogradientdescenthomo(p.s0ind, startingp, p.accuracy, p.pars);
             report << respg.p;
             report << "," <<respg.v.x << ",";
         }
@@ -268,7 +293,7 @@ void examine(examineprogram p, std::ostream& report)
         report << ",,";
 
     unsigned cdend = sys::gettimems();
-    report << cdend - rnend << ",";
+    report << cdend - plusend << ",";
 
     if(p.enumerate) // tbd still only to log
     {
@@ -366,8 +391,8 @@ int main(int argc, char *argv[])
     examineprogram p;
     testproblem::computationparams pars;
 
-    p.nstates = 10;
-    p.maxcons = 4;
+    p.nstates = 5;
+    p.maxcons = 2;
 
     pars.fopttimelimit = pars.fpseudogradienttimelimit = pars.fenumtimelimit = 1000000;
 
@@ -384,13 +409,15 @@ int main(int argc, char *argv[])
     p.pincrease = 0.7;
     p.s0ind = 1;
     p.riskneutral = true;
-    p.heuristic = true;
-    p.taylorheuristic = true;
-    p.pseudogradienthomo = true;
-    p.enumerate = true;
-    p.pseudogradienthetero = true;
+    p.heuristic = false;
+    p.taylorheuristic = false;
+    p.pseudogradienthomo = false;
+    p.enumerate = false;
+    p.pseudogradienthetero = false;
+    p.heuristicplus = true;
 
-    p.accuracy = 0.01;
+
+    p.accuracy = 0.05;
 
     std::ofstream report("report.csv");
     if(!report)
@@ -402,6 +429,7 @@ int main(int argc, char *argv[])
           << "rnpolicy,rncrit,rntime,"
           << "hpolicy,hcrit,hlambda,htime,"
           << "tpolicy,tcrit,tlambda,ttime,"
+          << "hppolicyh,hpcrith,hplambdah,hppolicyp,phcritp,ttime,"
           << "pghomopolicy,pghomocrit,pghomotime,"
           << "enumgpolicy,enumgcrit,enumegtime,"
           << "pgheteropolicy,pgheterocrit,pgheterotime,"
