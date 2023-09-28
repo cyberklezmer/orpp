@@ -302,7 +302,7 @@ void examine(examineprogram p, std::ostream& report)
     {
         try
         {
-            testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp, startingp} };
+            testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp} };
 
             testproblem::pgdheteroresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
             report << respg.p.p0;
@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
     p.enumerate = true;
     p.pseudogradienthetero = true;
 
-    p.accuracy = 0.05;
+    p.accuracy = 0.01;
 
     std::ofstream report("report.csv");
     if(!report)
