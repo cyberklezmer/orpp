@@ -302,7 +302,7 @@ void examine(examineprogram p, std::ostream& report)
     {
         try
         {
-            testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp, startingp} };
+            testproblem::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp} };
 
             testproblem::pgdheteroresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
             report << respg.p.p0;
@@ -357,21 +357,11 @@ int main(int argc, char *argv[])
     sys::logline() << "Using " << nthreads << " threads." << std::endl;
 
     sys::setloglevel(0);
-     std::ostringstream report;
 
 
-     report << "nstates,maxcons,kappa,gamma,accuracy,"
-           << "rnpolicy,rncrit,rntime,"
-           << "hpolicy,hcrit,hlambda,htime,"
-           << "tpolicy,tcrit,tlambda,ttime,"
-           << "pghomopolicy,pghomocrit,pghomotime,"
-           << "enumgpolicy,enumgcrit,enumegtime,"
-           << "pgheteropolicy,pgheterocrit,pgheterotime,"
-           << std::endl;
 
-     report << std::setprecision(5);
-    std::vector<double> kappas = { 0.6, 0.75, 0.9 };
-    std::vector<double> gammas = { 0.85, 0.9, 0.95 };
+     std::vector<double> kappas = { 0.6, 0.75, 0.9 };
+     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
 
     examineprogram p;
     testproblem::computationparams pars;
@@ -379,9 +369,7 @@ int main(int argc, char *argv[])
     p.nstates = 10;
     p.maxcons = 4;
 
-
-
-    pars.fopttimelimit = pars.fpseudogradienttimelimit = pars.fenumtimelimit = 100000;
+    pars.fopttimelimit = pars.fpseudogradienttimelimit = pars.fenumtimelimit = 1000000;
 
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
              = pars.fnestedparams.fthreadstouse = nthreads;
@@ -401,12 +389,32 @@ int main(int argc, char *argv[])
     p.pseudogradienthomo = true;
     p.enumerate = true;
     p.pseudogradienthetero = true;
-    p.kappa = kappas[2];
-    p.gamma = gammas[1];
-    p.accuracy = 0.05;
 
-    examine(p, report); // tbd
-    std::cout << report.str() << std::endl;
+    p.accuracy = 0.01;
+
+    std::ofstream report("report.csv");
+    if(!report)
+    {
+        throw exception("cannot open rep");
+    }
+
+    report << "nstates,maxcons,kappa,gamma,accuracy,"
+          << "rnpolicy,rncrit,rntime,"
+          << "hpolicy,hcrit,hlambda,htime,"
+          << "tpolicy,tcrit,tlambda,ttime,"
+          << "pghomopolicy,pghomocrit,pghomotime,"
+          << "enumgpolicy,enumgcrit,enumegtime,"
+          << "pgheteropolicy,pgheterocrit,pgheterotime,"
+          << std::endl;
+    report << std::setprecision(5);
+
+    for(unsigned i=0; i<kappas.size(); i++)
+        for(unsigned j=0; j<gammas.size(); j++)
+        {
+            p.kappa = kappas[i];
+            p.gamma = gammas[j];
+            examine(p, report); // tbd
+        }
     return 0;
 }
 
