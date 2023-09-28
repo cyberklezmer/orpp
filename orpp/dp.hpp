@@ -648,9 +648,9 @@ if(foofoo)
                           double accuracy,
                           const computationparams& params,
                           unsigned initialstep = std::numeric_limits<unsigned>::max()
-                           )
+                           ) const
     {
-        sys::logline() << "overallriskproblem::pseudogradientdescent,";
+        sys::logline() << "finitedpproblem::pseudogradientdescent,";
 
         unsigned horizon = this->requiredhorizon(accuracy / 2);
 
@@ -765,13 +765,13 @@ if(foofoo)
         finitepolicy p;
     };
 
-    pgdhomoresult pseudogradientdescent(
+    pgdhomoresult pseudogradientdescenthomo(
                           orpp::index s0ind,
                           const finitepolicy& initp,
                           double accuracy,
                           const computationparams& params,
                           unsigned initialstep = std::numeric_limits<unsigned>::max()
-                           )
+                           ) const
     {
         heteropolicy hp { initp[s0ind], {initp} };
         auto res = pseudogradientdescent<true>(s0ind,

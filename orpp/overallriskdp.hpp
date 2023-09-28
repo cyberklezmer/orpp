@@ -476,10 +476,35 @@ public:
     }
 
 
+    struct heuristicplusresult
+    {
+        heuristicresult hres;
+        typename finitedpproblem<Criterion,
+                Statespace,ConstrainedActionSpace,Transition,Reward>::
+             pgdhomoresult pgres;
+    };
+
+    heuristicplusresult heuristicplus(index s0ind, double accuracy,
+                              const computationparams& params) const
+    {
+        // enumeration
+
+        sys::logline() << "overallriskdpproblem::heuristicplus" << std::endl;
+
+        heuristicresult hres = this->heuristic(s0ind,accuracy,params);
+
+        auto pgres = this->pseudogradientdescenthomo(s0ind, hres.p, accuracy, params,1U);
+
+        return { hres, pgres };
+    }
+
+
+
     double lipschitzconstant() const
     {
         return frmlipshitzfactor * this->maxreward() / (1 - this->gamma());
     }
+
     void setriskaversion(double ra) { this->crit().setparam(ra); }
 
 private:
