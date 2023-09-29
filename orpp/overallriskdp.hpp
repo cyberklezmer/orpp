@@ -60,7 +60,8 @@ public:
     {
     public:
         taylorreward(const finitepolicy& base,
-                     const std::vector<double>& gradient) :
+                     const std::vector<double>& gradient,
+                     const Reward& orig) : Reward(orig),
             fbase(base), fgradient(gradient)
         {
             assert(fbase.size() == fgradient.size());
@@ -431,7 +432,7 @@ public:
                 grad.push_back((1-this->fgamma)*(rhoalpha-rhoeta) / (a1 - a0));
                 taylorinitV = taylorV;
             }
-            taylorreward r(candp,grad);
+            taylorreward r(candp,grad, this->reward());
             double addition = (1-this->fgamma) * r.maxgradadd(this->fconstraint);
 
             sys::logline(0) << "grad=";

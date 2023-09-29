@@ -52,6 +52,7 @@ public:
     const Statespace& statespace() const { return fstatespace; }
     const Criterion& crit() const { return fcrit; }
     Criterion& crit() { return fcrit; }
+    const Reward& reward() const { return freward; }
 protected:
     Criterion fcrit;
     Statespace fstatespace;
@@ -236,7 +237,6 @@ private:
     unsigned int fmin;
     unsigned int fmax;
 };
-
 
 
 template <typename Statespace, typename Actionspace>
@@ -881,7 +881,6 @@ private:
                     atoms.push_back(newa);
                 }
                 std::sort(atoms.begin(), atoms.end(), atom<double>::comparator);
-
                 ldistribution<double> d(atoms, false, true);
                 //newV[i]=this->fcrit(d,nothing());
                 const auto& crit = this->fcrit.nesting();
