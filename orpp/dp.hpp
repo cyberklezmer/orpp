@@ -210,6 +210,7 @@ public:
     integerspace(unsigned int amin, unsigned int amax) : fmin(amin), fmax(amax)
     {}
 
+    unsigned max() const { return fmax; }
 private:
     virtual bool getfirst(unsigned int& e) const
     {
@@ -430,10 +431,7 @@ public:
                 decimal = decimal / nactions;
               }
             if(!feasible)
-            {
-                sys::logline() << i << ": "  << policy << " infeasible" << std::endl;
                 continue;
-            }
 
             auto res = this->evaluatecrit(s0ind,policy, accuracy / 2, params);
             sys::logline() << i << ": "  << policy << " " <<res.x << "(" << res.sd << ")";
