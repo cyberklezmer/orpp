@@ -26,7 +26,7 @@ public:
 /// \tparam S state space
 /// \tparam T transition operator
 template<typename Criterion,
-          typename Statespace,
+          typename StateSpace,
           typename ConstrainedActionSpace,
           typename Transition,
           typename Reward
@@ -34,11 +34,11 @@ template<typename Criterion,
 class dpproblem : public object
 {
 public:
-    using Statespace_t = Statespace;
+    using StateSpace_t = StateSpace;
     using ConstrainedActionSpace_t = ConstrainedActionSpace;
 public:
     dpproblem(const Criterion& crit,
-              const Statespace& state,
+              const StateSpace& state,
               const ConstrainedActionSpace& constraint,
               const Transition& transition,
                const Reward& reward,
@@ -49,13 +49,13 @@ public:
     {}
     double gamma() const { return fgamma; }
     const ConstrainedActionSpace& constraint() const { return fconstraint; }
-    const Statespace& statespace() const { return fstatespace; }
+    const StateSpace& statespace() const { return fstatespace; }
     const Criterion& crit() const { return fcrit; }
     Criterion& crit() { return fcrit; }
     const Reward& reward() const { return freward; }
 protected:
     Criterion fcrit;
-    Statespace fstatespace;
+    StateSpace fstatespace;
     ConstrainedActionSpace fconstraint;
     Transition ftransition;
     Reward freward;
@@ -118,14 +118,14 @@ template <typename SElement, typename AElement>
 class constrainedspace : virtual public iteratedspace<AElement>
 {
 public:
-    bool firstfeasible(AElement& e, const SElement& c) const
+    bool firstfeasible(AElement& a, const SElement& s) const
     {
-        if(this->first(e))
+        if(this->first(a))
         {
-           if(isfeasible(e,c))
+           if(isfeasible(a,s))
                return true;
            else
-               return nextfeasible(e,c);
+               return nextfeasible(a,s);
         }
         else
             return false;
@@ -239,12 +239,12 @@ private:
 };
 
 
-template <typename Statespace, typename Actionspace>
+template <typename StateSpace, typename Actionspace>
 using finitetransition
- = fdistribution<typename Statespace::Element_t,
-   dpcondition<typename Statespace::Element_t,typename Actionspace::Element_t>>;
+ = fdistribution<typename StateSpace::Element_t,
+   dpcondition<typename StateSpace::Element_t,typename Actionspace::Element_t>>;
 
-/*using finitedpstatespace = integerspace;
+/*using finitedpStateSpace = integerspace;
 using finitedpactionspace =  constrainedspace<unsigned int,unsigned int>;
 using finitedptransition = finitetransition<finitedpactionspace, finitedpactionspace>;
 using finitedpreward = dpreward<finitedpactionspace, finitedpactionspace>;
@@ -272,8 +272,8 @@ public:
     finitepolicy(const std::vector<index> v) : std::vector<index>(v) {}
 
     finitepolicy(unsigned size) : std::vector<index>(size) {}
-//    template <typename Statespace>
-//    finitepolicy(const Statespace& s, index initial = 0) : std::vector<index>(s.num(),initial) {}
+//    template <typename StateSpace>
+//    finitepolicy(const StateSpace& s, index initial = 0) : std::vector<index>(s.num(),initial) {}
     template <typename Problem>
     finitepolicy(const Problem& p, index initial = 0) : std::vector<index>(p.statespace().num(),initial) {}
     finitepolicy(const finitepolicy& p): std::vector<index>(p) {}
@@ -321,11 +321,11 @@ inline double dist(const finitevaluefunction& a, const finitevaluefunction& b)
 
 
 template<typename Criterion,
-         typename Statespace,
+         typename StateSpace,
          typename ConstrainedActionSpace,
          typename Transition,
          typename Reward>
-class finitedpproblem : public dpproblem<Criterion,Statespace,ConstrainedActionSpace,
+class finitedpproblem : public dpproblem<Criterion,StateSpace,ConstrainedActionSpace,
                                  Transition,Reward>
 {
 public:
@@ -350,23 +350,23 @@ public:
     };
 
     finitedpproblem(const Criterion& crit,
-              const Statespace& state,
+              const StateSpace& state,
               const ConstrainedActionSpace& constraint,
               const Transition& transition,
               const Reward& reward,
               double gamma,
               double maxreward) :
-         dpproblem<Criterion, Statespace,ConstrainedActionSpace,
+         dpproblem<Criterion, StateSpace,ConstrainedActionSpace,
                           Transition,Reward>
            (crit, state, constraint, transition, reward, gamma),
          fmaxreward(maxreward)
     {
-        static_assert(std::is_base_of<iteratedspace<typename Statespace::Element_t>,Statespace>::value);
+        static_assert(std::is_base_of<iteratedspace<typename StateSpace::Element_t>,StateSpace>::value);
         static_assert(std::is_base_of<constrainedspace<
-                          typename Statespace::Element_t,
+                          typename StateSpace::Element_t,
                           typename ConstrainedActionSpace::Element_t>,ConstrainedActionSpace>::value);
-        static_assert(std::is_base_of<finitetransition<Statespace,ConstrainedActionSpace>,Transition>::value);
-        static_assert(std::is_base_of<dpreward<Statespace,ConstrainedActionSpace>,Reward>::value);
+        static_assert(std::is_base_of<finitetransition<StateSpace,ConstrainedActionSpace>,Transition>::value);
+        static_assert(std::is_base_of<dpreward<StateSpace,ConstrainedActionSpace>,Reward>::value);
     }
 
 
@@ -393,11 +393,97 @@ public:
         return this->fcrit(sc.dist);
     }
 
+
+
+    unsigned numpolicyvalues() const
+    {
+        auto nstates = this->statespace().num();
+        unsigned res = 1;
+        for(orpp::index i=0; i<nstates; i++)
+        {
+            typename StateSpace::Element_t s = this->statespace()[i];
+            typename ConstrainedActionSpace::Element_t a;
+
+            unsigned n = 0;
+            if(this->constraint().firstfeasible(a,s))
+            {
+                for(;;)
+                {
+                    n++;
+                    if(!this->constraint().nextfeasible(a,s))
+                        break;
+                }
+            }
+            res *= n;
+        }
+        return res;
+    }
+
+
     struct enumresult
     {
         finitepolicy p;
         valuewitherror<double> v;
     };
+
+private:
+    void doenumerate(const finitepolicy& ap,
+                           index s0ind,
+                           double accuracy,
+                           enumresult& thebest,
+                           const computationparams& params,
+                           timems st) const
+    {
+        orpp::index si = ap.size();
+        if(si < this->statespace().num())
+        {
+            typename StateSpace::Element_t s = this->statespace()[si];
+
+            finitepolicy p = ap;
+            p.push_back(0); // all the same what we push
+
+            typename ConstrainedActionSpace::Element_t a;
+            if(!this->constraint().first(a))
+                throw exception("At least one action has to exist");
+
+            bool atleastonefeasible = false;
+            orpp::index ai = 0;
+            for(; ; ai++)
+            {
+                if(this->constraint().feasible(a,s))
+                {
+                    atleastonefeasible = true;
+                    p[si] = ai;
+                    doenumerate(p,s0ind,accuracy, thebest,params,st);
+                }
+                if(!this->constraint().next(a))
+                   break;
+            }
+            if(!atleastonefeasible)
+                throw exception("At least one action has to be feasible");
+            assert(ai == this->constraint().num());
+        }
+        else
+        {
+           auto t = sys::gettimems();
+           if(t - st > params.fenumtimelimit)
+           {
+                sys::logline() << "Exiting for time reasons" << std::endl;
+                throw timelimitexception(params.fenumtimelimit);
+           }
+           auto res = this->evaluatecrit(s0ind,ap, accuracy / 2, params);
+           sys::logline() << ap << ": " <<res.x << "(" << res.sd << ")";
+           if(res.x > thebest.v.x)
+           {
+                thebest.v = {res.x, accuracy / 2};
+                thebest.p = ap;
+                sys::log() << "*";
+            }
+            sys::log() << std::endl;
+        }
+
+    }
+public:
 
     enumresult enumeratehomo(index s0ind,
                          double accuracy,
@@ -405,45 +491,16 @@ public:
     {
         sys::logline() << "finitedpproblem::enumerate" << std::endl;
         auto st = sys::gettimems();
-        finitepolicy besthomo(*this);
-        double besthomov = 0;
-        auto nstates = this->fstatespace.num();
-        auto nactions = this->fconstraint.num();
 
-        for(unsigned i=1; i< pow(nactions,nstates); i++)
-        {
-            auto t = sys::gettimems();
-            if(t - st > params.fenumtimelimit)
-            {
-                sys::logline() << "Exiting for time reasons" << std::endl;
-                throw timelimitexception(params.fenumtimelimit);
-            }
-            finitepolicy policy(*this,0);
-            auto decimal = i;
-            unsigned k=0;
-            bool feasible = true;
-            while (decimal != 0) {
-                unsigned int z = decimal % nactions;
-                if(!this->constraint().feasible(z,k))
-                    feasible = false;
-                assert(k < policy.size());
-                policy[k++] = z;
-                decimal = decimal / nactions;
-              }
-            if(!feasible)
-                continue;
+        enumresult thebest =  { finitepolicy(*this), {0, 0} };
 
-            auto res = this->evaluatecrit(s0ind,policy, accuracy / 2, params);
-            sys::logline() << i << ": "  << policy << " " <<res.x << "(" << res.sd << ")";
-            if(res.x > besthomov)
-            {
-                besthomov = res.x;
-                besthomo = policy;
-                sys::log() << "*";
-            }
-            sys::log() << std::endl;
-        }
-        return { besthomo, { besthomov, accuracy} };
+        finitepolicy p(0U);
+
+        doenumerate(p,s0ind,accuracy,thebest,params, st);
+
+
+        sys::logline() << "finitedpproblem::enumerate ended" << std::endl;
+        return thebest;
     }
 
 private:
@@ -548,13 +605,13 @@ public:
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting creating threads" << std::endl;
                 for(unsigned k=0; k<params.fthreadstouse; k++)
-                    ts.push_back(std::thread(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
+                    ts.push_back(std::thread(&finitedpproblem<Criterion, StateSpace,ConstrainedActionSpace,
                                     Transition,Reward>::computepath,
                                  this, s0index,p0, p, timehorizon, &rs[k], &ns[k]));
                 bool semaphor = false;
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting the observing thread" << std::endl;
-                std::thread obst(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
+                std::thread obst(&finitedpproblem<Criterion, StateSpace,ConstrainedActionSpace,
                                  Transition,Reward>::observer,this,
                                  &ns,&obss, &semaphor, 0
                                  );
@@ -794,21 +851,21 @@ private:
 };
 
 template<typename Criterion,
-         typename Statespace,
+         typename StateSpace,
          typename ConstrainedActionSpace,
          typename Transition,
          typename Reward>
-class finitehomodpproblem : public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+class finitehomodpproblem : public finitedpproblem<Criterion,StateSpace,ConstrainedActionSpace,
                                  Transition,Reward>
 {
 public:
     finitehomodpproblem(const Criterion& crit,
-              const Statespace& state,
+              const StateSpace& state,
               const ConstrainedActionSpace& constraint,
               const Transition& transition,
               const Reward& reward,
               double gamma,
-              double maxreward) :finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+              double maxreward) :finitedpproblem<Criterion,StateSpace,ConstrainedActionSpace,
                                  Transition,Reward>(crit, state,constraint,
                                                  transition, reward, gamma,maxreward)
     {
@@ -816,7 +873,7 @@ public:
     }
 
     struct computationparams:
-          public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+          public finitedpproblem<Criterion,StateSpace,ConstrainedActionSpace,
             Transition,Reward>::computationparams
     {
         computationparams() : fvaluemaxiterations(100000) {}
@@ -825,7 +882,7 @@ public:
 
     struct viresult
     {
-        viresult(const finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
+        viresult(const finitedpproblem<Criterion,StateSpace,ConstrainedActionSpace,
                  Transition,Reward>& pr) : p(pr),v(pr), e(0) {}
         finitepolicy p;
         finitevaluefunction v;
@@ -837,7 +894,7 @@ private:
 
 
     template <bool optimize>
-    void evaluatestates(const std::vector<typename Statespace::Element_t>& es,
+    void evaluatestates(const std::vector<typename StateSpace::Element_t>& es,
                         const finitevaluefunction& V,
                         std::vector<typename ConstrainedActionSpace::Element_t*> actions,
                          std::vector<double*> res) const
@@ -847,7 +904,7 @@ private:
 
         for(unsigned i=0; i<es.size(); i++)
         {
-            typename Statespace::Element_t e = es[i];
+            typename StateSpace::Element_t e = es[i];
             dpcondition<unsigned int,unsigned int> c;
             typename ConstrainedActionSpace::Element_t a;
             double bestv = minfinity<double>;
@@ -928,13 +985,13 @@ public:
     std::cout << "," << V[k];
     std::cout << std::endl;*/
             finitevaluefunction newV(*this);
-            typename Statespace::Element_t e;
+            typename StateSpace::Element_t e;
             this->fstatespace.first(e);
             if(evalparams.fthreadstouse <= 1)
             {
                 for(index i = 0; i < V.size(); i++, this->fstatespace.next(e))
                 {
-                    //std::vector<typename Statespace::Element_t>
+                    //std::vector<typename StateSpace::Element_t>
                     evaluatestates<optimize>({e}, V, {&(params.p[i])}, {&(newV[i])});
                 }
             }
@@ -945,7 +1002,7 @@ public:
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Number of threads actually used: " << nt << std::endl;
 
-                std::vector<std::vector<typename Statespace::Element_t>>
+                std::vector<std::vector<typename StateSpace::Element_t>>
                         ss(nt);
                 std::vector<std::vector<typename ConstrainedActionSpace::Element_t*>>
                         aptrs(nt);
@@ -964,10 +1021,10 @@ public:
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting creating threads" << std::endl;
                 for(unsigned k=0; k<nt; k++)
-/*ts.push_back(std::thread(&finitehomodpproblem<Criterion,Statespace,ConstrainedActionSpace,
+/*ts.push_back(std::thread(&finitehomodpproblem<Criterion,StateSpace,ConstrainedActionSpace,
                                              Transition,Reward>::foo<optimize>,
                                              this));*/
-                    ts.push_back(std::thread(&finitehomodpproblem<Criterion,Statespace,ConstrainedActionSpace,
+                    ts.push_back(std::thread(&finitehomodpproblem<Criterion,StateSpace,ConstrainedActionSpace,
                                              Transition,Reward>::evaluatestates<optimize>,
                                              this, ss[k], V,
                                              aptrs[k],
@@ -975,7 +1032,7 @@ public:
 //                bool semaphor = false;
 //                if(sys::loglevel() >= 3)
 //                   sys::logline(3) << "Starting the observing thread" << std::endl;
-//                std::thread obst(&finitedpproblem<Criterion, Statespace,ConstrainedActionSpace,
+//                std::thread obst(&finitedpproblem<Criterion, StateSpace,ConstrainedActionSpace,
 //                                 Transition,Reward>::observer,this,
 //                                 &ns,&obss, &semaphor, 0
 //                                 );

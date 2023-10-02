@@ -106,8 +106,7 @@ public:
                probability pincrease, double gamma, probability pcrash) :
         overallriskproblem<invcrit, invstatespace,
                     invactionspace, invtransition, invreward>
-// error here
-        (invcrit(0),invstatespace(maxinv), invactionspace(maxinv,lot),
+          (invcrit(alpha),invstatespace(maxinv), invactionspace(maxinv,lot),
            invtransition(maxinv,lot,pincrease,pcrash), invreward(maxinv), gamma,maxinv/lot,2.0 / (1-alpha)) {}
 };
 
@@ -351,24 +350,26 @@ void examineproblem(P& problem, HP& hp, R p, std::ostream& report)
 {
     finitepolicy startingp(problem,0);
 
-    // enumeration
     unsigned tstart = sys::gettimems();
 
+
+    timems viend = tstart;
     if(p.riskneutral)
     {
          sys::logline() << "riskneutral" << std::endl;
          finitevaluefunction initV(hp,1);
+         viend = sys::gettimems();
+
          typename HP::viresult vires = hp.valueiteration(initV,p.accuracy,p.pars.fnestedparams);
-         sys::logline() << vires.p << ": " << vires.v[p.s0ind] << std::endl;
-         report << vires.p << "," << vires.v[p.s0ind] << ",";
-auto res = hp.evaluateraw(p.s0ind,vires.p,p.accuracy,p.pars.fnestedparams);
-std::cout << "crit = " << res.average() << std::endl;
+         auto res = problem.evaluatecrit(p.s0ind,vires.p,p.accuracy,p.pars);
+         sys::logline() << vires.p << ": " << vires.v[p.s0ind] << " crit= " << res.x << std::endl;
+         report << vires.p << "," << vires.v[p.s0ind] << "," << res.x << ",";
     }
     else
-        report << ",,";
+        report << ",,,";
     unsigned rnend = sys::gettimems();
 
-    report << rnend - tstart << ",";
+    report << viend - tstart << ",";
 
 
     if(p.heuristic)
@@ -453,7 +454,9 @@ std::cout << "crit = " << res.average() << std::endl;
 
     if(p.enumerate) // tbd still only to log
     {
-        if(pow(problem.constraint().num(),problem.statespace().num()) > p.fmaxstatestoenum)
+        auto numpolicies = problem.numpolicyvalues();
+        sys::logline() << "# of policy values: " << numpolicies << std::endl;
+        if(numpolicies >= p.fmaxstatestoenum)
         {
             sys::logline() << "Too much states to enumerate" << std::endl;
             report << ",toomuchstates,";
@@ -548,11 +551,11 @@ void domain(unsigned nthreads)
     p.heuristic = false;
     p.taylorheuristic = false;
     p.pseudogradienthomo = false;
-    p.enumerate = false;
+    p.enumerate = true;
     p.pseudogradienthetero = false;
     p.heuristicplus = true;
 
-    p.accuracy = 0.01;
+    p.accuracy = 0.002;
 
     std::ofstream report("report.csv");
     if(!report)
@@ -567,7 +570,7 @@ void domain(unsigned nthreads)
             report << "maxinv,lot,kappa,gamma,pcrash,accuracy,";
 
 
-    report << "rnpolicy,rncrit,rntime,"
+    report << "rnpolicy,rnexp,rncrit,rntime,"
           << "hpolicy,hcrit,hlambda,htime,"
           << "tpolicy,tcrit,tlambda,ttime,"
           << "hppolicyh,hpcrith,hplambdah,hppolicyp,phcritp,ttime,"
@@ -577,19 +580,17 @@ void domain(unsigned nthreads)
           << std::endl;
     report << std::setprecision(5);
 
-    std::vector<double> kappas = { 0.6, 0.75, 0.9 };
-    std::vector<double> gammas = { 0.85, 0.9, 0.95 };
-    std::vector<double> pcrashs = { 0, 0.1, 0.2 };
-
-    for(double kappa = 0.4; kappa < 0.951; kappa += 0.1)
+    
+    for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
+    for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
     {
-        p.pcrash = 0.1;
+        p.pcrash = pcrash;
         p.gamma = 0.8;
         p.kappa = kappa;
 
         if constexpr(std::is_same<testexamineprogram,R>::value)
         {
-            p.nstates = 5;
+            p.nstates = 6;
             p.maxcons = 2;
             p.pincrease = 0.7;
             report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
@@ -607,7 +608,7 @@ void domain(unsigned nthreads)
         }
         if constexpr(std::is_same<invexamineprogram,R>::value)
         {
-            p.maxinv = 5;
+            p.maxinv = 4;
             p.lot = 2;
             p.pincrease = 0.7;
             report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
@@ -665,3 +666,4 @@ int main(int argc, char *argv[])
     domain<invproblem,invexamineprogram>(nthreads);
     return 0;
 }
+
