@@ -461,7 +461,7 @@ private:
             }
             if(!atleastonefeasible)
                 throw exception("At least one action has to be feasible");
-            assert(ai == this->constraint().num());
+            assert(ai == this->constraint().num()-1);
         }
         else
         {

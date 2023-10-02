@@ -95,11 +95,11 @@ private:
     unsigned flot;
 };
 
-using invcritcvar = CVaR<ldistribution<double>,true>;
-class invcritmcv: public MeanCVaR<ldistribution<double>,true>
+using critcvar = CVaR<ldistribution<double>,true>;
+class critmcv: public MeanCVaR<ldistribution<double>,true>
 {
 public:
-    invcritmcv(double alpha) : MeanCVaR(0.95, alpha) {}
+    critmcv(double alpha) : MeanCVaR(0.95, alpha) {}
 };
 
 template <typename Crit>
@@ -139,7 +139,7 @@ public:
       fnumstates(numstates)
     {
         if(amaxcons < (numstates-1) - maxfinalstate())
-            throw "Too little maxcons";
+            throw exception("Too little maxcons");
     }
     unsigned maxcons() const { return num()-1; }
     virtual bool isfeasible(const unsigned int& a, const unsigned int& s) const
@@ -225,7 +225,6 @@ private:
     probability fpcrash;
 };
 
-using testcritcvar = CVaR<ldistribution<double>,true>;
 
 template <typename Crit>
 class testproblem : public overallriskproblem<Crit,
@@ -358,7 +357,7 @@ struct invexamineprogram: public examineprogram
 
 
 template <typename P, typename HP, typename R>
-void examineproblem(P& problem, HP& hp, R p, std::ostream& report)
+void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
 {
     finitepolicy startingp(problem,0);
 
@@ -547,7 +546,7 @@ void domain(unsigned nthreads, std::string repontname)
     p.s0ind = 1;
 
     pars.fopttimelimit = pars.fpseudogradienttimelimit
-            = pars.fenumtimelimit = 5000000;
+            = pars.fenumtimelimit = 3600000;
 
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
              = pars.fnestedparams.fthreadstouse = nthreads;
@@ -560,11 +559,11 @@ void domain(unsigned nthreads, std::string repontname)
     p.fmaxstatestoenum = 10000;
     p.pars = pars;
     p.riskneutral = true;
-    p.heuristic = false;
-    p.taylorheuristic = false;
-    p.pseudogradienthomo = false;
-    p.enumerate = false;
-    p.pseudogradienthetero = false;
+    p.heuristic = true;
+    p.taylorheuristic = true;
+    p.pseudogradienthomo = true;
+    p.enumerate = true;
+    p.pseudogradienthetero = true;
     p.heuristicplus = true;
 
     p.accuracy = 0.05;// 0.002;
@@ -602,8 +601,8 @@ void domain(unsigned nthreads, std::string repontname)
 
         if constexpr(std::is_same<testexamineprogram<C>,R>::value)
         {
-            p.nstates = 6;
-            p.maxcons = 2;
+            p.nstates = 10;
+            p.maxcons = 5;
             p.pincrease = 0.7;
             report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
                    << p.pcrash << "," << p.accuracy << ",";
@@ -611,7 +610,7 @@ void domain(unsigned nthreads, std::string repontname)
             sys::logline() << "kappa, gamma, pcrash = "
                            << p.kappa << ", " << p.gamma << ", "
                            << p.pcrash << std::endl;
-            testproblem problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
+            testproblem<C> problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
             testhomoproblem<C> hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
 
             examineproblem(problem,hp,p,report);
@@ -674,12 +673,46 @@ int main(int argc, char *argv[])
         }
     }
 
-//    domain<testproblem,testexamineprogram>(nthreads);
+    bool test = true;
+    if(argc>2)
+    {
+        if(argv[2][0] == 'I')
+            test = false;
+    }
 
-    using crit = invcritcvar;
-    domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, "reportcvar.csv");
-    using mcrit = invcritmcv;
-    domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, "reportmcv.csv");
+    bool cvar = true;
+    if(argc>2)
+    {
+        if(argv[2][0] == 'M')
+            cvar = false;
+    }
+
+    if(test)
+    {
+        if(cvar)
+        {
+            using crit = critcvar;
+            domain<testproblem<crit>,testexamineprogram<crit>,crit>(nthreads, "conscvar.csv");
+        }
+        else
+        {
+            using mcrit = critmcv;
+            domain<testproblem<mcrit>,testexamineprogram<mcrit>,mcrit>(nthreads, "consmcv.csv");
+        }
+    }
+    else
+    {
+        if(cvar)
+        {
+            using crit = critcvar;
+            domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, "invcvar.csv");
+        }
+        else
+        {
+            using mcrit = critmcv;
+            domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, "invmcv.csv");
+        }
+    }
     return 0;
 }
 
