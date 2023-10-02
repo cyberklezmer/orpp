@@ -106,7 +106,8 @@ public:
                probability pincrease, double gamma, probability pcrash) :
         overallriskproblem<invcrit, invstatespace,
                     invactionspace, invtransition, invreward>
-          (invcrit(0),invstatespace(maxinv), invactionspace(maxinv,lot),
+// error here
+        (invcrit(0),invstatespace(maxinv), invactionspace(maxinv,lot),
            invtransition(maxinv,lot,pincrease,pcrash), invreward(maxinv), gamma,maxinv/lot,2.0 / (1-alpha)) {}
 };
 
@@ -115,7 +116,7 @@ class invhomoproblem: public invproblem::nestedproblem
 public:
     invhomoproblem(unsigned maxinv, unsigned lot, probability alpha,
                    probability pincrease, double gamma, probability pcrash)  :
-          invproblem::nestedproblem(invcrit(alpha),invstatespace(maxinv), invactionspace(maxinv,lot),
+          invproblem::nestedproblem(invcrit(0),invstatespace(maxinv), invactionspace(maxinv,lot),
                                               invtransition(maxinv,lot,pincrease,pcrash), invreward(maxinv), gamma,
                                     static_cast<double>(maxinv))
     {
@@ -362,7 +363,6 @@ void examineproblem(P& problem, HP& hp, R p, std::ostream& report)
          report << vires.p << "," << vires.v[p.s0ind] << ",";
 auto res = hp.evaluateraw(p.s0ind,vires.p,p.accuracy,p.pars.fnestedparams);
 std::cout << "crit = " << res.average() << std::endl;
-throw;
     }
     else
         report << ",,";
@@ -581,7 +581,7 @@ void domain(unsigned nthreads)
     std::vector<double> gammas = { 0.85, 0.9, 0.95 };
     std::vector<double> pcrashs = { 0, 0.1, 0.2 };
 
-    for(double kappa = 0.2; kappa < 0.951; kappa += 0.1)
+    for(double kappa = 0.4; kappa < 0.951; kappa += 0.1)
     {
         p.pcrash = 0.1;
         p.gamma = 0.8;
