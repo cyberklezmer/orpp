@@ -2,7 +2,7 @@
 #include "orpp/boostdist.hpp"
 #include "orpp/overallriskdp.hpp"
 #include "orpp/test/testdp.hpp"
-#include "orpp/test/testoverallriskdp.hpp"
+// #include "orpp/test/testoverallriskdp.hpp"
 
 using namespace orpp;
 
@@ -95,27 +95,33 @@ private:
     unsigned flot;
 };
 
-using invcrit = CVaR<ldistribution<double>,true>;
+using invcritcvar = CVaR<ldistribution<double>,true>;
+class invcritmcv: public MeanCVaR<ldistribution<double>,true>
+{
+public:
+    invcritmcv(double alpha) : MeanCVaR(0.95, alpha) {}
+};
 
-
-class invproblem : public overallriskproblem<invcrit,
+template <typename Crit>
+class invproblem : public overallriskproblem<Crit,
         invstatespace, invactionspace, invtransition, invreward>
 {
 public:
     invproblem(unsigned maxinv, unsigned lot, probability alpha,
                probability pincrease, double gamma, probability pcrash) :
-        overallriskproblem<invcrit, invstatespace,
+        overallriskproblem<Crit, invstatespace,
                     invactionspace, invtransition, invreward>
-          (invcrit(alpha),invstatespace(maxinv), invactionspace(maxinv,lot),
+          (Crit(alpha),invstatespace(maxinv), invactionspace(maxinv,lot),
            invtransition(maxinv,lot,pincrease,pcrash), invreward(maxinv), gamma,maxinv/lot,2.0 / (1-alpha)) {}
 };
 
-class invhomoproblem: public invproblem::nestedproblem
+template <typename Crit>
+class invhomoproblem: public invproblem<Crit>::nestedproblem
 {
 public:
     invhomoproblem(unsigned maxinv, unsigned lot, probability alpha,
                    probability pincrease, double gamma, probability pcrash)  :
-          invproblem::nestedproblem(invcrit(0),invstatespace(maxinv), invactionspace(maxinv,lot),
+          invproblem<Crit>::nestedproblem(Crit(alpha),invstatespace(maxinv), invactionspace(maxinv,lot),
                                               invtransition(maxinv,lot,pincrease,pcrash), invreward(maxinv), gamma,
                                     static_cast<double>(maxinv))
     {
@@ -219,49 +225,53 @@ private:
     probability fpcrash;
 };
 
-using testcrit = CVaR<ldistribution<double>,true>;
+using testcritcvar = CVaR<ldistribution<double>,true>;
 
-class testproblem : public overallriskproblem<testcrit,
+template <typename Crit>
+class testproblem : public overallriskproblem<Crit,
         teststatespace, testactionspace, testtransition, testreward>
 {
 public:
     testproblem(unsigned nstates, unsigned maxcons, probability alpha, probability pincrease, double gamma, probability pcrash) :
-        overallriskproblem<testcrit, teststatespace,
+        overallriskproblem<Crit, teststatespace,
                     testactionspace, testtransition, testreward>
-          (testcrit(alpha),teststatespace(nstates), testactionspace(maxcons,nstates),
+          (Crit(alpha),teststatespace(nstates), testactionspace(maxcons,nstates),
            testtransition(pincrease,nstates, pcrash), testreward(), gamma,maxcons,2.0 / (1-alpha)) {}
 };
 
 
-accuracytestresult testoverall(const testproblem& problem,
+template <typename Crit>
+accuracytestresult testoverall(const testproblem<Crit>& problem,
                                orpp::index p0,
                                const std::vector<finitepolicy>& ps,
                                orpp::index s0ind, double accuracy,
                                unsigned testiters,
-                               const typename testproblem::computationparams& params)
+                               const typename testproblem<Crit>::computationparams& params)
 {
     sys::log() << "testoverall" << std::endl;
     return testevaluate<false>(problem, s0ind, p0, ps, accuracy, params, testiters);
 }
 
-class testhomoproblem: public testproblem::nestedproblem
+template <typename Crit>
+class testhomoproblem: public testproblem<Crit>::nestedproblem
 {
 public:
     testhomoproblem(unsigned nstates, unsigned maxcons,
                     double iota, double pincrease, double gamma, double pcrash) :
 //        overallriskproblem<testcrit, teststatespace,
 //                    testactionspace, testtransition, testreward>
-          testproblem::nestedproblem(testcrit(iota),teststatespace(nstates),
+          testproblem<Crit>::nestedproblem(Crit(iota),teststatespace(nstates),
                                      testactionspace(maxcons, nstates),
            testtransition(pincrease,nstates, pcrash), testreward(), gamma, maxcons)
     {
     }
 };
 
-accuracytestresult testhomo(const testhomoproblem& problem,
+template <typename Crit>
+accuracytestresult testhomo(const testhomoproblem<Crit>& problem,
                             double accuracy, orpp::index s0ind,
                             unsigned testiters,
-                            const testhomoproblem::computationparams& cp
+                            const typename testhomoproblem<Crit>::computationparams& cp
                             )
 {
     finitevaluefunction initV(problem,0);
@@ -270,11 +280,11 @@ accuracytestresult testhomo(const testhomoproblem& problem,
     return testevaluatehomo(problem, s0ind, res.p ,accuracy, cp, testiters);
 }
 
-
-void testhomotime(const testhomoproblem& problem,
+template <typename Crit>
+void testhomotime(const testhomoproblem<Crit>& problem,
                             double accuracy, orpp::index s0ind,
                             unsigned testiters,
-                            const testhomoproblem::computationparams& cp
+                            const typename testhomoproblem<Crit>::computationparams& cp
                             )
 {
     finitevaluefunction initV(problem,0);
@@ -282,20 +292,20 @@ void testhomotime(const testhomoproblem& problem,
        problem.valueiteration(initV,accuracy,cp);
 }
 
-
+template <typename Crit>
 void test(unsigned nstates, unsigned maxcons,
             double kappa, double pincrease, double gamma,
           double pcrash,
              orpp::index s0ind, double accuracy,
              unsigned testiters,
-             const testproblem::computationparams& params)
+             const typename testproblem<Crit>::computationparams& params)
 {
-   testproblem problem(nstates, maxcons, kappa,pincrease,gamma,pcrash);
+   testproblem<Crit> problem(nstates, maxcons, kappa,pincrease,gamma,pcrash);
 
-   testproblem::heuristicresult res = problem.heuristic(s0ind,accuracy,params);
+   typename testproblem<Crit>::heuristicresult res = problem.heuristic(s0ind,accuracy,params);
    testoverall(problem,res.p[s0ind],{res.p},s0ind,accuracy,testiters,params);
 
-   testhomoproblem hp(nstates, maxcons, res.iota, pincrease,gamma, pcrash);
+   testhomoproblem<Crit> hp(nstates, maxcons, res.iota, pincrease,gamma, pcrash);
    testhomo(hp,accuracy,s0ind,testiters,params.fnestedparams);
 }
 
@@ -326,22 +336,24 @@ struct examineprogram
     unsigned fmaxstatestoenum;
 };
 
+template <typename Crit>
 struct testexamineprogram: public examineprogram
 {
     double pincrease = 0.7;
     unsigned nstates;
     unsigned maxcons;
     double pcrash;
-    testproblem::computationparams pars;
+    typename testproblem<Crit>::computationparams pars;
 };
 
+template <typename Crit>
 struct invexamineprogram: public examineprogram
 {
     double pincrease = 0.7;
     unsigned maxinv;
     unsigned lot;
     double pcrash;
-    invproblem::computationparams pars;
+    typename invproblem<Crit>::computationparams pars;
 };
 
 
@@ -520,8 +532,8 @@ void examineproblem(P& problem, HP& hp, R p, std::ostream& report)
 
 }
 
-template <typename P, typename R>
-void domain(unsigned nthreads)
+template <typename P, typename R, typename C>
+void domain(unsigned nthreads, std::string repontname)
 {
     sys::setlog(std::cout);
     sys::logline() << "Using " << nthreads << " threads." << std::endl;
@@ -551,22 +563,22 @@ void domain(unsigned nthreads)
     p.heuristic = false;
     p.taylorheuristic = false;
     p.pseudogradienthomo = false;
-    p.enumerate = true;
+    p.enumerate = false;
     p.pseudogradienthetero = false;
     p.heuristicplus = true;
 
-    p.accuracy = 0.002;
+    p.accuracy = 0.05;// 0.002;
 
-    std::ofstream report("report.csv");
+    std::ofstream report(repontname);
     if(!report)
     {
         throw exception("cannot open rep");
     }
 
-    if constexpr(std::is_same<testexamineprogram,R>::value)
+    if constexpr(std::is_same<testexamineprogram<C>,R>::value)
             report << "nstates,maxcons,kappa,gamma,pcrash,accuracy,";
 
-    if constexpr(std::is_same<invexamineprogram,R>::value)
+    if constexpr(std::is_same<invexamineprogram<C>,R>::value)
             report << "maxinv,lot,kappa,gamma,pcrash,accuracy,";
 
 
@@ -588,7 +600,7 @@ void domain(unsigned nthreads)
         p.gamma = 0.8;
         p.kappa = kappa;
 
-        if constexpr(std::is_same<testexamineprogram,R>::value)
+        if constexpr(std::is_same<testexamineprogram<C>,R>::value)
         {
             p.nstates = 6;
             p.maxcons = 2;
@@ -600,13 +612,13 @@ void domain(unsigned nthreads)
                            << p.kappa << ", " << p.gamma << ", "
                            << p.pcrash << std::endl;
             testproblem problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
-            testhomoproblem hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
+            testhomoproblem<C> hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
 
             examineproblem(problem,hp,p,report);
             sys::logline() << std::endl;
 
         }
-        if constexpr(std::is_same<invexamineprogram,R>::value)
+        if constexpr(std::is_same<invexamineprogram<C>,R>::value)
         {
             p.maxinv = 4;
             p.lot = 2;
@@ -617,8 +629,8 @@ void domain(unsigned nthreads)
             sys::logline() << "kappa, gamma, pcrash = "
                            << p.kappa << ", " << p.gamma << ", "
                            << p.pcrash << std::endl;
-            invproblem problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
-            invhomoproblem hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+            invproblem<C> problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+            invhomoproblem<C> hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
 
             examineproblem(problem,hp,p,report);
             sys::logline() << std::endl;
@@ -663,7 +675,12 @@ int main(int argc, char *argv[])
     }
 
 //    domain<testproblem,testexamineprogram>(nthreads);
-    domain<invproblem,invexamineprogram>(nthreads);
+
+    using crit = invcritcvar;
+    domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, "reportcvar.csv");
+    using mcrit = invcritmcv;
+    domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, "reportmcv.csv");
     return 0;
 }
+
 
