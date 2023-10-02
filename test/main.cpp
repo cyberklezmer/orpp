@@ -365,16 +365,18 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
 
 
     timems viend = tstart;
+
     if(p.riskneutral)
     {
          sys::logline() << "riskneutral" << std::endl;
          finitevaluefunction initV(hp,1);
-         viend = sys::gettimems();
 
          typename HP::viresult vires = hp.valueiteration(initV,p.accuracy,p.pars.fnestedparams);
+         viend = sys::gettimems();
          auto res = problem.evaluatecrit(p.s0ind,vires.p,p.accuracy,p.pars);
          sys::logline() << vires.p << ": " << vires.v[p.s0ind] << " crit= " << res.x << std::endl;
          report << vires.p << "," << vires.v[p.s0ind] << "," << res.x << ",";
+         startingp = vires.p;
     }
     else
         report << ",,,";
@@ -403,6 +405,8 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
 
     if(p.taylorheuristic)
     {
+        if(!p.riskneutral)
+            throw exception("Initial policy not set (p.riskneutral==false)");
         try
         {
             typename P::heuristicresult hres = problem.taylorheuristic(p.s0ind,p.accuracy,startingp,p.pars);
