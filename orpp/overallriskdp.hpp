@@ -300,25 +300,37 @@ public:
     {
         sys::logline() << "overallriskproblem::heuristic" << std::endl;
 
+        auto st = sys::gettimems();
+
+        nestedproblem problem(this->fcrit,
+                              this->fstatespace,
+                              this->fconstraint,
+                              this->ftransition,this->freward,
+                              this->fgamma,
+                              this->fmaxreward);
+        problem.setriskaversion(0);
+
+        auto vires = problem.valueiteration(finitevaluefunction(problem,0),accuracy,params.fnestedparams);
+
+        finitepolicy bestp = vires.p;
+        finitepolicy lastp = bestp;
+
+        sys::logline() << "RN iteration: p="
+                       << vires.p << ", expectation=" << vires.v[s0ind]<< std::endl;
+
+
         double iota = this->fcrit.getparam();
 
-        finitepolicy bestp(this->fstatespace.num());
-        finitepolicy lastp = bestp;
         finitevaluefunction initV(this->fstatespace.num(),0);
 
         double lastvalueofcrit = 0;
         double resultingvalueofcrit = 0;
-        auto st = sys::gettimems();
+
+
 
         for(unsigned i=0; ; i++)
         {
 
-            nestedproblem problem(this->fcrit,
-                                  this->fstatespace,
-                                  this->fconstraint,
-                                  this->ftransition,this->freward,
-                                  this->fgamma,
-                                  this->fmaxreward);
 
             problem.setriskaversion(iota);
 

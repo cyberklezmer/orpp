@@ -574,6 +574,16 @@ public:
                          double accuracy,
                          const computationparams& params) const
     {
+        assert(this->constraint().isfeasible(p0,s0index));
+#ifndef NDEBUG
+        for(unsigned i=0; i<p.size(); i++)
+        {
+            assert(p[i].size()==this->statespace().num());
+            for(unsigned j=0; j<p[i].size(); j++)
+                assert(this->constraint().isfeasible(p[i][j],j));
+        }
+#endif
+
         if(sys::loglevel() >= 2)
         {
            sys::logline(2) << "dpproblem::evaluateraw(" << s0index
