@@ -604,7 +604,11 @@ public:
             }
         }
         if(fabs(sum - 1.0) > probabilitytolerance)
-            throw exception("ldistribution does not sum to one");
+        {
+            std::ostringstream err;
+            err << "ldistribution sums to " << sum;
+            throw exception(err.str());
+        }
 #endif
     }
 
