@@ -555,10 +555,7 @@ void domain(unsigned nthreads, std::string repontname)
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
              = pars.fnestedparams.fthreadstouse = nthreads;
     pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
-             = pars.fnestedparams.fthreadbatch = 3000;
-    pars.fmaxevaliterations = 2000000;
-
-
+             = pars.fnestedparams.fthreadbatch = 5000;
 
     p.fmaxstatestoenum = 10000;
     p.pars = pars;
@@ -737,4 +734,3 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-

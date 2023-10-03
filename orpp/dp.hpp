@@ -333,10 +333,10 @@ public:
 
     struct computationparams
     {
-        computationparams() : fmaxevaliterations(1000000),
+        computationparams() : fmaxevaliterations(std::numeric_limits<unsigned>::max()),
             fthreadstouse(0), fthreadbatch(1000),
             fevaltimelimit(std::numeric_limits<timems>::max()),
-            fpseudogradientmaxiters(1000000),
+            fpseudogradientmaxiters(std::numeric_limits<unsigned>::max()),
             fpseudogradienttimelimit(std::numeric_limits<timems>::max()),
             fenumtimelimit(std::numeric_limits<timems>::max())
           {}
@@ -886,7 +886,7 @@ public:
           public finitedpproblem<Criterion,StateSpace,ConstrainedActionSpace,
             Transition,Reward>::computationparams
     {
-        computationparams() : fvaluemaxiterations(100000) {}
+        computationparams() : fvaluemaxiterations(std::numeric_limits<unsigned>::max()) {}
         unsigned fvaluemaxiterations;
     };
 
