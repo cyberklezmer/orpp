@@ -374,7 +374,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
          typename HP::viresult vires = hp.valueiteration(initV,p.accuracy,p.pars.fnestedparams);
          viend = sys::gettimems();
          auto res = problem.evaluatecrit(p.s0ind,vires.p,p.accuracy,p.pars);
-         sys::logline() << vires.p << ": " << vires.v[p.s0ind] << " crit= " << res.x << std::endl;
+         sys::logline() << vires.p << ": " << vires.v[p.s0ind] << " crit= " << res.x << " (" << res.sd << ")," << std::endl;
          report << vires.p << "," << vires.v[p.s0ind] << "," << res.x << ",";
          startingp = vires.p;
     }
@@ -570,7 +570,7 @@ void domain(unsigned nthreads, std::string repontname)
     p.pseudogradienthetero = true;
     p.heuristicplus = true;
 
-    p.accuracy = 0.05;// 0.002;
+p.accuracy = 0.0005;
 
     std::ofstream report(repontname);
     if(!report)
@@ -578,31 +578,49 @@ void domain(unsigned nthreads, std::string repontname)
         throw exception("cannot open rep");
     }
 
+    report << "problem,crit,";
+    std::string id;
     if constexpr(std::is_same<testexamineprogram<C>,R>::value)
+    {
+            id = "cons";
             report << "nstates,maxcons,kappa,gamma,pcrash,accuracy,";
+    }
 
     if constexpr(std::is_same<invexamineprogram<C>,R>::value)
+    {
+            id = "inv";
             report << "maxinv,lot,kappa,gamma,pcrash,accuracy,";
+    }
+
+    std::string cid;
+    if constexpr(std::is_same<critcvar,C>::value)
+            cid = "cvar";
+    if constexpr(std::is_same<critmcv,C>::value)
+            cid = "MCV";
 
 
     report << "rnpolicy,rnexp,rncrit,rntime,"
           << "hpolicy,hcrit,hlambda,htime,"
           << "tpolicy,tcrit,tlambda,ttime,"
-          << "hppolicyh,hpcrith,hplambdah,hppolicyp,phcritp,ttime,"
+          << "hppolicyh,hpcrith,hplambdah,hppolicyp,hpcritp,hptime,"
           << "pghomopolicy,pghomocrit,pghomotime,"
           << "enumgpolicy,enumgcrit,enumegtime,"
           << "pgheteropolicy,pgheterocrit,pgheterotime,"
           << std::endl;
     report << std::setprecision(5);
 
-    
-    for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
-    for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
+
+//    for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
+//    for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
+for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
+for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
+
     {
         p.pcrash = pcrash;
         p.gamma = 0.8;
         p.kappa = kappa;
 
+        report << id << "," << cid << ",";
         if constexpr(std::is_same<testexamineprogram<C>,R>::value)
         {
             p.nstates = 10;
@@ -624,7 +642,7 @@ void domain(unsigned nthreads, std::string repontname)
         if constexpr(std::is_same<invexamineprogram<C>,R>::value)
         {
             p.maxinv = 4;
-            p.lot = 2;
+            p.lot = 3;
             p.pincrease = 0.7;
             report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
                    << p.pcrash << "," << p.accuracy << ",";
@@ -685,9 +703,9 @@ int main(int argc, char *argv[])
     }
 
     bool cvar = true;
-    if(argc>2)
+    if(argc>3)
     {
-        if(argv[2][0] == 'M')
+        if(argv[3][0] == 'M')
             cvar = false;
     }
 
@@ -696,12 +714,12 @@ int main(int argc, char *argv[])
         if(cvar)
         {
             using crit = critcvar;
-            domain<testproblem<crit>,testexamineprogram<crit>,crit>(nthreads, "conscvar.csv");
+            domain<testproblem<crit>,testexamineprogram<crit>,crit>(nthreads, "reportCC.csv");
         }
         else
         {
             using mcrit = critmcv;
-            domain<testproblem<mcrit>,testexamineprogram<mcrit>,mcrit>(nthreads, "consmcv.csv");
+            domain<testproblem<mcrit>,testexamineprogram<mcrit>,mcrit>(nthreads, "reportCM.csv");
         }
     }
     else
@@ -709,15 +727,14 @@ int main(int argc, char *argv[])
         if(cvar)
         {
             using crit = critcvar;
-            domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, "invcvar.csv");
+            domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, "reportIC.csv");
         }
         else
         {
             using mcrit = critmcv;
-            domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, "invmcv.csv");
+            domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, "reportIM.csv");
         }
     }
     return 0;
 }
-
 
