@@ -151,8 +151,9 @@ public:
           public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
             Transition, Reward>::computationparams
     {
-        computationparams() : fpseudogradientmaxiters(100),
-            fheuristicmaxiters(100), fopttimelimit(std::numeric_limits<timems>::max()) {}
+        computationparams() : fpseudogradientmaxiters(std::numeric_limits<unsigned>::max()),
+            fheuristicmaxiters(std::numeric_limits<unsigned>::max()),
+            fopttimelimit(std::numeric_limits<timems>::max()) {}
         typename nestedtaylorproblem::computationparams fnestedtaylorparams;
         typename nestedproblem::computationparams fnestedparams;
         typename nestedonedproblem::computationparams fnestedonedparams;
