@@ -296,13 +296,9 @@ public:
             throw exception("Error finding nested r.a. parameter: from > to");
     }
 
-    heuristicresult heuristic(index s0ind, double accuracy,
-                              const computationparams& params) const
+
+    typename nestedproblem::viresult riskaversesolution(double accuracy,const computationparams& params) const
     {
-        sys::logline() << "overallriskproblem::heuristic" << std::endl;
-
-        auto st = sys::gettimems();
-
         nestedproblem problem(this->fcrit,
                               this->fstatespace,
                               this->fconstraint,
@@ -311,7 +307,17 @@ public:
                               this->fmaxreward);
         problem.setriskaversion(0);
 
-        auto vires = problem.valueiteration(finitevaluefunction(problem,0),accuracy,params.fnestedparams);
+        return problem.valueiteration(finitevaluefunction(problem,0),accuracy,params.fnestedparams);
+    }
+
+    heuristicresult heuristic(index s0ind, double accuracy,
+                              const computationparams& params) const
+    {
+        sys::logline() << "overallriskproblem::heuristic" << std::endl;
+
+        auto st = sys::gettimems();
+
+        auto vires = riskaversesolution(accuracy,params);
 
         finitepolicy bestp = vires.p;
         finitepolicy lastp = bestp;
@@ -331,6 +337,12 @@ public:
 
         for(unsigned i=0; ; i++)
         {
+            nestedproblem problem(this->fcrit,
+                                  this->fstatespace,
+                                  this->fconstraint,
+                                  this->ftransition,this->freward,
+                                  this->fgamma,
+                                  this->fmaxreward);
 
 
             problem.setriskaversion(iota);

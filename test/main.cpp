@@ -113,6 +113,90 @@ public:
                     invactionspace, invtransition, invreward>
           (Crit(alpha),invstatespace(maxinv), invactionspace(maxinv,lot),
            invtransition(maxinv,lot,pincrease,pcrash), invreward(maxinv), gamma,maxinv/lot,2.0 / (1-alpha)) {}
+    void doenumerateex(const finitepolicy& ap,
+                           orpp::index s0ind,
+                           double accuracy,
+                           typename finitedpproblem<Crit,invstatespace, invactionspace, invtransition, invreward>::enumresult& thebest,
+                           const typename finitedpproblem<Crit,invstatespace, invactionspace, invtransition, invreward>::computationparams& params,
+                           timems st) const
+    {
+        orpp::index si = ap.size();
+        if(si < this->statespace().num())
+        {
+            unsigned s = this->statespace()[si];
+
+            finitepolicy p = ap;
+            p.push_back(0); // all the same what we push
+
+            auto mi = this->statespace().maxinv();
+            bool justcopying = si > mi;
+
+            orpp::index ai;
+            if(justcopying)
+                ai = ap[mi];
+            else
+                ai = 0;
+            unsigned a;
+            if(!this->constraint().first(a))
+                throw exception("At least one action has to exist");
+            bool atleastonefeasible = false;
+            for(; ; ai++)
+            {
+                if(this->constraint().feasible(a,s))
+                {
+                    atleastonefeasible = true;
+                    p[si] = ai;
+                    doenumerateex(p,s0ind,accuracy, thebest,params,st);
+                }
+                if(justcopying || !this->constraint().next(a))
+                   break;
+            }
+            if(!atleastonefeasible)
+                throw exception("At least one action has to be feasible");
+            if(!justcopying)
+               assert(ai == this->constraint().num()-1);
+        }
+        else
+        {
+           auto t = sys::gettimems();
+           if(t - st > params.fenumtimelimit)
+           {
+                sys::logline() << "Exiting for time reasons" << std::endl;
+                throw timelimitexception(params.fenumtimelimit);
+           }
+           auto res = this->evaluatecrit(s0ind,ap, accuracy / 2, params);
+           sys::logline() << ap << ": " <<res.x << "(" << res.sd << ")";
+           if(res.x > thebest.v.x)
+           {
+                thebest.v = {res.x, accuracy / 2};
+                thebest.p = ap;
+                sys::log() << "*";
+            }
+            sys::log() << std::endl;
+        }
+
+    }
+    typename finitedpproblem<Crit,invstatespace, invactionspace, invtransition, invreward>::enumresult enumeratehomoex(orpp::index s0ind,
+                         double accuracy,
+                         const typename finitedpproblem<Crit,invstatespace, invactionspace, invtransition, invreward>::computationparams& params)
+    {
+        sys::logline() << "finitedpproblem::enumerate" << std::endl;
+        auto st = sys::gettimems();
+
+       typename finitedpproblem<Crit,invstatespace, invactionspace, invtransition, invreward>::enumresult
+                thebest =  { finitepolicy(*this), {0, 0} };
+
+        finitepolicy p(0U);
+
+        doenumerateex(p,s0ind,accuracy,thebest,params, st);
+
+
+        sys::logline() << "finitedpproblem::enumerate ended" << std::endl;
+        return thebest;
+    }
+
+
+
 };
 
 template <typename Crit>
@@ -356,7 +440,7 @@ struct invexamineprogram: public examineprogram
 };
 
 
-template <typename P, typename HP, typename R>
+template <bool enumeratex, typename P, typename HP, typename R>
 void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
 {
     finitepolicy startingp(problem,0);
@@ -369,9 +453,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
     if(p.riskneutral)
     {
          sys::logline() << "riskneutral" << std::endl;
-         finitevaluefunction initV(hp,1);
-
-         typename HP::viresult vires = hp.valueiteration(initV,p.accuracy,p.pars.fnestedparams);
+         auto vires = problem.riskaversesolution(p.accuracy,p.pars);
          viend = sys::gettimems();
          auto res = problem.evaluatecrit(p.s0ind,vires.p,p.accuracy,p.pars);
          sys::logline() << vires.p << ": " << vires.v[p.s0ind] << " crit= " << res.x << " (" << res.sd << ")," << std::endl;
@@ -471,22 +553,40 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
     {
         auto numpolicies = problem.numpolicyvalues();
         sys::logline() << "# of policy values: " << numpolicies << std::endl;
-        if(numpolicies >= p.fmaxstatestoenum)
+        if constexpr(!enumeratex)
         {
-            sys::logline() << "Too much states to enumerate" << std::endl;
-            report << ",toomuchstates,";
-        }
-        else try
-        {
-            typename P::enumresult res = problem.enumeratehomo(p.s0ind, p.accuracy, p.pars);
+            if(numpolicies >= p.fmaxstatestoenum)
+            {
+                sys::logline() << "Too much states to enumerate" << std::endl;
+                report << ",toomuchstates,";
+            }
+            else try
+            {
+                typename P::enumresult res = problem.enumeratehomo(p.s0ind, p.accuracy, p.pars);
 
-            sys::log() << "best of enumerate:" << res.p << " "
-                       << res.v.x  << std::endl;
-            report << res.p << "," << res.v.x << ",";
+                sys::log() << "best of enumerate:" << res.p << " "
+                           << res.v.x  << std::endl;
+                report << res.p << "," << res.v.x << ",";
+            }
+            catch(const timelimitexception& e)
+            {
+                report << ",outoftime,";
+            }
         }
-        catch(const timelimitexception& e)
+        else
         {
-            report << ",outoftime,";
+            try
+            {
+                typename P::enumresult res = problem.enumeratehomoex(p.s0ind, p.accuracy, p.pars);
+
+                sys::log() << "best of enumerate:" << res.p << " "
+                           << res.v.x  << std::endl;
+                report << res.p << "," << res.v.x << ",";
+            }
+            catch(const timelimitexception& e)
+            {
+                report << ",outoftime,";
+            }
         }
     }
     else
@@ -559,15 +659,16 @@ void domain(unsigned nthreads, std::string repontname)
 
     p.fmaxstatestoenum = 10000;
     p.pars = pars;
-    p.riskneutral = true;
-    p.heuristic = true;
-    p.taylorheuristic = true;
-    p.pseudogradienthomo = true;
-    p.enumerate = true;
-    p.pseudogradienthetero = true;
-    p.heuristicplus = true;
+p.enumerate = true;
+p.riskneutral = true;
+p.heuristic = true;
+p.taylorheuristic = true;
+p.pseudogradienthomo = true;
+p.pseudogradienthetero = true;
+p.heuristicplus = true;
 
-p.accuracy = 0.0015;
+//p.accuracy = 0.0015;
+p.accuracy = 0.05;
 
     std::ofstream report(repontname);
     if(!report)
@@ -607,11 +708,10 @@ p.accuracy = 0.0015;
     report << std::setprecision(5);
 
 
-//    for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
-//    for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
-for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
-for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
-
+    for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
+    for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
+//for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
+//for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
     {
         p.pcrash = pcrash;
         p.gamma = 0.8;
@@ -632,14 +732,14 @@ for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
             testproblem<C> problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
             testhomoproblem<C> hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
 
-            examineproblem(problem,hp,p,report);
+            examineproblem<false>(problem,hp,p,report);
             sys::logline() << std::endl;
 
         }
         if constexpr(std::is_same<invexamineprogram<C>,R>::value)
         {
             p.maxinv = 4;
-            p.lot = 3;
+            p.lot = 2;
             p.pincrease = 0.7;
             report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
                    << p.pcrash << "," << p.accuracy << ",";
@@ -650,7 +750,7 @@ for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
             invproblem<C> problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
             invhomoproblem<C> hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
 
-            examineproblem(problem,hp,p,report);
+            examineproblem<true>(problem,hp,p,report);
             sys::logline() << std::endl;
 
         }
@@ -692,11 +792,13 @@ int main(int argc, char *argv[])
         }
     }
 
-    bool test = true;
+    bool test = false;
     if(argc>2)
     {
         if(argv[2][0] == 'I')
             test = false;
+        if(argv[2][0] == 'C')
+            test = true;
     }
 
     bool cvar = true;
