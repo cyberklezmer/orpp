@@ -550,7 +550,7 @@ void domain(unsigned nthreads, std::string repontname)
     p.s0ind = 1;
 
     pars.fopttimelimit = pars.fpseudogradienttimelimit
-            = pars.fenumtimelimit = 3600000;
+            = pars.fenumtimelimit = 7200000;
 
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
              = pars.fnestedparams.fthreadstouse = nthreads;
@@ -567,7 +567,7 @@ void domain(unsigned nthreads, std::string repontname)
     p.pseudogradienthetero = true;
     p.heuristicplus = true;
 
-p.accuracy = 0.0005;
+p.accuracy = 0.0015;
 
     std::ofstream report(repontname);
     if(!report)
