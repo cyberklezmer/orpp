@@ -531,6 +531,8 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
 
     if(p.pseudogradienthomo)
     {
+        if(!p.riskneutral)
+            throw exception("Initial policy not set (p.riskneutral==false)");
         try
         {
             typename P::pgdhomoresult respg = problem.pseudogradientdescenthomo(p.s0ind, startingp, p.accuracy, p.pars);
@@ -635,8 +637,10 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report)
 
 }
 
+enum eanalysis {egrid, elarge, enumanalyses};
+
 template <typename P, typename R, typename C>
-void domain(unsigned nthreads, std::string repontname)
+void domain(unsigned nthreads, std::string repontname, eanalysis e)
 {
     sys::setlog(std::cout);
     sys::logline() << "Using " << nthreads << " threads." << std::endl;
@@ -659,13 +663,17 @@ void domain(unsigned nthreads, std::string repontname)
 
     p.fmaxstatestoenum = 10000;
     p.pars = pars;
-p.enumerate = true;
-p.riskneutral = true;
-p.heuristic = true;
-p.taylorheuristic = true;
-p.pseudogradienthomo = true;
-p.pseudogradienthetero = true;
-p.heuristicplus = true;
+    p.riskneutral = true;
+    p.pseudogradienthomo = true;
+    p.heuristicplus = true;
+
+    if(e==egrid)
+    {
+        p.enumerate = true;
+        p.heuristic = true;
+        p.pseudogradienthetero = true;
+        p.taylorheuristic = true;
+    }
 
 //p.accuracy = 0.0015;
 p.accuracy = 0.05;
@@ -707,21 +715,66 @@ p.accuracy = 0.05;
           << std::endl;
     report << std::setprecision(5);
 
+    if(e==egrid)
+        for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
+            for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
+        //for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
+        //for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
+            {
+                p.pcrash = pcrash;
+                p.gamma = 0.8;
+                p.kappa = kappa;
 
-    for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
-    for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
-//for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
-//for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
+                report << id << "," << cid << ",";
+                if constexpr(std::is_same<testexamineprogram<C>,R>::value)
+                {
+                    p.nstates = 10;
+                    p.maxcons = 5;
+                    p.pincrease = 0.7;
+                    report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
+                           << p.pcrash << "," << p.accuracy << ",";
+
+                    sys::logline() << "kappa, gamma, pcrash = "
+                                   << p.kappa << ", " << p.gamma << ", "
+                                   << p.pcrash << std::endl;
+                    testproblem<C> problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
+                    testhomoproblem<C> hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
+
+                    examineproblem<false>(problem,hp,p,report);
+                    sys::logline() << std::endl;
+
+                }
+                if constexpr(std::is_same<invexamineprogram<C>,R>::value)
+                {
+                    p.maxinv = 4;
+                    p.lot = 2;
+                    p.pincrease = 0.7;
+                    report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
+                           << p.pcrash << "," << p.accuracy << ",";
+
+                    sys::logline() << "kappa, gamma, pcrash = "
+                                   << p.kappa << ", " << p.gamma << ", "
+                                   << p.pcrash << std::endl;
+                    invproblem<C> problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+                    invhomoproblem<C> hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+
+                    examineproblem<true>(problem,hp,p,report);
+                    sys::logline() << std::endl;
+
+                }
+            }
+
+    if(e==elarge)
     {
-        p.pcrash = pcrash;
+        p.pcrash = 0.033;
         p.gamma = 0.8;
-        p.kappa = kappa;
+        p.kappa = 0.7;
 
         report << id << "," << cid << ",";
         if constexpr(std::is_same<testexamineprogram<C>,R>::value)
         {
-            p.nstates = 10;
-            p.maxcons = 5;
+            p.nstates = 14;
+            p.maxcons = 7;
             p.pincrease = 0.7;
             report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
                    << p.pcrash << "," << p.accuracy << ",";
@@ -738,7 +791,7 @@ p.accuracy = 0.05;
         }
         if constexpr(std::is_same<invexamineprogram<C>,R>::value)
         {
-            p.maxinv = 4;
+            p.maxinv = 10;
             p.lot = 2;
             p.pincrease = 0.7;
             report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
@@ -754,24 +807,10 @@ p.accuracy = 0.05;
             sys::logline() << std::endl;
 
         }
-
-
     }
 
-//    for(unsigned i=1; i<2 /*kappas.size()*/; i++)
-//        for(unsigned j=0; j<1 /*gammas.size() */; j++)
-//            for(unsigned k=2; k<3; k++ )
-/*            {
 
-                p.kappa = kappas[i];
-                p.gamma = gammas[j];
-                p.pcrash = pcrashs[k];
-                sys::logline() << "kappa, gamma, pcrash = "
-                               << p.kappa << ", " << p.gamma << ", "
-                               << p.pcrash << std::endl;
-                examine(p, report); // tbd
-                sys::logline() << std::endl;
-            } */
+
 
 }
 
@@ -792,33 +831,55 @@ int main(int argc, char *argv[])
         }
     }
 
+    eanalysis e = egrid;
+    if(argc > 2)
+        switch(argv[2][0])
+        {
+        case 'G':
+            e = egrid;
+            break;
+        case 'L':
+            e = elarge;
+            break;
+        default:
+            throw exception("Unknown option in the second argument");
+        }
+
     bool test = false;
-    if(argc>2)
+    if(argc>3)
     {
-        if(argv[2][0] == 'I')
+        if(argv[3][0] == 'I')
             test = false;
-        if(argv[2][0] == 'C')
+        if(argv[3][0] == 'C')
             test = true;
     }
 
     bool cvar = true;
-    if(argc>3)
+    if(argc>4)
     {
-        if(argv[3][0] == 'M')
+        if(argv[4][0] == 'M')
             cvar = false;
+        if(argv[4][0] == 'C')
+            cvar = true;
     }
+
+    std::string rn;
+    if(e == egrid)
+        rn = "grid";
+    else
+        rn = "large";
 
     if(test)
     {
         if(cvar)
         {
             using crit = critcvar;
-            domain<testproblem<crit>,testexamineprogram<crit>,crit>(nthreads, "reportCC.csv");
+            domain<testproblem<crit>,testexamineprogram<crit>,crit>(nthreads, rn + "CC.csv",e);
         }
         else
         {
             using mcrit = critmcv;
-            domain<testproblem<mcrit>,testexamineprogram<mcrit>,mcrit>(nthreads, "reportCM.csv");
+            domain<testproblem<mcrit>,testexamineprogram<mcrit>,mcrit>(nthreads, rn +"CM.csv",e);
         }
     }
     else
@@ -826,12 +887,12 @@ int main(int argc, char *argv[])
         if(cvar)
         {
             using crit = critcvar;
-            domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, "reportIC.csv");
+            domain<invproblem<crit>,invexamineprogram<crit>,crit>(nthreads, rn + "IC.csv",e );
         }
         else
         {
             using mcrit = critmcv;
-            domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, "reportIM.csv");
+            domain<invproblem<mcrit>,invexamineprogram<mcrit>,mcrit>(nthreads, rn + "IM.csv",e);
         }
     }
     return 0;
