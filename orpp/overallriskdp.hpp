@@ -310,21 +310,17 @@ public:
         return problem.valueiteration(finitevaluefunction(problem,0),accuracy,params.fnestedparams);
     }
 
+    template <bool quick=false>
     heuristicresult heuristic(index s0ind, double accuracy,
+                              finitepolicy& initp,
                               const computationparams& params) const
     {
         sys::logline() << "overallriskproblem::heuristic" << std::endl;
 
         auto st = sys::gettimems();
 
-        auto vires = riskaversesolution(accuracy,params);
-
-        finitepolicy bestp = vires.p;
+        finitepolicy bestp = initp;
         finitepolicy lastp = bestp;
-
-        sys::logline() << "RN iteration: p="
-                       << vires.p << ", expectation=" << vires.v[s0ind]<< std::endl;
-
 
         double iota = this->fcrit.getparam();
 
@@ -332,8 +328,6 @@ public:
 
         double lastvalueofcrit = 0;
         double resultingvalueofcrit = 0;
-
-
 
         for(unsigned i=0; ; i++)
         {
@@ -351,7 +345,7 @@ public:
 
             initV = vires.v;
 
-            statcounter cs = problem.evaluateraw( s0ind, {vires.p}, accuracy / 2.0, params.fnestedparams);
+            statcounter cs = problem.evaluateraw( s0ind, vires.p, accuracy / 2.0, params.fnestedparams);
 
             double valueofcrit = this->fcrit(cs.dist).x;
 
@@ -361,7 +355,7 @@ public:
 
             if(i > 0)
             {
-                if(valueofcrit <= lastvalueofcrit + accuracy
+                if(quick || valueofcrit <= lastvalueofcrit + accuracy
                         || i==params.fheuristicmaxiters-1)
                 {
                     resultingvalueofcrit = lastvalueofcrit;
@@ -390,9 +384,22 @@ public:
         return res;
     }
 
+    template <bool quick=false>
+    heuristicresult heuristic(index s0ind, double accuracy,
+                              const computationparams& params) const
+    {
+        auto vires = riskaversesolution(accuracy,params);
+
+        sys::logline() << "overalldpproblem::heuristic RN initialization: p="
+                       << vires.p << ", expectation=" << vires.v[s0ind]<< std::endl;
+
+        return heuristic<quick>(s0ind, accuracy,vires.p,params);
+    }
+
+    template <bool quick=false>
     heuristicresult taylorheuristic(index s0ind, double accuracy,
                                     finitepolicy& initp,
-                              const computationparams& params) const
+                                    const computationparams& params) const
     {
         sys::logline() << "overallriskproblem::taylorheuristic" << std::endl;
 
@@ -421,7 +428,7 @@ public:
             sys::logline() << "iteration " << i << " iota=" << iota << ", p="
                          << candp << ", crit=" << valueofcrit << std::endl;
 
-            if((i>0 && valueofcrit <= lastvalueofcrit + accuracy)
+            if((i>0 && (quick || valueofcrit <= lastvalueofcrit + accuracy))
                     || i==params.fheuristicmaxiters-1)
                 break;
 
@@ -501,6 +508,18 @@ public:
         return res;
     }
 
+
+    template <bool quick=false>
+    heuristicresult taylorheuristic(index s0ind, double accuracy,
+                              const computationparams& params) const
+    {
+        auto vires = riskaversesolution(accuracy,params);
+
+        sys::logline() << "overalldpproblem::taylorheuristic RN initialization: p="
+                       << vires.p << ", expectation=" << vires.v[s0ind]<< std::endl;
+
+        return taylorheuristic<quick>(s0ind, accuracy,vires.p,params);
+    }
 
     struct heuristicplusresult
     {
