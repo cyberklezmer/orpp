@@ -726,7 +726,7 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
     pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
              = pars.fnestedparams.fthreadbatch = 5000;
 
-p.evalaccuracy = 0.01;
+    p.evalaccuracy = 0.001;
     p.fmaxstatestoenum = 10000;
     p.pars = pars;
 
@@ -743,7 +743,6 @@ p.evalaccuracy = 0.01;
         p.pseudogradienthetero = true;
     }
 
-//p.accuracy = 0.0015;
 
     std::ofstream report(repontname);
     if(!report)
@@ -791,7 +790,7 @@ p.evalaccuracy = 0.01;
 
     if(e==egrid)
         for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
-            for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
+            for(double pcrash = 0.025; pcrash < 0.126; pcrash += 0.025)
             {
                 donotenum = false;
                 for(double accuracy = 0.01; accuracy < 0.2; accuracy *= 2)
@@ -854,7 +853,7 @@ p.evalaccuracy = 0.01;
 
         report << id << "," << cid << ",";
 
-        for(unsigned i=4; i<=50; i+=10)
+        for(unsigned i=8; i<=50; i+=8)
         {
             if constexpr(std::is_same<testexamineprogram<C>,R>::value)
             {
@@ -862,7 +861,7 @@ p.evalaccuracy = 0.01;
                 p.maxcons = i / 2;
                 p.pincrease = 0.7;
                 report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
-                       << p.pcrash << "," << p.accuracy << ",";
+                       << p.pcrash << "," << p.accuracy << "," << p.evalaccuracy << ",";;
 
                 sys::logline() << "kappa, gamma, pcrash = "
                                << p.kappa << ", " << p.gamma << ", "
@@ -880,7 +879,7 @@ p.evalaccuracy = 0.01;
                 p.lot = 2;
                 p.pincrease = 0.7;
                 report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
-                       << p.pcrash << "," << p.accuracy << ",";
+                       << p.pcrash << "," << p.accuracy << "," << p.evalaccuracy << ",";
 
                 sys::logline() << "kappa, gamma, pcrash = "
                                << p.kappa << ", " << p.gamma << ", "
