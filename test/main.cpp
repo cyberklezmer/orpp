@@ -448,11 +448,10 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
                     double& lastex
                     )
 {
-    finitepolicy startingp(problem,0);
-
     timems tverystart;
     timems tstart = tverystart = sys::gettimems();
 
+    finitepolicy probablybest(0U);
     if(p.riskneutral)
     {
          sys::logline() << "riskneutral" << std::endl;
@@ -461,7 +460,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
          auto res = problem.evaluatecrit(p.s0ind,vires.p,p.evalaccuracy,p.pars);
          sys::logline() << vires.p << ": " << vires.v[p.s0ind] << " crit= " << res.x << " (" << res.sd << ")," << std::endl;
          report << vires.p << "," << vires.v[p.s0ind] << "," << res.x << "," << tend - tstart << ",";
-         startingp = vires.p;
+         probablybest = vires.p;
     }
     else
         report << ",,,,";
@@ -472,7 +471,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
     {
         try
         {
-            typename P::heuristicresult hres = problem.heuristic(p.s0ind,p.accuracy,p.pars);
+            typename P::heuristicresult hres = problem.template heuristic<true>(p.s0ind,p.accuracy,p.pars);
             timems tend = sys::gettimems();
             auto res = problem.evaluatecrit(p.s0ind,hres.p,p.evalaccuracy,p.pars);
 
@@ -483,19 +482,34 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
             report << ",outoftime,,,";
         }
 
+        tstart = sys::gettimems();
+
+        try
+        {
+            typename P::heuristicresult hres = problem.heuristic(p.s0ind,p.accuracy,p.pars);
+            timems tend = sys::gettimems();
+            auto res = problem.evaluatecrit(p.s0ind,hres.p,p.evalaccuracy,p.pars);
+
+            report << hres.p << "," << res.x << "," << hres.iota << "," << tend - tstart << ",";
+            probablybest = hres.p;
+
+        }
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,,,";
+        }
+
     }
     else
-        report << ",,,,";
+        report << ",,,," << ",,,,";
 
     tstart = sys::gettimems();
 
     if(p.taylorheuristic)
     {
-        if(!p.riskneutral)
-            throw exception("Initial policy not set (p.riskneutral==false)");
         try
         {
-            typename P::heuristicresult hres = problem.taylorheuristic(p.s0ind,p.accuracy,startingp,p.pars);
+            typename P::heuristicresult hres = problem.template taylorheuristic<true>(p.s0ind,p.accuracy,p.pars);
             timems tend = sys::gettimems();
 
             auto res = problem.evaluatecrit(p.s0ind,hres.p,p.evalaccuracy,p.pars);
@@ -508,9 +522,29 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
             report << ",outoftime,,,";
         }
 
+        tstart = sys::gettimems();
+
+
+        try
+        {
+            typename P::heuristicresult hres = problem.taylorheuristic(p.s0ind,p.accuracy,p.pars);
+            timems tend = sys::gettimems();
+
+            auto res = problem.evaluatecrit(p.s0ind,hres.p,p.evalaccuracy,p.pars);
+
+            report << hres.p << ","
+                   << res.x << "," << hres.iota << ","  << tend - tstart << ",";;;
+            probablybest = hres.p;
+
+        }
+        catch(const timelimitexception& e)
+        {
+            report << ",outoftime,,,";
+        }
+
     }
     else
-        report << ",,,,";
+        report << ",,,," << ",,,,";
 
     tstart = sys::gettimems();
 
@@ -528,7 +562,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
             report << hpres.hres.p << ","
                    << hpres.hres.v << "," << hpres.hres.iota << ","
                    << hpres.pgres.p << "," << res.x << ","  << tend - tstart << ",";;;
-            startingp = hpres.pgres.p;
+            probablybest = hpres.pgres.p;
         }
         catch(const timelimitexception& e)
         {
@@ -543,11 +577,10 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
 
     if(p.pseudogradienthomo)
     {
-        if(!p.riskneutral)
-            throw exception("Initial policy not set (p.riskneutral==false)");
         try
         {
-            typename P::pgdhomoresult respg = problem.pseudogradientdescenthomo(p.s0ind, startingp, p.accuracy, p.pars);
+            auto vires = problem.riskaversesolution(p.accuracy,p.pars);
+            typename P::pgdhomoresult respg = problem.pseudogradientdescenthomo(p.s0ind, vires.p, p.accuracy, p.pars);
             timems tend = sys::gettimems();
 
             auto res = problem.evaluatecrit(p.s0ind,respg.p,p.evalaccuracy,p.pars);
@@ -574,51 +607,51 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
         }
         else
         {
-        auto numpolicies = problem.numpolicyvalues();
-        sys::logline() << "# of policy values: " << numpolicies << std::endl;
-        if constexpr(!enumeratex)
-        {
-            if(numpolicies >= p.fmaxstatestoenum)
+            auto numpolicies = problem.numpolicyvalues();
+            sys::logline() << "# of policy values: " << numpolicies << std::endl;
+            if constexpr(!enumeratex)
             {
-                sys::logline() << "Too much states to enumerate" << std::endl;
-                report << ",toomuchstates,";
-            }
-            else try
-            {
-                typename P::enumresult res = problem.enumeratehomo(p.s0ind, p.evalaccuracy, p.pars);
-                timems tend = sys::gettimems();
+                if(numpolicies >= p.fmaxstatestoenum)
+                {
+                    sys::logline() << "Too much states to enumerate" << std::endl;
+                    report << ",toomuchstates,";
+                }
+                else try
+                {
+                    typename P::enumresult res = problem.enumeratehomo(p.s0ind, p.evalaccuracy, p.pars);
+                    timems tend = sys::gettimems();
 
-                sys::log() << "best of enumerate:" << res.p << " "
-                           << res.v.x  << std::endl;
-                report << res.p << "," << res.v.x << ","  << tend - tstart << ",";
+                    sys::log() << "best of enumerate:" << res.p << " "
+                               << res.v.x  << std::endl;
+                    report << res.p << "," << res.v.x << ","  << tend - tstart << ",";
 
-                lastep = res.p;
-                lastex = res.v.x;
+                    lastep = res.p;
+                    lastex = res.v.x;
+                }
+                catch(const timelimitexception& e)
+                {
+                    report << ",outoftime,,";
+                }
             }
-            catch(const timelimitexception& e)
+            else
             {
-                report << ",outoftime,,";
-            }
-        }
-        else
-        {
-            try
-            {
-                typename P::enumresult res = problem.enumeratehomoex(p.s0ind, p.evalaccuracy, p.pars);
-                timems tend = sys::gettimems();
+                try
+                {
+                    typename P::enumresult res = problem.enumeratehomoex(p.s0ind, p.evalaccuracy, p.pars);
+                    timems tend = sys::gettimems();
 
 
-                sys::log() << "best of enumerate:" << res.p << " "
-                           << res.v.x  << std::endl;
-                report << res.p << "," << res.v.x << "," << tend - tstart << ",";
-                lastep = res.p;
-                lastex = res.v.x;
+                    sys::log() << "best of enumerate:" << res.p << " "
+                               << res.v.x  << std::endl;
+                    report << res.p << "," << res.v.x << "," << tend - tstart << ",";
+                    lastep = res.p;
+                    lastex = res.v.x;
+                }
+                catch(const timelimitexception& e)
+                {
+                    report << ",outoftime,,";
+                }
             }
-            catch(const timelimitexception& e)
-            {
-                report << ",outoftime,,";
-            }
-        }
         }
     }
     else
@@ -628,12 +661,16 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
 
     if(p.pseudogradienthetero)
     {
-        try
+        if(probablybest.size() == 0)
+            report << ",nostartpset,,";
+        else try
         {
-            typename P::heteropolicy heterop = { startingp[p.s0ind], {startingp, startingp} };
+            typename P::heteropolicy heterop = { probablybest[p.s0ind], {probablybest, probablybest} };
 
             typename P::pgdheteroresult respg = problem.pseudogradientdescent(p.s0ind, heterop, p.accuracy, p.pars);
             timems tend = sys::gettimems();
+
+            auto res = problem.evaluatecrit(p.s0ind,respg.p,p.evalaccuracy,p.pars);
 
             report << respg.p.p0;
             for(unsigned k=0;k < respg.p.ps.size(); k++)
@@ -642,7 +679,6 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
                 report << respg.p.ps[k];
             }
             report << "," <<respg.v.x << "," << tend - tstart << ",";;;
-;
         }
         catch(const timelimitexception& e)
         {
@@ -707,7 +743,6 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
         p.pseudogradienthetero = true;
     }
 
-//p.accuracy = 0.0015;
 
     std::ofstream report(repontname);
     if(!report)
@@ -716,17 +751,16 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
     }
 
     report << "problem,crit,";
+    report << "nstates/maxinv,maxcons/lot,kappa,gamma,pcrash,accuracy,evalaccuracy,";
     std::string id;
     if constexpr(std::is_same<testexamineprogram<C>,R>::value)
     {
             id = "cons";
-            report << "nstates,maxcons,kappa,gamma,pcrash,accuracy,evalaccuracy,";
     }
 
     if constexpr(std::is_same<invexamineprogram<C>,R>::value)
     {
             id = "inv";
-            report << "maxinv,lot,kappa,gamma,pcrash,accuracy,evalaccuracy,";
     }
 
     std::string cid;
@@ -737,7 +771,9 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
 
 
     report << "rnpolicy,rnexp,rncrit,rntime,"
+          << "qhpolicy,qhcrit,qhlambda,qhtime,"
           << "hpolicy,hcrit,hlambda,htime,"
+          << "qtpolicy,qtcrit,qtlambda,qttime,"
           << "tpolicy,tcrit,tlambda,ttime,"
           << "hppolicyh,hpcrith,hplambdah,hppolicyp,hpcritp,hptime,"
           << "pghomopolicy,pghomocrit,pghomotime,"
@@ -816,47 +852,47 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
         p.kappa = 0.7;
 
         report << id << "," << cid << ",";
-        if constexpr(std::is_same<testexamineprogram<C>,R>::value)
+
+        for(unsigned i=8; i<=50; i+=8)
         {
-            p.nstates = 14;
-            p.maxcons = 7;
-            p.pincrease = 0.7;
-            report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
-                   << p.pcrash << "," << p.accuracy << ",";
+            if constexpr(std::is_same<testexamineprogram<C>,R>::value)
+            {
+                p.nstates = i;
+                p.maxcons = i / 2;
+                p.pincrease = 0.7;
+                report << p.nstates << "," << p.maxcons << "," << p.kappa << "," << p.gamma << ","
+                       << p.pcrash << "," << p.accuracy << "," << p.evalaccuracy << ",";;
 
-            sys::logline() << "kappa, gamma, pcrash = "
-                           << p.kappa << ", " << p.gamma << ", "
-                           << p.pcrash << std::endl;
-            testproblem<C> problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
-            testhomoproblem<C> hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
+                sys::logline() << "kappa, gamma, pcrash = "
+                               << p.kappa << ", " << p.gamma << ", "
+                               << p.pcrash << std::endl;
+                testproblem<C> problem(p.nstates, p.maxcons, p.kappa, p.pincrease, p.gamma, p.pcrash);
+                testhomoproblem<C> hp(p.nstates, p.maxcons, 0, p.pincrease,p.gamma, p.pcrash);
 
-            examineproblem<false>(problem,hp,p,report,donotenum,lastep,lastex);
-            sys::logline() << std::endl;
+                examineproblem<false>(problem,hp,p,report,donotenum,lastep,lastex);
+                sys::logline() << std::endl;
 
-        }
-        if constexpr(std::is_same<invexamineprogram<C>,R>::value)
-        {
-            p.maxinv = 15;
-            p.lot = 2;
-            p.pincrease = 0.7;
-            report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
-                   << p.pcrash << "," << p.accuracy << ",";
+            }
+            if constexpr(std::is_same<invexamineprogram<C>,R>::value)
+            {
+                p.maxinv = i;
+                p.lot = 2;
+                p.pincrease = 0.7;
+                report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
+                       << p.pcrash << "," << p.accuracy << "," << p.evalaccuracy << ",";
 
-            sys::logline() << "kappa, gamma, pcrash = "
-                           << p.kappa << ", " << p.gamma << ", "
-                           << p.pcrash << std::endl;
-            invproblem<C> problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
-            invhomoproblem<C> hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+                sys::logline() << "kappa, gamma, pcrash = "
+                               << p.kappa << ", " << p.gamma << ", "
+                               << p.pcrash << std::endl;
+                invproblem<C> problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+                invhomoproblem<C> hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
 
-            examineproblem<true>(problem,hp,p,report,donotenum,lastep,lastex);
-            sys::logline() << std::endl;
+                examineproblem<true>(problem,hp,p,report,donotenum,lastep,lastex);
+                sys::logline() << std::endl;
 
+            }
         }
     }
-
-
-
-
 }
 
 

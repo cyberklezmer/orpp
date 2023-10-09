@@ -375,13 +375,18 @@ public:
         return (log(accuracy * (1-this->gamma())) - log(maxreward())) / log( this->gamma());
     }
 
+    struct heteropolicy
+    {
+        orpp::index p0;
+        std::vector<finitepolicy> ps;
+    };
+
     valuewitherror<double> evaluatecrit(index s0ind,
-                                         typename ConstrainedActionSpace::Element_t p0,
-                                         const std::vector<finitepolicy>& ps,
+                                         const heteropolicy& p,
                                          double accuracy,
                                          const computationparams& params) const
     {
-        statcounter sc = this->evaluateraw(s0ind, p0, ps, accuracy, params);
+        statcounter sc = this->evaluateraw(s0ind,p , accuracy, params);
         return this->fcrit(sc.dist);
     }
     valuewitherror<double> evaluatecrit(index s0ind,
@@ -389,7 +394,7 @@ public:
                                          double accuracy,
                                          const computationparams& params) const
     {
-        statcounter sc = this->evaluateraw(s0ind, p[s0ind], {p}, accuracy, params);
+        statcounter sc = this->evaluateraw(s0ind, { p[s0ind], {p}}, accuracy, params);
         return this->fcrit(sc.dist);
     }
 
@@ -560,27 +565,28 @@ private:
         }
     }
 public:
+
+
     statcounter evaluateraw(index s0index,
                          const finitepolicy& p,
                          double accuracy,
                          const computationparams& params) const
     {
-        return evaluateraw(s0index,p[s0index],{p}, accuracy, params);
+        return evaluateraw(s0index,{ p[s0index],{p}}, accuracy, params);
     }
 
     statcounter evaluateraw(index s0index,
-                         typename ConstrainedActionSpace::Element_t p0,
-                         const std::vector<finitepolicy>& p,
+                         const heteropolicy& p,
                          double accuracy,
                          const computationparams& params) const
     {
-        assert(this->constraint().isfeasible(p0,s0index));
+        assert(this->constraint().isfeasible(p.p0,s0index));
 #ifndef NDEBUG
-        for(unsigned i=0; i<p.size(); i++)
+        for(unsigned i=0; i<p.ps.size(); i++)
         {
-            assert(p[i].size()==this->statespace().num());
-            for(unsigned j=0; j<p[i].size(); j++)
-                assert(this->constraint().isfeasible(p[i][j],j));
+            assert(p.ps[i].size()==this->statespace().num());
+            for(unsigned j=0; j<p.ps[i].size(); j++)
+                assert(this->constraint().isfeasible(p.ps[i][j],j));
         }
 #endif
 
@@ -588,8 +594,8 @@ public:
         {
            sys::logline(2) << "dpproblem::evaluateraw(" << s0index
                  << ", {";
-           for(unsigned i=0; i<p.size(); i++)
-               sys::log() << p[i] << ",";
+           for(unsigned i=0; i<p.ps.size(); i++)
+               sys::log() << p.ps[i] << ",";
            sys::log() << "}, "<< accuracy<< ", ...)" << std::endl;
         }
         auto st = sys::gettimems();
@@ -602,7 +608,7 @@ public:
             {
                 std::vector<double> sum(1);
                 unsigned foocnt;
-                computepath(s0index,p0, p, timehorizon, &sum,&foocnt);
+                computepath(s0index,p.p0, p.ps, timehorizon, &sum,&foocnt);
                 sc.add(sum[0]);
                 j++;
             }
@@ -617,7 +623,7 @@ public:
                 for(unsigned k=0; k<params.fthreadstouse; k++)
                     ts.push_back(std::thread(&finitedpproblem<Criterion, StateSpace,ConstrainedActionSpace,
                                     Transition,Reward>::computepath,
-                                 this, s0index,p0, p, timehorizon, &rs[k], &ns[k]));
+                                 this, s0index,p.p0, p.ps, timehorizon, &rs[k], &ns[k]));
                 bool semaphor = false;
                 if(sys::loglevel() >= 3)
                    sys::logline(3) << "Starting the observing thread" << std::endl;
@@ -647,21 +653,6 @@ public:
 
             if(j>10 && sc.averagestdev() < accuracy / 4)
             {
-static bool foofoo = true;
-if(foofoo)
-{
-    std::ofstream s("loglog.csv");
-    for(unsigned i=0; i<obss.size(); i++)
-    {
-        s << obss[i].t << "," << obss[i].final;
-        for(unsigned j=0; j<obss[i].ns.size(); j++)
-            s << "," << obss[i].ns[j];
-        s << std::endl;
-    }
-    s << "totalsc," << sc.num << std::endl;
-    s << "horizon," << timehorizon << std::endl;
-    foofoo = false;
-}
                 break;
             }
 
@@ -692,11 +683,6 @@ if(foofoo)
     double maxreward() const { return fmaxreward; }
 
 
-    struct heteropolicy
-    {
-        orpp::index p0;
-        std::vector<finitepolicy> ps;
-    };
 
 
     struct pgdheteroresult
@@ -720,7 +706,7 @@ if(foofoo)
         unsigned horizon = this->requiredhorizon(accuracy / 2);
 
         sys::log() << "required horizon: " << horizon << std::endl;
-        auto bestv = this->evaluatecrit(s0ind, initps.p0, initps.ps, accuracy,params);
+        auto bestv = this->evaluatecrit(s0ind, initps, accuracy,params);
 
         heteropolicy bestps = initps;
         heteropolicy iterps = initps;
@@ -767,7 +753,7 @@ if(foofoo)
                            if(j==1 && k==s0ind)
                                 p.p0 = p.ps[0][s0ind];
                         }
-                        auto v = this->evaluatecrit(s0ind, p.p0, p.ps, accuracy,params);
+                        auto v = this->evaluatecrit(s0ind, p, accuracy,params);
 
                         sys::logline() << "k=" << k << "," << "p:" << p.p0;
                         for(unsigned x=0; x<p.ps.size(); x++)
@@ -843,6 +829,9 @@ if(foofoo)
                                   hp,accuracy, params,initialstep);
         return { res.v, res.p.ps[0]};
     }
+
+
+
 protected:
     double fmaxreward;
 
