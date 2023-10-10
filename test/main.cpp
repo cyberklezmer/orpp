@@ -603,7 +603,10 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
     {
         if(donotenum)
         {
-            report << lastep << "," << lastex << ","  <<  ",";
+            if(lastep.size() == 0)
+                report << ",outoftime,,";
+            else
+                report << lastep << "," << lastex << ","  <<  ",";
         }
         else
         {
@@ -630,6 +633,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
                 }
                 catch(const timelimitexception& e)
                 {
+                    lastep = finitepolicy(0U);
                     report << ",outoftime,,";
                 }
             }
@@ -649,6 +653,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
                 }
                 catch(const timelimitexception& e)
                 {
+                    lastep = finitepolicy(0U);
                     report << ",outoftime,,";
                 }
             }
@@ -726,7 +731,7 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
     pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
              = pars.fnestedparams.fthreadbatch = 5000;
 
-    p.evalaccuracy = 0.001;
+    p.evalaccuracy = 0.0025;
     p.fmaxstatestoenum = 10000;
     p.pars = pars;
 
@@ -790,10 +795,10 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
 
     if(e==egrid)
         for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
-            for(double pcrash = 0; pcrash < 0.126; pcrash += 0.025)
+            for(double pcrash = 0.025; pcrash < 0.126; pcrash += 0.025)
             {
                 donotenum = false;
-                for(double accuracy = 0.01; accuracy < 0.2; accuracy *= 2)
+                for(double accuracy = 0.01; accuracy < 0.2; accuracy *= 4)
         //for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
         //for(double pcrash = 0.125; pcrash < 0.126; pcrash += 0.025)
                 {
@@ -853,7 +858,7 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
 
         report << id << "," << cid << ",";
 
-        for(unsigned i=8; i<=50; i+=8)
+        for(unsigned i=4; i<=16; i+=4)
         {
             if constexpr(std::is_same<testexamineprogram<C>,R>::value)
             {
@@ -978,5 +983,6 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
+
 
 
