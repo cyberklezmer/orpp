@@ -723,8 +723,6 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
 
     p.s0ind = 1;
 
-    pars.fopttimelimit = pars.fpseudogradienttimelimit
-            = pars.fenumtimelimit = 7200000;
 
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
              = pars.fnestedparams.fthreadstouse = nthreads;
@@ -797,6 +795,10 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
         for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
             for(double pcrash = 0.025; pcrash < 0.126; pcrash += 0.025)
             {
+                pars.fopttimelimit = pars.fpseudogradienttimelimit
+                        = pars.fenumtimelimit = 7200000;
+
+
                 donotenum = false;
                 for(double accuracy = 0.01; accuracy < 0.2; accuracy *= 4)
         //for(double kappa = 0.7; kappa < 0.71; kappa += 0.2)
@@ -856,10 +858,13 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
         p.gamma = 0.8;
         p.kappa = 0.7;
 
-        report << id << "," << cid << ",";
 
-        for(unsigned i=4; i<=16; i+=4)
+        for(unsigned i=4; i<=10; i+=2)
         {
+            report << id << "," << cid << ",";
+            pars.fopttimelimit = pars.fpseudogradienttimelimit
+                    = pars.fenumtimelimit = 10800000;
+
             if constexpr(std::is_same<testexamineprogram<C>,R>::value)
             {
                 p.nstates = i;
@@ -983,6 +988,7 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
+
 
 
 
