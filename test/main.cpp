@@ -729,9 +729,9 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
     p.eastep = 0.2;
 
 
-    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
+    pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse
              = pars.fnestedparams.fthreadstouse = nthreads;
-    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch = pars.fnestedonedparams.fthreadbatch
+    pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch
              = pars.fnestedparams.fthreadbatch = 5000;
 
     p.evalaccuracy = 0.0025;
@@ -1023,7 +1023,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    eanalysis e = eapprox;
+    eanalysis e = egrid;
     if(argc > 2)
         switch(argv[2][0])
         {

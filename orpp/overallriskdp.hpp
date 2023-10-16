@@ -110,16 +110,6 @@ public:
     };
 
 
-    class onedreward : public Reward
-    {
-    public:
-        onedreward(std::vector<double> additions) :
-            fadditions(additions) {}
-        double operator() (const dpcondition<unsigned int, unsigned int>& x) const
-        { return Reward::operator()(x)+fadditions[x.a]; }
-    private: 
-        std::vector<double> fadditions;
-    };
 
     class onedactionspace : public ConstrainedActionSpace
     {
@@ -143,9 +133,7 @@ public:
         }
     };
 
-    using nestedonedproblem = nestedproblembase<onedactionspace,onedreward>;
-
-    using nestedtaylorproblem = nestedproblembase<ConstrainedActionSpace,taylorreward>;
+    using nestedtaylorproblem = nestedproblembase<onedactionspace,taylorreward>;
 
     struct computationparams:
           public finitedpproblem<Criterion,Statespace,ConstrainedActionSpace,
@@ -156,7 +144,6 @@ public:
             fopttimelimit(std::numeric_limits<timems>::max()) {}
         typename nestedtaylorproblem::computationparams fnestedtaylorparams;
         typename nestedproblem::computationparams fnestedparams;
-        typename nestedonedproblem::computationparams fnestedonedparams;
         unsigned fpseudogradientmaxiters;
         unsigned fheuristicmaxiters;
         timems fopttimelimit;
@@ -451,9 +438,9 @@ public:
 
             nproblem.setriskaversion(iota);
 
-            std::vector<double> grad;
             for(unsigned s=0; s<candp.size(); s++)
             {
+                std::vector<double> grad(candp.size(),0);
                 auto p=candp;
                 typename ConstrainedActionSpace::Element_t a0 = p[s];
                 typename ConstrainedActionSpace::Element_t a1 = a0;
@@ -478,40 +465,42 @@ public:
  //std::cout << "s=" << s << " r0=" << rhoeta << " r1=" << rhoalpha
 //          << " d=" << (static_cast<double>(a1) - static_cast<double>(a0))
 //          << " p:" << p << std::endl;
-                grad.push_back((1-this->fgamma)*(rhoalpha-rhoeta) / (a1 - a0));
+                grad[s]=((1-this->fgamma)*(rhoalpha-rhoeta) / (a1 - a0));
                 taylorinitV = taylorV;
-            }
-            taylorreward r(candp,grad, this->reward());
-            double addition = (1-this->fgamma) * r.maxgradadd(this->fconstraint);
 
-            sys::logline(0) << "grad=";
-            for(unsigned k=0; k<grad.size(); k++)
-                sys::log() << grad[k] << " ";
-            sys::log() << std::endl;
+                onedactionspace c(candp,s,this->fconstraint);
 
-            nestedtaylorproblem taylorproblem(this->fcrit,
-                                  this->fstatespace,
-                                  this->fconstraint,
-                                  this->ftransition,r,
-                                  this->fgamma,
-                                  this->fmaxreward + addition); // should be reset
+                taylorreward r(candp,grad, this->reward());
+                double addition = (1-this->fgamma) * r.maxgradadd(this->fconstraint);
 
-            taylorproblem.setriskaversion(iota);
+                sys::logline(0) << "grad=";
+                for(unsigned k=0; k<grad.size(); k++)
+                    sys::log() << grad[k] << " ";
+                sys::log() << std::endl;
 
-            auto vires = taylorproblem.valueiteration(initV,accuracy/3,params.fnestedtaylorparams);
+                nestedtaylorproblem taylorproblem(this->fcrit,
+                                      this->fstatespace,
+                                      c,
+                                      this->ftransition,
+                                      r,
+                                      this->fgamma,
+                                      this->fmaxreward + addition); // should be reset
 
+                taylorproblem.setriskaversion(iota);
 
+                auto vires = taylorproblem.valueiteration(initV,accuracy/3,params.fnestedtaylorparams);
 
+                lastp = candp;
+                candp = vires.p;
+                taylorinitV = vires.v;
+                lastvalueofcrit = valueofcrit;
+                auto t = sys::gettimems();
+                if(t - st > params.fopttimelimit)
+                {
+                    sys::logline() << "Exiting for time reasons" << std::endl;
+                    throw timelimitexception(params.fopttimelimit);
+                }
 
-            lastp = candp;
-            candp = vires.p;
-            taylorinitV = vires.v;
-            lastvalueofcrit = valueofcrit;
-            auto t = sys::gettimems();
-            if(t - st > params.fopttimelimit)
-            {
-                sys::logline() << "Exiting for time reasons" << std::endl;
-                throw timelimitexception(params.fopttimelimit);
             }
 
         }
