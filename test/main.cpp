@@ -408,6 +408,7 @@ struct examineprogram
     double accuracy;
     double evalaccuracy;
     orpp::index s0ind = 1;
+    double eastep = 0.2;
 //    unsigned testiters = 10;
     bool heuristic = false;
     bool taylorheuristic = false;
@@ -707,7 +708,7 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
 
 }
 
-enum eanalysis {egrid, elarge, enumanalyses};
+enum eanalysis {egrid, elarge, eapprox, enumanalyses};
 
 template <typename P, typename R, typename C>
 void domain(unsigned nthreads, std::string repontname, eanalysis e)
@@ -719,9 +720,13 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
 
     R p;
 
+
+
     typename P::computationparams pars;
 
     p.s0ind = 1;
+
+    p.eastep = 0.2;
 
 
     pars.fthreadstouse = pars.fnestedtaylorparams.fthreadstouse = pars.fnestedonedparams.fthreadstouse
@@ -773,7 +778,19 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
             cid = "MCV";
 
 
-    report << "rnpolicy,rnexp,rncrit,rntime,"
+    if(e == eapprox)
+    {
+       report << "ref,";
+       for(double q = 0; q < 1.01; q+=p.eastep)
+           report << "a" << q << ",";
+       for(double q = 0; q < 1.01; q+=p.eastep)
+           report << "e" << q << ",";
+       for(double q = 0; q < 1.01; q+=p.eastep)
+            report << "p" << q << ",";
+       report << std::endl;
+    }
+    else
+       report << "rnpolicy,rnexp,rncrit,rntime,"
           << "qhpolicy,qhcrit,qhlambda,qhtime,"
           << "hpolicy,hcrit,hlambda,htime,"
           << "qtpolicy,qtcrit,qtlambda,qttime,"
@@ -903,6 +920,90 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
             }
         }
     }
+    if(e==eapprox)
+    {
+        if constexpr(std::is_same<invexamineprogram<C>,R>::value)
+        {
+            p.evalaccuracy = 0.01;
+            std::vector<unsigned> pb = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6,6,6,6,6,6,6,6,6,6,6 };
+
+            p.maxinv = 12;
+            double q = 0.5;
+            std::vector<unsigned> r;
+            for(unsigned i=0; i<pb.size(); i++)
+            {
+                double x = (i % 2) ? 0.51 : 0.49;
+                r.push_back( static_cast<unsigned>(q*pb[i] + x));
+            }
+            finitepolicy pr(r);
+            sys::logline() << "referemce:" << pr << std::endl;
+
+
+            for(double kappa = 0.1; kappa < 0.91; kappa += 0.2)
+                for(double pcrash = 0.025; pcrash < 0.126; pcrash += 0.025)
+                {
+                    p.pcrash = pcrash;
+                    p.gamma = 0.8;
+                    p.kappa = kappa;
+                    p.lot = 2;
+
+                    invproblem<C> problem(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
+
+                    auto res = problem.evaluatecrit(p.s0ind,pr,p.evalaccuracy,p.pars);
+
+
+                    double iota = problem.findiota(pr,res.x,finitevaluefunction(problem,0),
+                                     p.s0ind,
+                                     p.evalaccuracy,
+                                     p.pars.fnestedparams
+                                     );
+
+                    invhomoproblem<C> hp(p.maxinv,p.lot, iota, p.pincrease, p.gamma, p.pcrash);
+
+                    sys::logline() << "kappa=" << kappa
+                                      << " pcrash=" << pcrash
+                                      << " iota=" << iota
+                                      << std::endl ;
+                    report << id << "," << cid << ",";
+                    report << p.maxinv << "," << p.lot << "," << p.kappa << "," << p.gamma << ","
+                           << p.pcrash << ",," << p.evalaccuracy << ","
+                            << pr << ",";
+
+                    std::vector<finitepolicy> ps;
+                    std::vector<double> es;
+                    for(double q=0; q<=1.0001; q+=p.eastep)
+                    {
+                        std::vector<unsigned> r;
+                        for(unsigned i=0; i<pb.size(); i++)
+                        {
+                            double x = (i % 2) ? 0.51 : 0.49;
+                            r.push_back( static_cast<unsigned>(q*pb[i] + x));
+                        }
+                        finitepolicy cp(r);
+                        auto hres = hp.evaluate(finitevaluefunction(problem,0),cp,
+                                       p.evalaccuracy,p.pars.fnestedparams);
+                        double av = hres.x[p.s0ind];
+                        auto res = problem.evaluatecrit(p.s0ind,cp,p.evalaccuracy,p.pars);
+                        double ev = res.x;
+
+                        sys::logline() << "policy:" << cp
+                                       << " (" << ev << "-" << av << ")="
+                                       << ev-av << std::endl;
+                        report << av << ",";
+                        es.push_back(ev);
+                        ps.push_back(cp);
+                    }
+                    for(unsigned k=0; k<es.size(); k++)
+                        report << es[k] << ",";
+                    for(unsigned k=0; k<ps.size(); k++)
+                        report << ps[k] << ",";
+                    report << std::endl;
+                }
+        }
+        else
+            throw exception("approx not implemented for cons");
+    }
+
 }
 
 
@@ -922,7 +1023,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    eanalysis e = egrid;
+    eanalysis e = eapprox;
     if(argc > 2)
         switch(argv[2][0])
         {
@@ -931,6 +1032,9 @@ int main(int argc, char *argv[])
             break;
         case 'L':
             e = elarge;
+            break;
+        case 'A':
+            e = eapprox;
             break;
         default:
             throw exception("Unknown option in the second argument");
@@ -957,8 +1061,10 @@ int main(int argc, char *argv[])
     std::string rn;
     if(e == egrid)
         rn = "grid";
-    else
+    else if(e == elarge)
         rn = "large";
+    else if(e == eapprox)
+        rn = "approx";
 
     if(test)
     {

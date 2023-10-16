@@ -297,6 +297,23 @@ public:
     }
 
 
+    double findiota(const finitepolicy& policy,
+                    double constant,
+                    const finitevaluefunction initvalue,
+                    orpp::index initindex,
+                    double accuracy,
+                    const typename nestedproblem::computationparams& pars
+                    ) const
+    {
+        nestedproblem problem(this->fcrit,
+                          this->fstatespace,
+                          this->fconstraint,
+                          this->ftransition,this->freward,
+                          this->fgamma,
+                          this->fmaxreward);
+        return findiota(problem, policy,constant, initvalue, initindex,accuracy,pars);
+    }
+
     typename nestedproblem::viresult riskaversesolution(double accuracy,const computationparams& params) const
     {
         nestedproblem problem(this->fcrit,
