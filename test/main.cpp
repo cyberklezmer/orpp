@@ -932,7 +932,7 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
             std::vector<unsigned> r;
             for(unsigned i=0; i<pb.size(); i++)
             {
-                double x = (i % 2) ? 0.49 : 0.51;
+                double x = (i % 2) ? 0.51 : 0.49;
                 r.push_back( static_cast<unsigned>(q*pb[i] + x));
             }
             finitepolicy pr(r);
@@ -976,7 +976,7 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
                         std::vector<unsigned> r;
                         for(unsigned i=0; i<pb.size(); i++)
                         {
-                            double x = (i % 2) ? 0.49 : 0.51;
+                            double x = (i % 2) ? 0.51 : 0.49;
                             r.push_back( static_cast<unsigned>(q*pb[i] + x));
                         }
                         finitepolicy cp(r);
@@ -995,7 +995,7 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
                     }
                     for(unsigned k=0; k<es.size(); k++)
                         report << es[k] << ",";
-                    for(unsigned k=0; k<es.size(); k++)
+                    for(unsigned k=0; k<ps.size(); k++)
                         report << ps[k] << ",";
                     report << std::endl;
                 }
@@ -1094,6 +1094,7 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
+
 
 
 
