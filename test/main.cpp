@@ -684,11 +684,11 @@ void examineproblem(P& problem, HP& hp, const R& p, std::ostream& report,
                 report << "-";
                 report << respg.p.ps[k];
             }
-            report << "," <<respg.v.x << "," << tend - tstart << ",";;;
+            report << "," <<respg.v.x << "," << tend - tstart << ",";
         }
         catch(const timelimitexception& e)
         {
-            report << ",outoftime,,";
+            report << ",outoftime,sys::gettimems()-tstart,";
         }
 
     }
@@ -740,11 +740,13 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
 
     p.riskneutral = true;
     p.pseudogradienthomo = true;
+if(0)
+{
     p.heuristicplus = true;
     p.heuristic = true;
     p.taylorheuristic = true;
     p.heuristic = true;
-
+}
     if(e==egrid)
     {
         p.enumerate = true;
@@ -876,11 +878,13 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
         p.kappa = 0.7;
 
 
-        for(unsigned i=4; i<=10; i+=2)
+        for(unsigned i=
+            //4
+8; i<=10; i+=2)
         {
             report << id << "," << cid << ",";
             pars.fopttimelimit = pars.fpseudogradienttimelimit
-                    = pars.fenumtimelimit = 10800000;
+                    = pars.fenumtimelimit = 3*7200*1000;
 
             if constexpr(std::is_same<testexamineprogram<C>,R>::value)
             {
