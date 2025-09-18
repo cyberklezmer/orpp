@@ -1,0 +1,43 @@
+\doxysection{orpp/matrices.hpp File Reference}
+\hypertarget{matrices_8hpp}{}\label{matrices_8hpp}\index{orpp/matrices.hpp@{orpp/matrices.hpp}}
+{\ttfamily \#include $<$Eigen/\+Eigenvalues$>$}\newline
+{\ttfamily \#include "{}orpp.\+hpp"{}}\newline
+Include dependency graph for matrices.\+hpp\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceorpp}{orpp}}
+\begin{DoxyCompactList}\small\item\em A class encapsulting calls of gnuplot. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{orpp\+::dvector}} = Eigen\+::\+Vector\+Xd
+\item 
+using \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{orpp\+::dmatrix}} = Eigen\+::\+Matrix$<$ double, Eigen\+::\+Dynamic, Eigen\+::\+Dynamic $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{namespaceorpp_a69283ad2611972b52c1788d54a3da46e}{orpp\+::radius}} (const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&m)
+\item 
+\mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \mbox{\hyperlink{namespaceorpp_aa14b538d056fc20c32686f566c663367}{orpp\+::pseudoinverse}} (const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&m)
+\item 
+\mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{dvector}} \mbox{\hyperlink{namespaceorpp_adc2399e4587810eaf1bbe7bf19895f12}{orpp\+::stackv}} (const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&x, const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&y)
+\item 
+\mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \mbox{\hyperlink{namespaceorpp_af1535133e0c5749779b3d7bddaad2f94}{orpp\+::stackm}} (const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&x, const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&y)
+\item 
+\mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \mbox{\hyperlink{namespaceorpp_a58020171f5baef73c706790434b62930}{orpp\+::block}} (const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&x, const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&y, const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&z, const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&zz)
+\item 
+\mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \mbox{\hyperlink{namespaceorpp_a21575bb7b060d63e225b26124cd3d74e}{orpp\+::diag}} (const \mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{dvector}} \&v)
+\item 
+\mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{dvector}} \mbox{\hyperlink{namespaceorpp_abc2e432a02d2e704a8d70befec994ce7}{orpp\+::dv}} (const std\+::vector$<$ double $>$ \&d)
+\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{namespaceorpp_a60adf1e6682ad88a390839d45e1b7f66}{orpp\+::vd}} (const \mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{dvector}} \&\mbox{\hyperlink{namespaceorpp_abc2e432a02d2e704a8d70befec994ce7}{dv}})
+\item 
+\mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{dvector}} \mbox{\hyperlink{namespaceorpp_a71c055fcba805e9c5b29bd304c85df72}{orpp\+::square}} (const \mbox{\hyperlink{namespaceorpp_ad34778ebf728928dc2d9e0cb978860d0}{dvector}} \&x)
+\item 
+auto \mbox{\hyperlink{namespaceorpp_aa715f82450e5a749582dd3679cb8e50b}{orpp\+::m2csv}} (const \mbox{\hyperlink{namespaceorpp_a80f109d13018829e9c2101492ae1326a}{dmatrix}} \&m)
+\end{DoxyCompactItemize}

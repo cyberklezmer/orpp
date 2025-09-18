@@ -1,0 +1,1440 @@
+\doxysection{random.\+hpp}
+\hypertarget{random_8hpp_source}{}\label{random_8hpp_source}\index{orpp/random.hpp@{orpp/random.hpp}}
+\mbox{\hyperlink{random_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ RANDOM\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ RANDOM\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}orpp.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <algorithm>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceorpp}{orpp}}}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{group__General_ga5f93ace9d45c70eb349fa47e7946b066}{esignificance}}\ \{\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a28803ae574c87a4b2743ba2592ee5223}{enotsignificant}},\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066adf704dd22f7a1f12fa96ab8e7e632a77}{e10percentsignificant}},\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a11f241919296804091fa013cefa3ccd9}{e5percensignificant}},}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a868bf50c76334821a7ced7a9f0331fa1}{e1percentsignificant}},\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066afad18e71ccec63e0fb82045f014f1183}{enumsignificances}}\};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ E>}
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ E\ \mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}};}
+\DoxyCodeLine{00022\ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}<double>}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \mbox{\hyperlink{group__General_ga5f93ace9d45c70eb349fa47e7946b066}{esignificance}}\ \mbox{\hyperlink{structorpp_1_1realestimate_a8ea26a34e97d358d5fe13cd2d21d36c4}{twosidedsignificance}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ assert(\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ >\ 0);}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s\ =\ fabs(\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}}\ /\ \mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}});}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(s\ >\ 2.5758)}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a868bf50c76334821a7ced7a9f0331fa1}{e1percentsignificant}};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(s\ >\ 1.96)}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a11f241919296804091fa013cefa3ccd9}{e5percensignificant}};}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(s\ >\ 1.6449)}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066adf704dd22f7a1f12fa96ab8e7e632a77}{e10percentsignificant}};}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a28803ae574c87a4b2743ba2592ee5223}{enotsignificant}};}
+\DoxyCodeLine{00038\ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{inline}\ std::string\ \mbox{\hyperlink{group__General_gade517de265faebea44df3d7db7ba5f50}{stars}}(\mbox{\hyperlink{group__General_ga5f93ace9d45c70eb349fa47e7946b066}{esignificance}}\ s)}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordflow}{switch}(s)}
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a28803ae574c87a4b2743ba2592ee5223}{enotsignificant}}:}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066adf704dd22f7a1f12fa96ab8e7e632a77}{e10percentsignificant}}:}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}*"{}};}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a11f241919296804091fa013cefa3ccd9}{e5percensignificant}}:}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}**"{}};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a868bf50c76334821a7ced7a9f0331fa1}{e1percentsignificant}}:}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{stringliteral}{"{}***"{}};}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}unknonw\ significance"{}});}
+\DoxyCodeLine{00056\ \ \ \ \ \}}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\ \mbox{\hyperlink{group__General_ga2b1b180489c053b2cd09e23a2e4864f0}{operator+}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\&\ a,\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\&\ b)}
+\DoxyCodeLine{00060\ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ a.\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}}\ +\ b.\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}},\ sqrt(\ a.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ *\ a.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ +\ b.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ *\ b.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}})\};}
+\DoxyCodeLine{00062\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\ \mbox{\hyperlink{group__General_ga109445676d777ab17748246ca2cc003b}{operator-\/}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\&\ a,\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\&\ b)}
+\DoxyCodeLine{00065\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ a.\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}}\ -\/\ b.\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}},\ sqrt(\ a.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ *\ a.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ +\ b.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}}\ *\ b.\mbox{\hyperlink{structorpp_1_1valuewitherror_a35fd3a93772fc1efb01e993ff7dc61cb}{sd}})\};}
+\DoxyCodeLine{00067\ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__Distributions_ga4e020bf05d865ce56a1b95fc761e7ad8}{probabilitytolerance}}\ =\ 1e-\/6;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00082\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I=\textcolor{keywordtype}{double},\ \textcolor{keyword}{typename}\ C=nothing>}
+\DoxyCodeLine{00083\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1distribution}{distribution}}:\ \textcolor{keyword}{public}\ object}
+\DoxyCodeLine{00084\ \{}
+\DoxyCodeLine{00085\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00086\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}}()\ \{\}}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\_t}}\ =\ I;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\_t}}\ =\ C;}
+\DoxyCodeLine{00089\ \};}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I=\textcolor{keywordtype}{double}>}
+\DoxyCodeLine{00092\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1markovdistribution}{markovdistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1distribution}{distribution}}\ <I,I>}
+\DoxyCodeLine{00093\ \{}
+\DoxyCodeLine{00094\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00095\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1markovdistribution_a48073186e821592cff0c0d33cad74407}{markovdistribution}}()\ \{\}}
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1markovdistribution_a92dabb82699478cf05a90584adf48fec}{I\_t}}\ =\ I;}
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1markovdistribution_aafa752023a3f99a3d91cc16a27f6f47a}{C\_t}}\ =\ I;}
+\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00105\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ S,\ \textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00106\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1jdistribution}{jdistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1distribution}{distribution}}}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ <std::pair<F,\ S>,\ C>}
+\DoxyCodeLine{00108\ \{}
+\DoxyCodeLine{00109\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1jdistribution_a3cbd5c02c1ab71c33815265037819a9e}{F\_t}}\ =\ F;}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1jdistribution_ac4582646c681241b93a47b677ead288d}{S\_t}}\ =\ S;}
+\DoxyCodeLine{00112\ \};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00118\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ X,\ \textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00119\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1vdistribution}{vdistribution}}\ :\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1distribution}{distribution}}<std::vector<X>,C>}
+\DoxyCodeLine{00120\ \{}
+\DoxyCodeLine{00121\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1vdistribution_ac45fdc3efa7adb4d514e5517a40b6f54}{X\_t}}\ =\ X;}
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ this-\/>dim\_is();\ \}}
+\DoxyCodeLine{00124\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim\_is()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00126\ \};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I,\ \textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00140\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1mdistribution}{mdistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1distribution}{distribution}}<I,\ C>}
+\DoxyCodeLine{00141\ \{}
+\DoxyCodeLine{00142\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00143\ \ \ \ \ I\ \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}}(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00144\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ do\_draw(c);}
+\DoxyCodeLine{00146\ \ \ \ \ \}}
+\DoxyCodeLine{00147\ \ \ \ \ I\ \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00148\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<C,nothing>::value);}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ do\_draw(na);}
+\DoxyCodeLine{00151\ \ \ \ \ \}}
+\DoxyCodeLine{00152\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keyword}{virtual}\ I\ do\_draw(\textcolor{keyword}{const}\ C\&\ c)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00154\ \};}
+\DoxyCodeLine{00155\ }
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00163\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1realdistribution}{realdistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1distribution}{distribution}}<double,\ C>}
+\DoxyCodeLine{00164\ \{}
+\DoxyCodeLine{00165\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1realdistribution_a047b424718d27d90887540a95bbc8513}{mean}}(\textcolor{keyword}{const}\ C\&\ c,\ \textcolor{keywordtype}{double}\ prec=0.0)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00167\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1realdistribution_a2ffc8119af94c02fd8a267f887249f2a}{mean\_is}}(c,prec);}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1realdistribution_ad80866200b2a7a33a676829c87d1cb92}{mean}}(\textcolor{keywordtype}{double}\ prec=0.0)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00171\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1realdistribution_a047b424718d27d90887540a95bbc8513}{mean}}(na,\ prec);}
+\DoxyCodeLine{00173\ \ \ \ \ \}}
+\DoxyCodeLine{00174\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1realdistribution_a2ffc8119af94c02fd8a267f887249f2a}{mean\_is}}(\textcolor{keyword}{const}\ C\&,\ \textcolor{keywordtype}{double}\ \ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00176\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ orpp::exception(\textcolor{stringliteral}{"{}Mean\ undefined!"{}});}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ \};}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00182\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1cdfdistribution}{cdfdistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1realdistribution}{realdistribution}}<C>}
+\DoxyCodeLine{00183\ \{}
+\DoxyCodeLine{00184\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ probability\ \mbox{\hyperlink{classorpp_1_1cdfdistribution_a62897e6e2896e78bdd544f70da10b287}{cdf}}(\textcolor{keywordtype}{double}\ x)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00187\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{classorpp_1_1cdfdistribution_a62897e6e2896e78bdd544f70da10b287}{cdf}}(x,na);}
+\DoxyCodeLine{00189\ \ \ \ \ \}}
+\DoxyCodeLine{00190\ \ \ \ \ probability\ \mbox{\hyperlink{classorpp_1_1cdfdistribution_aec99dbe58218f1ded0d715724e09a58a}{cdf}}(\textcolor{keywordtype}{double}\ x,\ \textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00191\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x\ <=\ orpp::min<double>())}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(x\ >=\ orpp::max<double>())}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ cdf\_is(x,c);}
+\DoxyCodeLine{00198\ \ \ \ \ \}}
+\DoxyCodeLine{00199\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{keyword}{virtual}\ probability\ cdf\_is(\textcolor{keywordtype}{double},\ \textcolor{keyword}{const}\ C\&\ c)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00201\ \};}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ }
+\DoxyCodeLine{00204\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00205\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1qdistribution}{qdistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1cdfdistribution}{cdfdistribution}}<C>,}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mdistribution}{mdistribution}}<double,C>}
+\DoxyCodeLine{00207\ \{}
+\DoxyCodeLine{00208\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}}(probability\ p)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00210\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ assert(p<=1);}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ assert(p>=0);}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}}(p,na);}
+\DoxyCodeLine{00214\ \ \ \ \ \}}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db}{quantile}}(probability\ p,\ \textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00216\ \textcolor{keyword}{\ \ \ \ }\{\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ quantile\_is(p,c);}
+\DoxyCodeLine{00218\ \ \ \ \ \}}
+\DoxyCodeLine{00219\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00220\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ quantile\_is(probability,\ \textcolor{keyword}{const}\ C\&)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \textcolor{comment}{//\ a\ numeric\ method\ may\ be\ implemnted\ here}}
+\DoxyCodeLine{00222\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ do\_draw(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00223\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ probability\ u\ =\ sys::uniform();}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}}(u,c);}
+\DoxyCodeLine{00226\ \ \ \ \ \}}
+\DoxyCodeLine{00227\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1qdistribution_af41a1cffabe3ef8cf1eff97c30e3f02b}{mean\_is}}(\textcolor{keyword}{const}\ C\&\ c,\ \textcolor{keywordtype}{double}\ prec)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00229\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ assert(prec>0);}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s=0;}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s2=0;}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=1;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;i++)}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}}(c);}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ s\ +=\ x;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ s2\ +=\ x*x;}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i\%100\ ==\ 0)}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ var\ =\ s2/i\ -\/\ (s/i)\ *(s/i);}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sqrt(var/i)<prec)}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ s\ /\ i;}
+\DoxyCodeLine{00247\ \ \ \ \ \}}
+\DoxyCodeLine{00248\ \};}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00250\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00251\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1scaleddistribution}{scaleddistribution}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1qdistribution}{qdistribution}}<nothing>}
+\DoxyCodeLine{00252\ \{}
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keywordtype}{void}\ check()}
+\DoxyCodeLine{00254\ \ \ \ \ \{}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ assert(fsd\ >\ 0);}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<qdistribution<nothing>,D>::value);}
+\DoxyCodeLine{00257\ \ \ \ \ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00260\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a19f58a6715c54454e55db78f84a96538}{scaleddistribution}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}})\ :\ fm(\mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}}),\ fsd(\mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}})}
+\DoxyCodeLine{00261\ \ \ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00263\ \ \ \ \ \}}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00265\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a537d47c2e9b4d986c6ab3ad59eafb36b}{scaleddistribution}}(\textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}})}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ :\ fm(\mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}}),\ fsd(\mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}}),\ fd(d)}
+\DoxyCodeLine{00267\ \ \ \ \ \{}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00269\ \ \ \ \ \}}
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a9aafd4bbefd40e23d30b82febabe1157}{srcd}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00272\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd;}
+\DoxyCodeLine{00274\ \ \ \ \ \}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fm;\ \}}
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fsd;\ \}}
+\DoxyCodeLine{00277\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ quantile\_is(probability\ p,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00279\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fm\ +\ fsd*fd.quantile(p);}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keyword}{virtual}\ probability\ cdf\_is(\textcolor{keywordtype}{double}\ x,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00283\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd.cdf((x-\/fm)\ /\ fsd);}
+\DoxyCodeLine{00285\ \ \ \ \ \}}
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ mean\_is(\textcolor{keyword}{const}\ nothing\&,\ \textcolor{keywordtype}{double}\ prec)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00288\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (fd.mean(prec\ /\ fsd)\ +\ fm)\ *\ fsd;}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00292\ \ \ \ \ \textcolor{keywordtype}{double}\ fm;}
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keywordtype}{double}\ fsd;}
+\DoxyCodeLine{00294\ \ \ \ \ D\ fd;}
+\DoxyCodeLine{00295\ \};}
+\DoxyCodeLine{00296\ }
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00299\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00300\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1truncateddistribution}{truncateddistribution}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1qdistribution}{qdistribution}}<nothing>}
+\DoxyCodeLine{00301\ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keywordtype}{void}\ check()}
+\DoxyCodeLine{00303\ \ \ \ \ \{}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ assert(fh\ >\ fl);}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<qdistribution<nothing>,D>::value);}
+\DoxyCodeLine{00306\ \ \ \ \ \}}
+\DoxyCodeLine{00307\ }
+\DoxyCodeLine{00308\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00309\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1truncateddistribution_a4f8f6f6b883728a54c30badfa016b0fb}{truncateddistribution}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_adb0bb98971c0ecec6231c8a813707c84}{l}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_ac7a1c817e8f7bc918a6340840e6b170f}{h}})\ :\ fl(\mbox{\hyperlink{classorpp_1_1truncateddistribution_adb0bb98971c0ecec6231c8a813707c84}{l}}),\ fh(\mbox{\hyperlink{classorpp_1_1truncateddistribution_ac7a1c817e8f7bc918a6340840e6b170f}{h}})}
+\DoxyCodeLine{00310\ \ \ \ \ \{}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00312\ \ \ \ \ \}}
+\DoxyCodeLine{00313\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1truncateddistribution_a002cab8683253acb43ee6b3334ef54bf}{truncateddistribution}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_adb0bb98971c0ecec6231c8a813707c84}{l}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_ac7a1c817e8f7bc918a6340840e6b170f}{h}},\ \textcolor{keyword}{const}\ D\&\ d)}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ :\ fl(\mbox{\hyperlink{classorpp_1_1truncateddistribution_adb0bb98971c0ecec6231c8a813707c84}{l}}),\ fh(\mbox{\hyperlink{classorpp_1_1truncateddistribution_ac7a1c817e8f7bc918a6340840e6b170f}{h}}),\ fd(d)}
+\DoxyCodeLine{00315\ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00317\ \ \ \ \ \}}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_af1c9080513160810f7e261a816765241}{srcd}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fd;\ \}}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_adb0bb98971c0ecec6231c8a813707c84}{l}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fl;\ \}}
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1truncateddistribution_ac7a1c817e8f7bc918a6340840e6b170f}{h}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fh;\ \}}
+\DoxyCodeLine{00323\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00324\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ quantile\_is(probability\ p,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00325\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ arg\ =\ p\ *\ fd.cdf(fh)\ +\ (1-\/p)\ *\ fd.cdf(fl);}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ assert(arg);}
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd.quantile(arg);}
+\DoxyCodeLine{00329\ \ \ \ \ \}}
+\DoxyCodeLine{00330\ \ \ \ \ \textcolor{keyword}{virtual}\ probability\ cdf\_is(\textcolor{keywordtype}{double}\ x,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00331\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cl\ =\ fd.cdf(fl);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ denom=fd.cdf(fh)-\/cl;}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ assert(denom>0);}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (fd.cdf(x)-\/cl)/denom;}
+\DoxyCodeLine{00336\ \ \ \ \ \}}
+\DoxyCodeLine{00337\ }
+\DoxyCodeLine{00338\ \ \ \ \ \textcolor{keywordtype}{double}\ fh;}
+\DoxyCodeLine{00339\ \ \ \ \ \textcolor{keywordtype}{double}\ fl;}
+\DoxyCodeLine{00340\ \ \ \ \ D\ fd;}
+\DoxyCodeLine{00341\ \};}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00346\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00347\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1arqdistribution}{arqdistribution}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1qdistribution}{qdistribution}}<double>}
+\DoxyCodeLine{00348\ \{}
+\DoxyCodeLine{00349\ \ \ \ \ \textcolor{keywordtype}{void}\ check()}
+\DoxyCodeLine{00350\ \ \ \ \ \{}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<qdistribution<nothing>,D>::value);}
+\DoxyCodeLine{00352\ \ \ \ \ \}}
+\DoxyCodeLine{00353\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00354\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1arqdistribution_a9a524ae042b0420e8a4607ea109286cd}{arqdistribution}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}}=1)\ :\ fa(\mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}})}
+\DoxyCodeLine{00355\ \ \ \ \ \{}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00357\ \ \ \ \ \}}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1arqdistribution_a89bb4e807d7ec20f0933a58587945c98}{arqdistribution}}(\textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}}=1)\ :\ fa(\mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}}),\ fd(d)}
+\DoxyCodeLine{00360\ \ \ \ \ \{}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00362\ \ \ \ \ \}}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fa;\ \}}
+\DoxyCodeLine{00364\ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1arqdistribution_ab93dae04432b1a91c7fc12f25413dd26}{srcd}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fd;\ \}}
+\DoxyCodeLine{00365\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00366\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ quantile\_is(probability\ p,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00367\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fa\ *\ c\ +\ fd.quantile(p);}
+\DoxyCodeLine{00369\ \ \ \ \ \}}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keyword}{virtual}\ probability\ cdf\_is(\textcolor{keywordtype}{double}\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00371\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd.cdf(x-\/fa\ *\ c);}
+\DoxyCodeLine{00373\ \ \ \ \ \}}
+\DoxyCodeLine{00374\ }
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keywordtype}{double}\ fa;}
+\DoxyCodeLine{00376\ \ \ \ \ D\ fd;}
+\DoxyCodeLine{00377\ \};}
+\DoxyCodeLine{00378\ }
+\DoxyCodeLine{00381\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00382\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1multiplieddistribution}{multiplieddistribution}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1qdistribution}{qdistribution}}<double>}
+\DoxyCodeLine{00383\ \{}
+\DoxyCodeLine{00384\ \ \ \ \ \textcolor{keywordtype}{void}\ check()}
+\DoxyCodeLine{00385\ \ \ \ \ \{}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ assert(fb>0);}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<qdistribution<nothing>,D>::value);}
+\DoxyCodeLine{00388\ \ \ \ \ \}}
+\DoxyCodeLine{00389\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00390\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1multiplieddistribution_a7a5c7d76e6a2bd42bcd682d185871ff3}{multiplieddistribution}}(\textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1multiplieddistribution_a33ab24268f36b75b31b6def6fe232935}{b}}=1)\ :\ fb(\mbox{\hyperlink{classorpp_1_1multiplieddistribution_a33ab24268f36b75b31b6def6fe232935}{b}})}
+\DoxyCodeLine{00391\ \ \ \ \ \{}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00393\ \ \ \ \ \}}
+\DoxyCodeLine{00394\ }
+\DoxyCodeLine{00395\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1multiplieddistribution_a04d8a64c19a3f56b597e12f3ab184de8}{multiplieddistribution}}(\textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1multiplieddistribution_a33ab24268f36b75b31b6def6fe232935}{b}}=1)\ :\ fb(\mbox{\hyperlink{classorpp_1_1multiplieddistribution_a33ab24268f36b75b31b6def6fe232935}{b}}),\ fd(d)}
+\DoxyCodeLine{00396\ \ \ \ \ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00398\ \ \ \ \ \}}
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1multiplieddistribution_a33ab24268f36b75b31b6def6fe232935}{b}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fb;\ \}}
+\DoxyCodeLine{00400\ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1multiplieddistribution_a43e593617058b543716eab545a669da5}{srcd}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fd;\ \}}
+\DoxyCodeLine{00401\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00402\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ quantile\_is(probability\ p,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00403\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ assert(c>0);}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fb\ *\ c\ *\ fd.quantile(p);}
+\DoxyCodeLine{00406\ \ \ \ \ \}}
+\DoxyCodeLine{00407\ \ \ \ \ \textcolor{keyword}{virtual}\ probability\ cdf\_is(\textcolor{keywordtype}{double}\ x,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{double}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00408\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ assert(c>0);}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd.cdf(x/(fb\ *\ c));}
+\DoxyCodeLine{00411\ \ \ \ \ \}}
+\DoxyCodeLine{00412\ }
+\DoxyCodeLine{00413\ \ \ \ \ \textcolor{keywordtype}{double}\ fb;}
+\DoxyCodeLine{00414\ \ \ \ \ D\ fd;}
+\DoxyCodeLine{00415\ \};}
+\DoxyCodeLine{00416\ }
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00419\ }
+\DoxyCodeLine{00420\ }
+\DoxyCodeLine{00424\ }
+\DoxyCodeLine{00425\ }
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00429\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00430\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1atom}{atom}}}
+\DoxyCodeLine{00431\ \{}
+\DoxyCodeLine{00432\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{structorpp_1_1atom_a7ad7864af92638a6e6a1d93a7496a8bc}{comparator}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\&\ l,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\&\ r)}
+\DoxyCodeLine{00433\ \ \ \ \ \{}
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \ (l.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}}\ <\ r.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}});}
+\DoxyCodeLine{00435\ \ \ \ \ \}}
+\DoxyCodeLine{00436\ }
+\DoxyCodeLine{00437\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{structorpp_1_1atom_ab3460baf8618f042e3018fdddde3ce30}{I\_t}}\ =\ I;}
+\DoxyCodeLine{00438\ \ \ \ \ I\ \mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}};}
+\DoxyCodeLine{00439\ \ \ \ \ probability\ \mbox{\hyperlink{structorpp_1_1atom_aaa5346e15091bf85e4eee19add4a55dd}{p}};}
+\DoxyCodeLine{00440\ \};}
+\DoxyCodeLine{00441\ }
+\DoxyCodeLine{00445\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I,\ \textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00446\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1ddistribution}{ddistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mdistribution}{mdistribution}}<I,C>}
+\DoxyCodeLine{00447\ \{}
+\DoxyCodeLine{00448\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00449\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator\ ()\ }}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00450\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ atom\_is(i,c);}
+\DoxyCodeLine{00452\ \ \ \ \ \}}
+\DoxyCodeLine{00453\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator\ ()\ }}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00454\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<C,nothing>::value);}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ atom\_is(i,na);}
+\DoxyCodeLine{00457\ \ \ \ \ \}}
+\DoxyCodeLine{00458\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}{is\_sorted}}();\ \}}
+\DoxyCodeLine{00459\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00461\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keyword}{const}\ C\&\ c)\ \textcolor{keyword}{const}\ \ =\ 0;}
+\DoxyCodeLine{00462\ \ \ \ \ \textcolor{keyword}{virtual}\ I\ do\_draw(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00463\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}}(c);}
+\DoxyCodeLine{00465\ \ \ \ \ \}}
+\DoxyCodeLine{00466\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00467\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}{is\_sorted}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00470\ \ \ \ \ I\ \mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}}(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00471\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}{is\_sorted}}())}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}distribution\ must\ be\ sorted\ to\ use\ drawuniv"{}});}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u\ =\ sys::uniform();}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sum\ =\ 0;}
+\DoxyCodeLine{00476\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ I\ last;}
+\DoxyCodeLine{00478\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<std::numeric\_limits<unsigned\ int>::max()\ ;\ i++)}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ a\ =\ (*this)(i,c)\ ;}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ sum\ +=\ a.\mbox{\hyperlink{structorpp_1_1atom_aaa5346e15091bf85e4eee19add4a55dd}{p}};}
+\DoxyCodeLine{00483\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ assert(i\ ==\ 0\ ||\ a.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}}\ >=\ last);}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ last=a.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}};}
+\DoxyCodeLine{00486\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sum\ >=\ u)}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}};}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ assert(0);}
+\DoxyCodeLine{00491\ \ \ \ \ \}}
+\DoxyCodeLine{00492\ \};}
+\DoxyCodeLine{00493\ }
+\DoxyCodeLine{00506\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I,\ \textcolor{keyword}{typename}\ C\ \textcolor{comment}{/*,\ bool\ listdef\ =\ false\ */}\ >}
+\DoxyCodeLine{00507\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}:\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1ddistribution}{ddistribution}}<I,C>}
+\DoxyCodeLine{00508\ \{}
+\DoxyCodeLine{00509\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00510\ \textcolor{comment}{//\ \ \ \ static\ bool\ constexpr\ flistdef=listdef;}}
+\DoxyCodeLine{00511\ \textcolor{comment}{//\ \ \ \ template\ <bool\ dosort=false>}}
+\DoxyCodeLine{00512\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}(std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}>\&\ a,\ \textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00513\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ a.resize(0);\ \textcolor{comment}{//\ better\ safe\ than\ sorry}}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ index\ n\ =\ natoms\_is(c);}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(index\ i=0;\ i<n;\ i++)}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \ \ \ \ a.push\_back(\{atom\_is(i,c)\});}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00520\ }
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ probability\ p=0;}
+\DoxyCodeLine{00522\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#ifndef\ NDEBUG}}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<\ a.size();\ i++)}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p\ +=\ a[i].p;}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ assert(fabs(p-\/1.0)\ <\ \mbox{\hyperlink{group__Distributions_ga4e020bf05d865ce56a1b95fc761e7ad8}{probabilitytolerance}});}
+\DoxyCodeLine{00526\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00527\ \ \ \ \ \}}
+\DoxyCodeLine{00528\ }
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1fdistribution_a3e088625e270923ababc08c78da34436}{atoms}}(std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}>\&\ a)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00530\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<C,nothing>::value);}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}(a,na);}
+\DoxyCodeLine{00533\ \ \ \ \ \}}
+\DoxyCodeLine{00534\ }
+\DoxyCodeLine{00535\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00536\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ natoms\_is(c);}
+\DoxyCodeLine{00538\ \ \ \ \ \}}
+\DoxyCodeLine{00539\ }
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1fdistribution_a364bc69a59992019b60577513b79bc7e}{natoms}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00541\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<C,nothing>::value);}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ natoms\_is(na);}
+\DoxyCodeLine{00544\ \ \ \ \ \}}
+\DoxyCodeLine{00545\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1fdistribution_aea085685c1b4c0c130ae91be696bda3a}{mean}}(\textcolor{keyword}{const}\ C\&\ c,\ \textcolor{keywordtype}{double}\ prec=0)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00546\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_convertible<I,double>::value);}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ std::vector<atom<I>>\ a;}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}(a,c);}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sum\ =\ 0;}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<a.size();\ i++)}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ sum\ +=\ a[i].p\ *\ a[i].x;}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sum;}
+\DoxyCodeLine{00554\ \ \ \ \ \}}
+\DoxyCodeLine{00555\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ natoms\_is(\textcolor{keyword}{const}\ C\&\ c)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00557\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keyword}{const}\ C\&\ c)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_equiprobable(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00561\ \ \ \ \ \textcolor{keyword}{virtual}\ I\ do\_draw(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00562\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(is\_equiprobable(c))}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u\ =\ sys::uniform();}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n\ =\ \mbox{\hyperlink{classorpp_1_1fdistribution_a364bc69a59992019b60577513b79bc7e}{natoms}}(c);}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\textcolor{keyword}{>}(floor(n*u));}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})(i,c).x;}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}}(c);}
+\DoxyCodeLine{00572\ \ \ \ \ \}}
+\DoxyCodeLine{00573\ \};}
+\DoxyCodeLine{00574\ }
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00580\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I,\ \textcolor{keywordtype}{bool}\ sortable=false>}
+\DoxyCodeLine{00581\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<I,nothing>}
+\DoxyCodeLine{00582\ \{\ \ \ }
+\DoxyCodeLine{00583\ }
+\DoxyCodeLine{00584\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00585\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ldistribution_ab43ca8d0ebab61fa2056ab1439113977}{ldistribution}}(\textcolor{keyword}{const}\ std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}>\&\ \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}},\ \textcolor{keywordtype}{bool}\ equiprobable,\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}})\ :}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ fatoms(\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}),\ fequiprobable(equiprobable),\ fsorted(\mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}})}
+\DoxyCodeLine{00587\ \ \ \ \ \{}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ assert(fatoms.size());}
+\DoxyCodeLine{00589\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ probability\ tp\ =\ fatoms[0].p;}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sum\ =\ tp;}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ last\ =\ fatoms[0].x;}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=1;\ i<fatoms.size();\ i++)}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p\ =\ fatoms[i].p;}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ sum\ +=\ p;}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(tp\ !=\ p\ \&\&\ equiprobable)}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}ldistribution\ initialized\ by\ non-\/equiprobable\ data"{}});}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(sortable)}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}}\ \&\&\ fatoms[i].x\ <\ last)}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}ldistribution\ initialized\ by\ non-\/sorted\ data"{}});}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last\ =\ fatoms[0].x;}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fabs(sum\ -\/\ 1.0)\ >\ \mbox{\hyperlink{group__Distributions_ga4e020bf05d865ce56a1b95fc761e7ad8}{probabilitytolerance}})}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ std::ostringstream\ err;}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ err\ <<\ \textcolor{stringliteral}{"{}ldistribution\ sums\ to\ "{}}\ <<\ sum;}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(err.str());}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00612\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00613\ \ \ \ \ \}}
+\DoxyCodeLine{00614\ }
+\DoxyCodeLine{00615\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ldistribution_a1c1e60ab3edf858e6cebb8466797a9d2}{ldistribution}}(\textcolor{keyword}{const}\ std::vector<I>\&\ values,\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}})\ :}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ fatoms(values.size()),\ fequiprobable(true),\ fsorted(\mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}})}
+\DoxyCodeLine{00617\ \ \ \ \ \{}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ assert(values.size());}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ probability\ p=1.0/fatoms.size();}
+\DoxyCodeLine{00620\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<fatoms.size();\ i++)}
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ fatoms[i].x\ =\ values[i];}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ fatoms[i].p\ =\ p;}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00625\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ last\ =\ fatoms[0].x;}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=1;\ i<fatoms.size();\ i++)}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(sortable)}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}}\ \&\&\ fatoms[i].x\ <\ last)}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}ldistribution\ initialized\ by\ non-\/sorted\ data"{}});}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last\ =\ fatoms[0].x;}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00636\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00637\ }
+\DoxyCodeLine{00638\ \ \ \ \ \}}
+\DoxyCodeLine{00639\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00640\ }
+\DoxyCodeLine{00641\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ natoms\_is(\textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00642\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fatoms.size();}
+\DoxyCodeLine{00644\ \ \ \ \ \}}
+\DoxyCodeLine{00645\ }
+\DoxyCodeLine{00646\ \ \ \ \ \textcolor{keyword}{virtual}\ atom<I>\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00647\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fatoms[i];}
+\DoxyCodeLine{00649\ \ \ \ \ \}}
+\DoxyCodeLine{00650\ \ \ \ \ std::vector<atom<I>>\ fatoms;}
+\DoxyCodeLine{00651\ \ \ \ \ \textcolor{keywordtype}{bool}\ fequiprobable;}
+\DoxyCodeLine{00652\ \ \ \ \ \textcolor{keywordtype}{bool}\ fsorted;}
+\DoxyCodeLine{00653\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_sorted()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fsorted;\ \}}
+\DoxyCodeLine{00654\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_equiprobable(\textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fequiprobable;\ \}}
+\DoxyCodeLine{00655\ \};}
+\DoxyCodeLine{00656\ }
+\DoxyCodeLine{00657\ }
+\DoxyCodeLine{00658\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I,\ \textcolor{keywordtype}{bool}\ sortable=false>}
+\DoxyCodeLine{00659\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1equipdistribution}{equipdistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<I,nothing>}
+\DoxyCodeLine{00660\ \{}
+\DoxyCodeLine{00661\ }
+\DoxyCodeLine{00662\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00663\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1equipdistribution_a4f780aba39d37f19d999679c36918b32}{equipdistribution}}(\textcolor{keyword}{const}\ std::vector<I>\&\ \mbox{\hyperlink{classorpp_1_1equipdistribution_a42899be4c5769ccdb8ce8cdf218a30b1}{values}},\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}})\ :}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ fvalues(\mbox{\hyperlink{classorpp_1_1equipdistribution_a42899be4c5769ccdb8ce8cdf218a30b1}{values}}),\ fsorted(\mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}})}
+\DoxyCodeLine{00665\ \ \ \ \ \{}
+\DoxyCodeLine{00666\ \textcolor{comment}{/*\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00667\ \textcolor{comment}{\ \ \ \ \ \ \ \ auto\ last\ =\ values[0];}}
+\DoxyCodeLine{00668\ \textcolor{comment}{\ \ \ \ \ \ \ \ for(unsigned\ int\ i=1;\ i<values.size();\ i++)}}
+\DoxyCodeLine{00669\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00670\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ if\ constexpr(sortable)}}
+\DoxyCodeLine{00671\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{00672\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(sorted\ \&\&\ values[i]\ <\ last)}}
+\DoxyCodeLine{00673\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ throw\ exception("{}ldistribution\ initialized\ by\ non-\/sorted\ data"{});}}
+\DoxyCodeLine{00674\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ last\ =\ values[0];}}
+\DoxyCodeLine{00675\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00676\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{00677\ \textcolor{comment}{\#endif*/}}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ \ \ \}}
+\DoxyCodeLine{00680\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00681\ \ \ \ \ std::vector<I>\&\ \mbox{\hyperlink{classorpp_1_1equipdistribution_a42899be4c5769ccdb8ce8cdf218a30b1}{values}}()}
+\DoxyCodeLine{00682\ \ \ \ \ \{}
+\DoxyCodeLine{00683\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fvalues;}
+\DoxyCodeLine{00684\ \ \ \ \ \}}
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ natoms\_is(\textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00689\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fvalues.size();}
+\DoxyCodeLine{00691\ \ \ \ \ \}}
+\DoxyCodeLine{00692\ }
+\DoxyCodeLine{00693\ \ \ \ \ \textcolor{keyword}{virtual}\ atom<I>\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00694\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00695\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ fvalues[i],\ 1.0\ /\ fvalues.size()\ \};}
+\DoxyCodeLine{00696\ \ \ \ \ \}}
+\DoxyCodeLine{00697\ \ \ \ \ std::vector<I>\ fvalues;}
+\DoxyCodeLine{00698\ \ \ \ \ \textcolor{keywordtype}{bool}\ fsorted;}
+\DoxyCodeLine{00699\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_sorted()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fsorted;\ \}}
+\DoxyCodeLine{00700\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_equiprobable(\textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00701\ \};}
+\DoxyCodeLine{00702\ }
+\DoxyCodeLine{00703\ }
+\DoxyCodeLine{00708\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00709\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1altldistribution}{altldistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<I,unsigned\ int>}
+\DoxyCodeLine{00710\ \{}
+\DoxyCodeLine{00711\ \ \ \ \ std::vector<ptr<ldistribution<I>>>\ makedists(\textcolor{keyword}{const}\ std::vector<std::vector<I>>\&\ values)}
+\DoxyCodeLine{00712\ \ \ \ \ \{}
+\DoxyCodeLine{00713\ \ \ \ \ \ \ \ \ std::vector<ptr<ldistribution<I>>>\ ret(values.size());}
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<\ values.size();\ i++)}
+\DoxyCodeLine{00715\ \ \ \ \ \ \ \ \ \ \ \ \ ret[i].reset(\textcolor{keyword}{new}\ \mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution<I>}}(values[i]));}
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00717\ \ \ \ \ \}}
+\DoxyCodeLine{00718\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00719\ \textcolor{comment}{/*\ \ \ \ altldistribution(const\ std::vector<std::vector<atom<I>>>\&\ atoms)\ :}}
+\DoxyCodeLine{00720\ \textcolor{comment}{\ \ \ \ \ \ \ \ fdists(makedists(atoms))}}
+\DoxyCodeLine{00721\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{00722\ \textcolor{comment}{\ \ \ \ \}*/}}
+\DoxyCodeLine{00723\ }
+\DoxyCodeLine{00724\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00725\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ atoms\_are(std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}>\&\ a,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00726\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ assert(c<fdists.size());}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ fdists[c]-\/>atoms(a,na);}
+\DoxyCodeLine{00729\ \ \ \ \ \}}
+\DoxyCodeLine{00730\ }
+\DoxyCodeLine{00731\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ natoms\_is(\textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00732\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ assert(c<fdists.size());}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fdists[c]-\/>natoms(na);}
+\DoxyCodeLine{00735\ \ \ \ \ \}}
+\DoxyCodeLine{00736\ }
+\DoxyCodeLine{00737\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00738\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ assert(c<fdists.size());}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fdists[c]-\/>atom(i,na);}
+\DoxyCodeLine{00741\ \ \ \ \ \}}
+\DoxyCodeLine{00742\ }
+\DoxyCodeLine{00743\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_equiprobable(\textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00744\ \textcolor{keyword}{\ \ \ \ }\{\ \textcolor{keywordflow}{return}\ fdists[c]-\/>is\_equiprobable();\ \}}
+\DoxyCodeLine{00745\ }
+\DoxyCodeLine{00746\ \ \ \ \ std::vector<ptr<ldistribution<I>>>\ fdists;}
+\DoxyCodeLine{00747\ }
+\DoxyCodeLine{00748\ \};}
+\DoxyCodeLine{00749\ }
+\DoxyCodeLine{00750\ }
+\DoxyCodeLine{00754\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ X>}
+\DoxyCodeLine{00755\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1lvdistribution}{lvdistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution}}<std::vector<X>>,}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1vdistribution}{vdistribution}}<X,nothing>}
+\DoxyCodeLine{00757\ \{}
+\DoxyCodeLine{00758\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00759\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1lvdistribution_a54d2e4b809c418d21231b15cab5d293b}{lvdistribution}}(\textcolor{keyword}{const}\ std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom}}<std::vector<X>>>\&\ \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}})\ :}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution}}<std::vector<X>>(\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}})}
+\DoxyCodeLine{00761\ \ \ \ \ \{}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ assert(\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}.size());}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ assert(\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}.size());}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=1;\ i<\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}.size();\ i++)}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ assert(\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}[i].x.size()==\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}}[0].x.size());}
+\DoxyCodeLine{00766\ \ \ \ \ \}}
+\DoxyCodeLine{00767\ }
+\DoxyCodeLine{00768\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1lvdistribution_a902f68bba673f78cc43cc8ba107dbe6d}{lvdistribution}}(\textcolor{keyword}{const}\ std::vector<std::vector<X>>\&\ values)\ :}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution}}<std::vector<X>>(values)}
+\DoxyCodeLine{00770\ \ \ \ \ \{}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ assert(values.size());}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ assert(values[0].size());}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=1;\ i<values.size();\ i++)}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ assert(values[i].size()==values[0].size());}
+\DoxyCodeLine{00775\ \ \ \ \ \}}
+\DoxyCodeLine{00776\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00777\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim\_is()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00778\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})(0).x.size();}
+\DoxyCodeLine{00780\ \ \ \ \ \}}
+\DoxyCodeLine{00781\ \};}
+\DoxyCodeLine{00782\ }
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00787\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00788\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1diracdistribution}{diracdistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution}}<I>}
+\DoxyCodeLine{00789\ \{}
+\DoxyCodeLine{00790\ \ \ \ \ std::vector<I>\ point(\textcolor{keyword}{const}\ I\&\ a)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00791\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ std::vector<I>\ ret\ =\ \{a\};}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{00794\ \ \ \ \ \}}
+\DoxyCodeLine{00795\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00796\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1diracdistribution_ab3322e6c943adf61b1ccefa7ee4174b2}{diracdistribution}}(\textcolor{keyword}{const}\ I\&\ a)}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classorpp_1_1ldistribution}{ldistribution}}<I>(point(a))\ \{\}}
+\DoxyCodeLine{00798\ \ \ \ \ I\ \mbox{\hyperlink{classorpp_1_1diracdistribution_a78549d7bcc145a421260efbf3be58050}{x}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00799\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1atom}{atom<I>}}\ a\ =\ (*this)(0);}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}};}
+\DoxyCodeLine{00802\ \ \ \ \ \}}
+\DoxyCodeLine{00803\ \};}
+\DoxyCodeLine{00804\ }
+\DoxyCodeLine{00806\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ X>}
+\DoxyCodeLine{00807\ \mbox{\hyperlink{classorpp_1_1lvdistribution}{lvdistribution<X>}}\ \mbox{\hyperlink{group__discretedisc_gace950755f650d29d49f45cc22ff10b80}{operator\ *}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution<X,nothing>}}\&\ x,}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution<X,nothing>}}\&\ y)}
+\DoxyCodeLine{00809\ \{}
+\DoxyCodeLine{00810\ \ \ \ \ assert(x.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}());}
+\DoxyCodeLine{00811\ \ \ \ \ assert(y.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}());}
+\DoxyCodeLine{00812\ \ \ \ \ std::vector<atom<std::vector<X>>>\ a(x.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}()*y.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}());}
+\DoxyCodeLine{00813\ }
+\DoxyCodeLine{00814\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dst\ =\ 0;}
+\DoxyCodeLine{00815\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<x.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}();\ i++)}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j=0;\ j<y.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}();\ j++)}
+\DoxyCodeLine{00817\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00818\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1atom}{atom<X>}}\ xa\ =\ x(i);}
+\DoxyCodeLine{00819\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1atom}{atom<X>}}\ ya\ =\ y(j);}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<X>\ r\ =\ \{\ xa.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}},\ ya.\mbox{\hyperlink{structorpp_1_1atom_a258a9e595e450f2c350570dc1328954e}{x}}\ \};}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ a[dst++]=\ \{\ r,\ xa.\mbox{\hyperlink{structorpp_1_1atom_aaa5346e15091bf85e4eee19add4a55dd}{p}}*ya.\mbox{\hyperlink{structorpp_1_1atom_aaa5346e15091bf85e4eee19add4a55dd}{p}}\};}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00823\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1lvdistribution}{lvdistribution<X>}}(a);}
+\DoxyCodeLine{00824\ \}}
+\DoxyCodeLine{00825\ }
+\DoxyCodeLine{00826\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D,\ \textcolor{keyword}{typename}\ C>}
+\DoxyCodeLine{00827\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1discretization}{discretization}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<double,\ C>}
+\DoxyCodeLine{00828\ \{}
+\DoxyCodeLine{00829\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00830\ \ \ \mbox{\hyperlink{classorpp_1_1discretization_a6c5636f6e6d6258dd3e3e0fb662e43ec}{discretization}}(\textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ n)\ :\ fd(d),\ fn(n)}
+\DoxyCodeLine{00831\ \ \ \{}
+\DoxyCodeLine{00832\ \ \ \ \ \ \ assert(fn);}
+\DoxyCodeLine{00833\ \ \ \}}
+\DoxyCodeLine{00834\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00835\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ natoms\_is(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00836\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00837\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fn;}
+\DoxyCodeLine{00838\ \ \ \}}
+\DoxyCodeLine{00839\ \ \ \textcolor{keyword}{virtual}\ atom<double>\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00840\ \textcolor{keyword}{\ \ }\{}
+\DoxyCodeLine{00841\ \ \ \ \ \ \ probability\ p=\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}\ (2*i+1)\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(2*fn);}
+\DoxyCodeLine{00842\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ fd.quantile(p,c),\ 1.0\ /\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}\ (fn)\ \};}
+\DoxyCodeLine{00843\ \ \ \}}
+\DoxyCodeLine{00844\ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ is\_equiprobable(\textcolor{keyword}{const}\ C\&\ c)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00845\ \ \ D\ fd;}
+\DoxyCodeLine{00846\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fn;}
+\DoxyCodeLine{00847\ \};}
+\DoxyCodeLine{00848\ }
+\DoxyCodeLine{00850\ }
+\DoxyCodeLine{00854\ }
+\DoxyCodeLine{00855\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ \ D>}
+\DoxyCodeLine{00856\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1meanvardistribution}{meanvardistribution}}:}
+\DoxyCodeLine{00857\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mdistribution}{mdistribution}}<std::vector<double>,nothing>,}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1vdistribution}{vdistribution}}<double,nothing>}
+\DoxyCodeLine{00859\ \{}
+\DoxyCodeLine{00860\ \ \ \ \ \textcolor{keywordtype}{void}\ check()}
+\DoxyCodeLine{00861\ \ \ \ \ \{}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \ \ <\mbox{\hyperlink{classorpp_1_1mdistribution}{mdistribution<typename\ D::I\_t,nothing>}},D>::value);}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_convertible}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \ \ \ <\textcolor{keyword}{typename}\ D::I\_t,\textcolor{keywordtype}{double}>::value);}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ assert(fm.size()\ ==\ fsqV.size());}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<fsqV.size();\ i++)}
+\DoxyCodeLine{00868\ \ \ \ \ \ \ \ \ \ \ \ \ assert(fsqV[i].size()==fm.size());}
+\DoxyCodeLine{00869\ \ \ \ \ \}}
+\DoxyCodeLine{00870\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00871\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ab297b73410ec8daa6d18ebf01e4cf7ff}{meanvardistribution}}(\textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}},}
+\DoxyCodeLine{00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<double>>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}}}
+\DoxyCodeLine{00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00874\ \ \ \ \ \ \ \ \ :\ fm(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}}),\ fsqV(\mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}})}
+\DoxyCodeLine{00875\ \ \ \ \ \{}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00877\ \ \ \ \ \}}
+\DoxyCodeLine{00878\ }
+\DoxyCodeLine{00879\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1meanvardistribution_aaede61c04f7bdbc2447c3c6711d96865}{meanvardistribution}}(\textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}},}
+\DoxyCodeLine{00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<double>>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}},}
+\DoxyCodeLine{00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}}
+\DoxyCodeLine{00882\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )}
+\DoxyCodeLine{00883\ \ \ \ \ \ \ \ \ :\ fm(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}}),\ fsqV(\mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}}),fd(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}})}
+\DoxyCodeLine{00884\ \ \ \ \ \{}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{00886\ \ \ \ \ \}}
+\DoxyCodeLine{00887\ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fd;\ \}}
+\DoxyCodeLine{00888\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}}()\textcolor{keyword}{\ const\ }\{\textcolor{keywordflow}{return}\ fm;\ \}}
+\DoxyCodeLine{00889\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<double>>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fsqV;\ \}}
+\DoxyCodeLine{00890\ }
+\DoxyCodeLine{00891\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00892\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a3d095b7e16c92ee1956197e394c94040}{dim\_is}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fm.size();\ \}}
+\DoxyCodeLine{00893\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<double>\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a94e575d1e2292cee6f5ce51ea1296423}{do\_draw}}(\textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00894\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00895\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}}();}
+\DoxyCodeLine{00896\ \ \ \ \ \ \ \ \ std::vector<double>\ r(fm);}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}};\ i++)}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u\ =\ fd.draw();}
+\DoxyCodeLine{00900\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j=0;\ j<\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}};\ j++)}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r[j]\ +=\ fsqV[j][i]\ *\ u;}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00903\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r;}
+\DoxyCodeLine{00904\ \ \ \ \ \}}
+\DoxyCodeLine{00905\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00906\ \ \ \ \ std::vector<double>\ fm;}
+\DoxyCodeLine{00907\ \ \ \ \ std::vector<std::vector<double>>\ fsqV;}
+\DoxyCodeLine{00908\ \ \ \ \ D\ fd;}
+\DoxyCodeLine{00909\ \};}
+\DoxyCodeLine{00910\ }
+\DoxyCodeLine{00911\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ \ D>}
+\DoxyCodeLine{00912\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1fmeanvardistribution}{fmeanvardistribution}}:}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1meanvardistribution}{meanvardistribution}}<D>,}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<std::vector<double>,nothing>}
+\DoxyCodeLine{00915\ \{}
+\DoxyCodeLine{00916\ \ \ \ \ \textcolor{keywordtype}{void}\ init(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}})}
+\DoxyCodeLine{00917\ \ \ \ \ \{}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \ \ <\mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution<double,nothing>}},D>::value);}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ fn\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}().natoms(na);}
+\DoxyCodeLine{00921\ \ \ \ \ \ \ \ \ fN\ =\ 1;}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<\mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}};\ i++)}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \ \ \ \ fN\ *=\ fn;}
+\DoxyCodeLine{00924\ \ \ \ \ \}}
+\DoxyCodeLine{00925\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00926\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1fmeanvardistribution_a3bc7ca3eb6902dee3f8b6febc4f7fc79}{fmeanvardistribution}}(\textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}},}
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<double>>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}}}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\ :}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1meanvardistribution}{meanvardistribution}}<D>(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}},\mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}})}
+\DoxyCodeLine{00930\ \ \ \ \ \{}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ init(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}}.size());}
+\DoxyCodeLine{00932\ \ \ \ \ \}}
+\DoxyCodeLine{00933\ }
+\DoxyCodeLine{00934\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1fmeanvardistribution_aec95c26b30f9376c1d65ba40ea6dd2b9}{fmeanvardistribution}}(\textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}},}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::vector<double>>\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}},}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ):}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1meanvardistribution}{meanvardistribution}}<D>(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}},\mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}},\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}})}
+\DoxyCodeLine{00939\ \ \ \ \ \{}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ init(\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}}.size());}
+\DoxyCodeLine{00941\ \ \ \ \ \}}
+\DoxyCodeLine{00942\ }
+\DoxyCodeLine{00943\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00944\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim\_is()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a3d095b7e16c92ee1956197e394c94040}{meanvardistribution<D>::dim\_is}}();\ \}}
+\DoxyCodeLine{00945\ \ \ \ \ \textcolor{keyword}{virtual}\ atom<std::vector<double>>\ atom\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ a,\ \textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00946\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}=this-\/>\mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}}();}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ std::vector<double>\ r(this-\/>\mbox{\hyperlink{classorpp_1_1meanvardistribution_ac133245960fd28a0993b13e743c65a2e}{m}}());}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ind\ =\ a;}
+\DoxyCodeLine{00950\ \textcolor{comment}{//sys::log()\ <<\ a\ ;}}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}};\ i++)}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ k\ =\ ind\ \%\ fn;}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ u=this-\/>\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}}()(k).x;}
+\DoxyCodeLine{00955\ \textcolor{comment}{//sys::log()\ <<\ "{},"{}\ <<\ u;}}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j=0;\ j<\mbox{\hyperlink{classorpp_1_1meanvardistribution_ace56ebaa157233bc4837bc652cfa29c5}{d}};\ j++)}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r[j]\ +=\ this-\/>\mbox{\hyperlink{classorpp_1_1meanvardistribution_a5da154247a404ea788a01c2072bd7869}{sqV}}()[j][i]\ *\ u;}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ ind\ /=\ fn;}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00960\ \textcolor{comment}{//for(unsigned\ int\ i=0;\ i<r.size();\ i++)}}
+\DoxyCodeLine{00961\ \textcolor{comment}{//\ \ \ sys::log()\ <<\ "{},"{}\ <<\ r[i];}}
+\DoxyCodeLine{00962\ \textcolor{comment}{//sys::log()\ <<\ endl;}}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ r,1.0\ /\ (double)\ fN\};}
+\DoxyCodeLine{00964\ \ \ \ \ \}}
+\DoxyCodeLine{00965\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ natoms\_is(\textcolor{keyword}{const}\ nothing\&\ )\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fN;\}}
+\DoxyCodeLine{00966\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<double>\ do\_draw(\textcolor{keyword}{const}\ nothing\&)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00967\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1meanvardistribution_a94e575d1e2292cee6f5ce51ea1296423}{meanvardistribution<D>::do\_draw}}(na);}
+\DoxyCodeLine{00969\ \ \ \ \ \}}
+\DoxyCodeLine{00970\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fn;}
+\DoxyCodeLine{00971\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fN;}
+\DoxyCodeLine{00972\ \};}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00977\ }
+\DoxyCodeLine{00978\ }
+\DoxyCodeLine{00982\ }
+\DoxyCodeLine{00983\ }
+\DoxyCodeLine{00994\ }
+\DoxyCodeLine{00995\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ S,\ \textcolor{keyword}{typename}\ M>}
+\DoxyCodeLine{00996\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution}}:}
+\DoxyCodeLine{00997\ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1jdistribution}{jdistribution}}<typename\ F::I\_t,\ typename\ S::I\_t,\ typename\ F::C\_t>}
+\DoxyCodeLine{00998\ \{}
+\DoxyCodeLine{00999\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01000\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ijdistribution_a4b4b86929ac9395071caef456033c88a}{F\_t}}\ =\ F;}
+\DoxyCodeLine{01001\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ijdistribution_a31c56989a121f6e4348716490afaba84}{S\_t}}\ =\ S;}
+\DoxyCodeLine{01002\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ijdistribution_a97bb29d60b3756f42c9d50bf5c35e001}{M\_t}}\ =\ M;}
+\DoxyCodeLine{01003\ }
+\DoxyCodeLine{01004\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ijdistribution_ae7122dc5d1c55604f8bd16a450b8a1c6}{ijdistribution}}(\textcolor{keyword}{const}\ F\&\ f,\ \textcolor{keyword}{const}\ S\&\ s)\ :\ ff(f),\ fs(s)}
+\DoxyCodeLine{01005\ \ \ \ \ \{}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<mapping<typename\ M::D\_t,typename\ M::R\_t>,M>::value);}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<\textcolor{keyword}{typename}\ M::D\_t,}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::pair<typename\ F::C\_t,typename\ F::I\_t>>::value);}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_convertible<typename\ M::R\_t\&,typename\ S::C\_t\&>::value);}
+\DoxyCodeLine{01010\ \ \ \ \ \}}
+\DoxyCodeLine{01011\ \ \ \ \ \textcolor{keyword}{const}\ F\&\ \mbox{\hyperlink{classorpp_1_1ijdistribution_a7fd8bfee1e2a065470b63ce58e45b006}{first}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ ff;\ \}}
+\DoxyCodeLine{01012\ \ \ \ \ \textcolor{keyword}{const}\ S\&\ \mbox{\hyperlink{classorpp_1_1ijdistribution_af26c7e0203c640ac2601dcd9740b9666}{second}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fs;\ \}}
+\DoxyCodeLine{01013\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01014\ \ \ \ \ F\ ff;}
+\DoxyCodeLine{01015\ \ \ \ \ S\ fs;}
+\DoxyCodeLine{01016\ \};}
+\DoxyCodeLine{01017\ }
+\DoxyCodeLine{01019\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D,\textcolor{keyword}{typename}\ R,\ \textcolor{keyword}{typename}\ M>}
+\DoxyCodeLine{01020\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}\ :\ \textcolor{keyword}{public}\ mapping<std::pair<nothing,D>,R>}
+\DoxyCodeLine{01021\ \{}
+\DoxyCodeLine{01022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01023\ \ \ \ \ \textcolor{keyword}{virtual}\ R\ \mbox{\hyperlink{classorpp_1_1uijmapping_a97a08fbe54f4705820e5ee79a334c53e}{operator()\ }}(\textcolor{keyword}{const}\ std::pair<nothing,D>\&\ p)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01024\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ M()(p.second);}
+\DoxyCodeLine{01026\ \ \ \ \ \}}
+\DoxyCodeLine{01027\ \};}
+\DoxyCodeLine{01028\ }
+\DoxyCodeLine{01036\ }
+\DoxyCodeLine{01037\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ S,\ \textcolor{keyword}{typename}\ M=\textcolor{keywordtype}{id}mapping<\textcolor{keyword}{typename}\ F::I\_t>>}
+\DoxyCodeLine{01038\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ijdistribution}{uijdistribution}}\ =\ \mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution<F,S,uijmapping<typename\ F::I\_t,typename\ S::C\_t,M>}}>;}
+\DoxyCodeLine{01039\ }
+\DoxyCodeLine{01047\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ S,\ \textcolor{keyword}{typename}\ M>}
+\DoxyCodeLine{01048\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution}}<F,S,M>,}
+\DoxyCodeLine{01049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mdistribution}{mdistribution}}<std::pair<typename\ F::I\_t,typename\ S::I\_t>,typename\ F::C\_t>}
+\DoxyCodeLine{01050\ \{}
+\DoxyCodeLine{01051\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01052\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mijdistribution_a070c19c7ef24f0cc2c7a4900fe8e8a51}{I\_t}}\ =\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{ijdistribution<F,S,M>::I\_t}};}
+\DoxyCodeLine{01053\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mijdistribution_a1bea7a84ef51196e7852ed3d7755d4a4}{C\_t}}\ =\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{ijdistribution<F,S,M>::C\_t}};}
+\DoxyCodeLine{01054\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1mijdistribution_a2d3f0bb34d58f6d31b91494b1fa4b9a3}{mijdistribution}}(\textcolor{keyword}{const}\ F\&\ d,\ \textcolor{keyword}{const}\ S\&\ e)\ :}
+\DoxyCodeLine{01055\ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution}}<F,S,M>(d,e)}
+\DoxyCodeLine{01056\ \ \ \ \ \{}
+\DoxyCodeLine{01057\ \ \ \ \ \}}
+\DoxyCodeLine{01058\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{01059\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classorpp_1_1mijdistribution_a070c19c7ef24f0cc2c7a4900fe8e8a51}{I\_t}}\ \mbox{\hyperlink{classorpp_1_1mijdistribution_a2cfb3afcc6177468b3f58410c221b488}{do\_draw}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1mijdistribution_a1bea7a84ef51196e7852ed3d7755d4a4}{C\_t}}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01060\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ F::I\_t\ i\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1ijdistribution_a7fd8bfee1e2a065470b63ce58e45b006}{first}}().draw(c);}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ std::pair<C\_t,typename\ F::I\_t>\ p\ =\ \{\ c,\ i\ \};}
+\DoxyCodeLine{01063\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ S::I\_t\ j\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1ijdistribution_af26c7e0203c640ac2601dcd9740b9666}{second}}().draw(M()(p));}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{i,j\};}
+\DoxyCodeLine{01065\ \ \ \ \ \}}
+\DoxyCodeLine{01066\ \};}
+\DoxyCodeLine{01067\ }
+\DoxyCodeLine{01075\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ S,\ \textcolor{keyword}{typename}\ M>}
+\DoxyCodeLine{01076\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1fijdistribution}{fijdistribution}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution}}<F,S,M>,}
+\DoxyCodeLine{01077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<std::pair<typename\ F::I\_t,typename\ S::I\_t>,}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ typename\ F::C\_t>}
+\DoxyCodeLine{01079\ \{}
+\DoxyCodeLine{01080\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01081\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1fijdistribution_ab6d15efffecb7b1edb29bba44bfa2395}{I\_t}}\ =\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{ijdistribution<F,S,M>::I\_t}};}
+\DoxyCodeLine{01082\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1fijdistribution_ad86a9299f0428d48344b4b85ae007f81}{C\_t}}\ =\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{ijdistribution<F,S,M>::C\_t}};}
+\DoxyCodeLine{01083\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1fijdistribution_a06e6d34740000f0080a7f198097584dd}{fijdistribution}}(\textcolor{keyword}{const}\ F\&\ d,\ \textcolor{keyword}{const}\ S\&\ e)\ :}
+\DoxyCodeLine{01084\ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution}}<F,S,M>(d,e)}
+\DoxyCodeLine{01085\ \ \ \ \ \{}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<}
+\DoxyCodeLine{01087\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution<typename\ F::I\_t,\ typename\ F::C\_t>}},F>::value);}
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<}
+\DoxyCodeLine{01089\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution<typename\ S::I\_t,\ typename\ S::C\_t>}},S>::value);}
+\DoxyCodeLine{01090\ \ \ \ \ \}}
+\DoxyCodeLine{01091\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01092\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ atoms\_are(std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom<I\_t>}}>\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1fijdistribution_ad86a9299f0428d48344b4b85ae007f81}{C\_t}}\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01093\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01094\ \ \ \ \ \ \ \ \ a.resize(0);}
+\DoxyCodeLine{01095\ \ \ \ \ \ \ \ \ std::vector<atom<typename\ F::I\_t>>\ fa;}
+\DoxyCodeLine{01096\ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1ijdistribution_a7fd8bfee1e2a065470b63ce58e45b006}{first}}().atoms(fa,c);}
+\DoxyCodeLine{01097\ }
+\DoxyCodeLine{01098\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<fa.size();\ i++)}
+\DoxyCodeLine{01099\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01100\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<atom<typename\ S::I\_t>>\ sa;}
+\DoxyCodeLine{01101\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1ijdistribution_af26c7e0203c640ac2601dcd9740b9666}{second}}().atoms(sa,M()(std::pair<C\_t,typename\ F::I\_t>(c,fa[i].x)));}
+\DoxyCodeLine{01102\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j=0;\ j<sa.size();\ j++)}
+\DoxyCodeLine{01103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a.push\_back(\{\ \{\ fa[i].x,\ sa[j].x\},\ fa[i].p\ *\ sa[j].p\});}
+\DoxyCodeLine{01104\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01105\ \ \ \ \ \}}
+\DoxyCodeLine{01106\ \ \ \ \ \textcolor{keyword}{virtual}\ I\_t\ do\_draw(\textcolor{keyword}{const}\ C\_t\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01107\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1mijdistribution_a2cfb3afcc6177468b3f58410c221b488}{mijdistribution<F,S,M>::do\_draw}}(c);}
+\DoxyCodeLine{01109\ \ \ \ \ \}}
+\DoxyCodeLine{01110\ }
+\DoxyCodeLine{01111\ \};}
+\DoxyCodeLine{01112\ }
+\DoxyCodeLine{01119\ }
+\DoxyCodeLine{01120\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ F,\ \textcolor{keyword}{typename}\ S,\ \textcolor{keyword}{typename}\ M>}
+\DoxyCodeLine{01121\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mijdistribution}{umijdistribution}}\ =\ \mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution<F,S,uijmapping<typename\ F::I\_t,typename\ S::C\_t,M>}}>;}
+\DoxyCodeLine{01122\ }
+\DoxyCodeLine{01124\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ X=\textcolor{keywordtype}{double}>}
+\DoxyCodeLine{01125\ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{scenario}}\ =\ std::vector<X>;}
+\DoxyCodeLine{01126\ }
+\DoxyCodeLine{01127\ }
+\DoxyCodeLine{01137\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ X,\textcolor{keyword}{typename}\ R>}
+\DoxyCodeLine{01138\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1zeta}{zeta}}:\ \textcolor{keyword}{public}\ mapping<scenario<X>,R>}
+\DoxyCodeLine{01139\ \{}
+\DoxyCodeLine{01140\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01141\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1zeta_a6610710cd8d8f681f2d507f6721f79d3}{R\_t}}=R;}
+\DoxyCodeLine{01142\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1zeta_a944d3ca352737d7e5ac654b86367f8c9}{X\_t}}=X;}
+\DoxyCodeLine{01143\ \};}
+\DoxyCodeLine{01144\ }
+\DoxyCodeLine{01156\ }
+\DoxyCodeLine{01157\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ E,\ \textcolor{keyword}{typename}\ D,\ \textcolor{keyword}{typename}\ Z>}
+\DoxyCodeLine{01158\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1ivdistribution}{ivdistribution}}:}
+\DoxyCodeLine{01159\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1vdistribution}{vdistribution}}<typename\ D::I\_t,nothing>}
+\DoxyCodeLine{01160\ \{}
+\DoxyCodeLine{01161\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \textcolor{keyword}{constexpr}\ check()}
+\DoxyCodeLine{01162\ \ \ \ \ \{}
+\DoxyCodeLine{01163\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<zeta<typename\ Z::X\_t,\ typename\ Z::R\_t>,Z>::value);}
+\DoxyCodeLine{01164\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<}
+\DoxyCodeLine{01165\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1distribution}{distribution<typename\ D::I\_t,typename\ D::C\_t>}},D>::value);}
+\DoxyCodeLine{01166\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<}
+\DoxyCodeLine{01167\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1distribution}{distribution<typename\ E::I\_t,nothing>}},E>::value);}
+\DoxyCodeLine{01168\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<typename\ Z::R\_t,typename\ D::C\_t>::value);}
+\DoxyCodeLine{01169\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<typename\ Z::X\_t,typename\ D::I\_t>::value);}
+\DoxyCodeLine{01170\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_same<typename\ E::I\_t,typename\ D::I\_t>::value);}
+\DoxyCodeLine{01171\ \ \ \ \ \}}
+\DoxyCodeLine{01172\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01173\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\_t}}\ =\ \textcolor{keyword}{typename}\ D::I\_t;}
+\DoxyCodeLine{01174\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ivdistribution_a680ebde66ab5c282ce0468b91a89540d}{E\_t}}\ =\ E;}
+\DoxyCodeLine{01175\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ivdistribution_af24cb512b919b623021f652e9123c429}{Z\_t}}\ =\ Z;}
+\DoxyCodeLine{01176\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1ivdistribution_ae514308e895d3f41a71d554b337e6588}{D\_t}}\ =\ D;}
+\DoxyCodeLine{01177\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ivdistribution_aa28ea9d8afb5bd9cc96e8af8ab9f86d3}{ivdistribution}}(\textcolor{keyword}{const}\ E\&\ e,\ \textcolor{keyword}{const}\ std::vector<D>\&\ d)}
+\DoxyCodeLine{01178\ \ \ \ \ \ \ \ :\ fd(d),\ fe(e)}
+\DoxyCodeLine{01179\ \ \ \ \ \{}
+\DoxyCodeLine{01180\ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{01181\ \ \ \ \ \}}
+\DoxyCodeLine{01182\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ivdistribution_a2805de9884b5fafaa4082aba36fa6994}{ivdistribution}}(\textcolor{keyword}{const}\ E\&\ e,\ \textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim)}
+\DoxyCodeLine{01183\ \ \ \ \ \ \ \ :\ fe(e),\ fd(dim-\/1,d)}
+\DoxyCodeLine{01184\ \ \ \ \ \{}
+\DoxyCodeLine{01185\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{01186\ \ \ \ \ \ \ \ \ assert(dim);}
+\DoxyCodeLine{01187\ \ \ \ \ \}}
+\DoxyCodeLine{01188\ }
+\DoxyCodeLine{01190\ \textcolor{comment}{/*\ \ \ \ ivdistribution(const\ X\_t\&\ x0,\ const\ D\&\ d,\ unsigned\ int\ dim)}}
+\DoxyCodeLine{01191\ \textcolor{comment}{\ \ \ \ \ \ \ :\ fe(diracdistribution<X\_t>(x0)),\ fd(dim-\/1,d)}}
+\DoxyCodeLine{01192\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{01193\ \textcolor{comment}{\ \ \ \ \ \ \ \ check();}}
+\DoxyCodeLine{01194\ \textcolor{comment}{\ \ \ \ \ \ \ \ assert(dim);}}
+\DoxyCodeLine{01195\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{01196\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01197\ \ \ \ \ \textcolor{keyword}{typename}\ Z::R\_t\ \mbox{\hyperlink{classorpp_1_1ivdistribution_ac4515bb67c9bb3e1ecff728e82b81fb3}{z}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{scenario<X\_t>}}\&\ s)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01198\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1ivdistribution_af24cb512b919b623021f652e9123c429}{Z\_t}}()(s);}
+\DoxyCodeLine{01200\ \ \ \ \ \}}
+\DoxyCodeLine{01201\ }
+\DoxyCodeLine{01203\ \ \ \ \ std::vector<X\_t>\ \mbox{\hyperlink{classorpp_1_1ivdistribution_a5342002f1d9e83bd615020fb220ab717}{draw}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01204\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01205\ \ \ \ \ \ \ \ \ std::vector<X\_t>\ ret;}
+\DoxyCodeLine{01206\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\_t}}\ x\ =\ fe.draw(na);}
+\DoxyCodeLine{01207\ \ \ \ \ \ \ \ \ ret.push\_back(x);}
+\DoxyCodeLine{01208\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Z::R\_t\ c\ =\ z(ret);}
+\DoxyCodeLine{01209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i=0;\ i<this-\/>dim()-\/1;\ i++)}
+\DoxyCodeLine{01210\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01211\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ this-\/>fd[i].draw(c);}
+\DoxyCodeLine{01212\ \ \ \ \ \ \ \ \ \ \ \ \ ret.push\_back(x);}
+\DoxyCodeLine{01213\ \ \ \ \ \ \ \ \ \ \ \ \ c\ =\ z(ret);}
+\DoxyCodeLine{01214\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01215\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{01216\ \ \ \ \ \}}
+\DoxyCodeLine{01217\ }
+\DoxyCodeLine{01221\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1ivdistribution_a1566bcbd12da7782c0dd494439f25c4d}{atoms}}(\textcolor{keyword}{const}\ std::vector<X\_t>\&\ s,\ std::vector<\mbox{\hyperlink{structorpp_1_1atom}{atom<X\_t>}}>\&\ a)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01222\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!s.size())}
+\DoxyCodeLine{01224\ \ \ \ \ \ \ \ \ \ \ \ \ fe.atoms(a);}
+\DoxyCodeLine{01225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01226\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01227\ \ \ \ \ \ \ \ \ \ \ \ \ assert(s.size()\ <\ this-\/>dim());}
+\DoxyCodeLine{01228\ \ \ \ \ \ \ \ \ \ \ \ \ fd[s.size()-\/1].atoms(a,Z()(s));}
+\DoxyCodeLine{01229\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01230\ \ \ \ \ \}}
+\DoxyCodeLine{01231\ \ \ \ \ \textcolor{keyword}{const}\ D\&\ \mbox{\hyperlink{classorpp_1_1ivdistribution_af361916fc9e635dd3413f220cab15159}{d}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01232\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01233\ \ \ \ \ \ \ \ \ assert(i>0);}
+\DoxyCodeLine{01234\ \ \ \ \ \ \ \ \ assert(i-\/1\ <\ fd.size());}
+\DoxyCodeLine{01235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd[i-\/1];}
+\DoxyCodeLine{01236\ \ \ \ \ \}}
+\DoxyCodeLine{01237\ \ \ \ \ \textcolor{keyword}{const}\ E\&\ \mbox{\hyperlink{classorpp_1_1ivdistribution_a6c366229a5a44cd527812b11b88d7732}{e}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01238\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fe;}
+\DoxyCodeLine{01240\ \ \ \ \ \}}
+\DoxyCodeLine{01241\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01242\ \ \ \ \ E\ fe;}
+\DoxyCodeLine{01243\ \ \ \ \ std::vector<D>\ fd;}
+\DoxyCodeLine{01244\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{01245\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{classorpp_1_1ivdistribution_af08897f5bcb01d18886e61b845dea0f6}{dim\_is}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01246\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fd.size()+1;}
+\DoxyCodeLine{01248\ \ \ \ \ \}}
+\DoxyCodeLine{01249\ \};}
+\DoxyCodeLine{01250\ }
+\DoxyCodeLine{01252\ }
+\DoxyCodeLine{01253\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ E,\ \textcolor{keyword}{typename}\ D,\ \textcolor{keyword}{typename}\ Z,\ \textcolor{keyword}{typename}\ M>}
+\DoxyCodeLine{01254\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1mivdistribution}{mivdistribution}}:}
+\DoxyCodeLine{01255\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1ivdistribution}{ivdistribution}}<E,D,Z>}
+\DoxyCodeLine{01256\ \{}
+\DoxyCodeLine{01257\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \textcolor{keyword}{constexpr}\ check()}
+\DoxyCodeLine{01258\ \ \ \ \ \{}
+\DoxyCodeLine{01259\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(\ std::is\_base\_of<distribution<typename\ M::I\_t,nothing>,\ M>::value);}
+\DoxyCodeLine{01260\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(\ std::is\_same<typename\ M::I\_t,typename\ D::I\_t>::value);}
+\DoxyCodeLine{01261\ \ \ \ \ \}}
+\DoxyCodeLine{01262\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01263\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mivdistribution_a384eece5144f2f14c07a30c5496d489e}{E\_t}}\ =\ E;}
+\DoxyCodeLine{01264\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mivdistribution_a80dcd92d21fae6808cbeaf4d6128e818}{M\_t}}\ =\ M;}
+\DoxyCodeLine{01265\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mivdistribution_a437cf9f8efd6ec7161366cf01d32c940}{D\_t}}\ =\ D;}
+\DoxyCodeLine{01266\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mivdistribution_ae63ff9afaf08844dae52b88303a28365}{Z\_t}}\ =\ Z;}
+\DoxyCodeLine{01267\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1mivdistribution_af0ec6d56b7d7348b49e764cb53ec75b3}{mivdistribution}}(\textcolor{keyword}{const}\ E\&\ e,\ \textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim)}
+\DoxyCodeLine{01268\ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classorpp_1_1ivdistribution}{ivdistribution}}<E,D,Z>(e,d,dim)}
+\DoxyCodeLine{01269\ }
+\DoxyCodeLine{01270\ \ \ \ \ \{}
+\DoxyCodeLine{01271\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{01272\ \ \ \ \ \ \ \ \ assert(dim);}
+\DoxyCodeLine{01273\ \ \ \ \ \}}
+\DoxyCodeLine{01274\ }
+\DoxyCodeLine{01275\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1mivdistribution_ab184ec8b9cadd74227e78324c37111cc}{mivdistribution}}(\textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ E::I\_t\&\ x0,\ \textcolor{keyword}{const}\ D\&\ d,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim)}
+\DoxyCodeLine{01276\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classorpp_1_1ivdistribution}{ivdistribution}}<E,D,Z>(x0,d,dim)}
+\DoxyCodeLine{01277\ \ \ \ \ \{}
+\DoxyCodeLine{01278\ \ \ \ \ \ \ \ \ check();}
+\DoxyCodeLine{01279\ \ \ \ \ \ \ \ \ assert(dim);}
+\DoxyCodeLine{01280\ \ \ \ \ \}}
+\DoxyCodeLine{01281\ \ \ \ \ \textcolor{comment}{//\ marginal\ distribution}}
+\DoxyCodeLine{01282\ \ \ \ \ M\ \mbox{\hyperlink{classorpp_1_1mivdistribution_a3e0b0c10ac0576e1ed7c95c002186138}{md}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01283\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01284\ \ \ \ \ \ \ \ \ assert(i>0);}
+\DoxyCodeLine{01285\ \ \ \ \ \ \ \ \ assert(i<this-\/>dim());}
+\DoxyCodeLine{01286\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ md\_is(i);}
+\DoxyCodeLine{01287\ \ \ \ \ \}}
+\DoxyCodeLine{01288\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01289\ \ \ \ \ \textcolor{keyword}{virtual}\ M\ md\_is(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{01290\ \};}
+\DoxyCodeLine{01291\ }
+\DoxyCodeLine{01292\ }
+\DoxyCodeLine{01293\ \textcolor{comment}{/*}}
+\DoxyCodeLine{01294\ \textcolor{comment}{template\ <typename\ D,\ typename\ E,\ typename\ Z>}}
+\DoxyCodeLine{01295\ \textcolor{comment}{class\ dipdistribution:}}
+\DoxyCodeLine{01296\ \textcolor{comment}{\ \ \ \ \ \ \ \ public\ ijdistribution<D,E,Z>,}}
+\DoxyCodeLine{01297\ \textcolor{comment}{\ \ \ \ \ \ \ \ public\ ddistribution<pair<typename\ D::I\_t,typename\ E::I\_t>,}}
+\DoxyCodeLine{01298\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ typename\ D::C\_t>}}
+\DoxyCodeLine{01299\ \textcolor{comment}{\{}}
+\DoxyCodeLine{01300\ \textcolor{comment}{public:}}
+\DoxyCodeLine{01301\ \textcolor{comment}{\ \ \ \ using\ I\_t\ =\ typename\ iterativedistribution<D,E>::I\_t;}}
+\DoxyCodeLine{01302\ \textcolor{comment}{\ \ \ \ using\ C\_t\ =\ typename\ iterativedistribution<D,E>::C\_t;}}
+\DoxyCodeLine{01303\ \textcolor{comment}{\ \ \ \ diterativedistribution(const\ D\&\ d,\ const\ E\&\ e)\ :}}
+\DoxyCodeLine{01304\ \textcolor{comment}{\ \ \ \ \ \ \ \ iterativedistribution<D,E>(d,e)}}
+\DoxyCodeLine{01305\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{01306\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{01307\ \textcolor{comment}{private:}}
+\DoxyCodeLine{01308\ \textcolor{comment}{\ \ \ \ virtual\ void\ atoms\_are(std::vector<atom<I\_t>>\&\ a,\ const\ C\_t\&\ c)\ const}}
+\DoxyCodeLine{01309\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{01310\ \textcolor{comment}{\ \ \ \ \ \ \ \ a.clear();}}
+\DoxyCodeLine{01311\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::vector<atom<typename\ D::I\_t>>\ da;}}
+\DoxyCodeLine{01312\ \textcolor{comment}{\ \ \ \ \ \ \ \ this-\/>d().atoms(da,c);}}
+\DoxyCodeLine{01313\ \textcolor{comment}{\ \ \ \ \ \ \ \ unsigned\ int\ nd=da.size();}}
+\DoxyCodeLine{01314\ \textcolor{comment}{\ \ \ \ \ \ \ \ for(unsigned\ int\ i=0;\ i<nd;\ i++)}}
+\DoxyCodeLine{01315\ \textcolor{comment}{\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{01316\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ atom<typename\ D::I\_t>\ x\ =\ da[i];}}
+\DoxyCodeLine{01317\ \textcolor{comment}{}}
+\DoxyCodeLine{01318\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ std::vector<atom<typename\ E::I\_t>>\ ea;}}
+\DoxyCodeLine{01319\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ this-\/>e().atoms(ea,x.x);}}
+\DoxyCodeLine{01320\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ unsigned\ int\ ne=ea.size();}}
+\DoxyCodeLine{01321\ \textcolor{comment}{}}
+\DoxyCodeLine{01322\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ for(unsigned\ int\ j=0;\ j<ne;\ j++)}}
+\DoxyCodeLine{01323\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{01324\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ atom<typename\ E::I\_t>\ y\ =\ ea[j];}}
+\DoxyCodeLine{01325\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a.push\_back(\{\{x.x,y.x\},x.p*y.p\});}}
+\DoxyCodeLine{01326\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{01327\ \textcolor{comment}{\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{01328\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{01329\ \textcolor{comment}{}}
+\DoxyCodeLine{01330\ \textcolor{comment}{\ \ \ \ virtual\ atom<I\_t>\ atom\_is(unsigned\ int\ i,\ const\ C\_t\&\ c)\ const}}
+\DoxyCodeLine{01331\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{01332\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::vector<atom<I\_t>>\ a;}}
+\DoxyCodeLine{01333\ \textcolor{comment}{\ \ \ \ \ \ \ \ atoms\_are(a,c);}}
+\DoxyCodeLine{01334\ \textcolor{comment}{\ \ \ \ \ \ \ \ assert(i<a.size());}}
+\DoxyCodeLine{01335\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ a[i];}}
+\DoxyCodeLine{01336\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{01337\ \textcolor{comment}{}}
+\DoxyCodeLine{01338\ \textcolor{comment}{\ \ \ \ virtual\ unsigned\ int\ natoms\_is(const\ C\_t\&\ c)\ const}}
+\DoxyCodeLine{01339\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{01340\ \textcolor{comment}{\ \ \ \ \ \ \ \ std::vector<atom<I\_t>>\ a;}}
+\DoxyCodeLine{01341\ \textcolor{comment}{\ \ \ \ \ \ \ \ atoms\_are(a,c);}}
+\DoxyCodeLine{01342\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ a.size();}}
+\DoxyCodeLine{01343\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{01344\ \textcolor{comment}{}}
+\DoxyCodeLine{01345\ \textcolor{comment}{\ \ \ \ virtual\ I\_t\ do\_draw(const\ C\_t\&\ c)\ const}}
+\DoxyCodeLine{01346\ \textcolor{comment}{\ \ \ \ \{}}
+\DoxyCodeLine{01347\ \textcolor{comment}{\ \ \ \ \ \ \ \ I\_t\ r;}}
+\DoxyCodeLine{01348\ \textcolor{comment}{\ \ \ \ \ \ \ \ r.i\ =\ this-\/>d().draw(c);}}
+\DoxyCodeLine{01349\ \textcolor{comment}{\ \ \ \ \ \ \ \ r.j\ =\ this-\/>e().draw(r.i);}}
+\DoxyCodeLine{01350\ \textcolor{comment}{\ \ \ \ \ \ \ \ return\ r;}}
+\DoxyCodeLine{01351\ \textcolor{comment}{\ \ \ \ \}}}
+\DoxyCodeLine{01352\ \textcolor{comment}{\};}}
+\DoxyCodeLine{01353\ \textcolor{comment}{}}
+\DoxyCodeLine{01354\ \textcolor{comment}{*/}}
+\DoxyCodeLine{01355\ }
+\DoxyCodeLine{01357\ }
+\DoxyCodeLine{01359\ }
+\DoxyCodeLine{01360\ }
+\DoxyCodeLine{01363\ }
+\DoxyCodeLine{01364\ \textcolor{comment}{//template\ <bool\ autosort=false>}}
+\DoxyCodeLine{01365\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1empiricaldistribution}{empiricaldistribution}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1equipdistribution}{equipdistribution}}<double,\ true>}
+\DoxyCodeLine{01366\ \{}
+\DoxyCodeLine{01367\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01368\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_ab453a4c184b34b90a177443ea13d75b7}{empiricaldistribution}}()}
+\DoxyCodeLine{01369\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classorpp_1_1equipdistribution}{equipdistribution}}<double,\ true>\ (std::vector<double>(),true),\ fsorted(true)}
+\DoxyCodeLine{01370\ \ \ \ \ \{}
+\DoxyCodeLine{01371\ \ \ \ \ \}}
+\DoxyCodeLine{01372\ }
+\DoxyCodeLine{01373\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_aff420ae7492c34e21842b5aa1eb65407}{empiricaldistribution}}(\textcolor{keyword}{const}\ std::vector<double>\&\ values)}
+\DoxyCodeLine{01374\ \ \ \ \ \ \ \ \ :\ \mbox{\hyperlink{classorpp_1_1equipdistribution}{equipdistribution}}<double,\ true>\ (values,true),\ fsorted(false)}
+\DoxyCodeLine{01375\ \ \ \ \ \{}
+\DoxyCodeLine{01376\ \textcolor{comment}{//\ \ \ \ \ \ \ \ static\_assert(!autosort);}}
+\DoxyCodeLine{01377\ \ \ \ \ \}}
+\DoxyCodeLine{01378\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a6a85ec1888e182548a24709881f4d26c}{add}}(\textcolor{keywordtype}{double}\ v)}
+\DoxyCodeLine{01379\ \ \ \ \ \{}
+\DoxyCodeLine{01380\ \textcolor{comment}{//\ \ \ \ \ \ \ \ if\ constexpr(autosort)}}
+\DoxyCodeLine{01381\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \{}}
+\DoxyCodeLine{01382\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ auto\ insertionPos\ =\ std::lower\_bound(values().begin(),\ values().end(),\ v);}}
+\DoxyCodeLine{01383\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ values().insert(insertionPos,\ v);}}
+\DoxyCodeLine{01384\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \}}}
+\DoxyCodeLine{01385\ \textcolor{comment}{//\ \ \ \ \ \ \ \ else}}
+\DoxyCodeLine{01386\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01387\ \ \ \ \ \ \ \ \ \ \ \ \ values().push\_back(v);}
+\DoxyCodeLine{01388\ \ \ \ \ \ \ \ \ \ \ \ \ fsorted\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{01389\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01390\ \ \ \ \ \}}
+\DoxyCodeLine{01391\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a426d14f338e12d3508da631f69489f37}{sort}}()}
+\DoxyCodeLine{01392\ \ \ \ \ \{}
+\DoxyCodeLine{01393\ \ \ \ \ \ \ \ \ std::sort(values().begin(),values().end());}
+\DoxyCodeLine{01394\ \ \ \ \ \}}
+\DoxyCodeLine{01395\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a90912f53df7a55667adfe702df3492e4}{value}}(\textcolor{keywordtype}{unsigned}\ i)}
+\DoxyCodeLine{01396\ \ \ \ \ \{}
+\DoxyCodeLine{01397\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fsorted)}
+\DoxyCodeLine{01398\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01399\ \ \ \ \ \ \ \ \ \ \ \ \ sort();}
+\DoxyCodeLine{01400\ \ \ \ \ \ \ \ \ \ \ \ \ fsorted\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{01401\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})(i).x;}
+\DoxyCodeLine{01403\ \ \ \ \ \}}
+\DoxyCodeLine{01404\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a6e252888d747a604931f3fb53461a6d5}{value}}(\textcolor{keywordtype}{unsigned}\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01405\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01406\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fsorted)}
+\DoxyCodeLine{01407\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}Empirical\ distribution\ not\ sorted"{}});}
+\DoxyCodeLine{01408\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})(i).x;}
+\DoxyCodeLine{01409\ \ \ \ \ \}}
+\DoxyCodeLine{01410\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a26ea3c000c5a6fb921ac4e5627b38fc7}{p}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ 1.0\ /\ (*this).natoms();\ \}}
+\DoxyCodeLine{01411\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{01412\ \ \ \ \ \textcolor{keywordtype}{bool}\ fsorted;}
+\DoxyCodeLine{01413\ \};}
+\DoxyCodeLine{01414\ }
+\DoxyCodeLine{01415\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}}
+\DoxyCodeLine{01416\ \{}
+\DoxyCodeLine{01417\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1empiricaldistribution}{empiricaldistribution}}\ \mbox{\hyperlink{structorpp_1_1statcounter_a7d947b1a46924fb95ea835f6ebd33825}{dist}};}
+\DoxyCodeLine{01418\ \ \ \ \ \textcolor{keywordtype}{double}\ sum\ =\ 0.0;}
+\DoxyCodeLine{01419\ \ \ \ \ \textcolor{keywordtype}{double}\ sumsq\ =\ 0.0;}
+\DoxyCodeLine{01420\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ num\ =\ 0;}
+\DoxyCodeLine{01421\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structorpp_1_1statcounter_a07f1ce849ab4bececaccf1af17a01c14}{add}}(\textcolor{keywordtype}{double}\ x)\ \{\ sum\ +=\ x;\ sumsq\ +=\ x*x;\ num++;\ \mbox{\hyperlink{namespaceorpp_ae5de5ecb1c04030ca9de645d21ac3ce7}{dist}}.add(x);\ \}}
+\DoxyCodeLine{01422\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_a6c9fbce4b961c82ccba9e23135748ec9}{var}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ sumsq/num\ -\/\ average()*average();\ \}}
+\DoxyCodeLine{01423\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_ac9195dbaac6e04bb77d3a65582106aab}{varvar}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ var()*var()\ /\ num;\ \}}
+\DoxyCodeLine{01424\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_a45fac77d3b6022a6db41f285e216ceb2}{varstdev}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ sqrt(varvar());\ \}}
+\DoxyCodeLine{01425\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_a5ac394b74f6f62f4755402fa48c35c7b}{stdev}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ sqrt(var());\ \}}
+\DoxyCodeLine{01426\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_ace6938426ce9ab0f70b9638c5078d7b0}{averagevar}}()\textcolor{keyword}{\ const\ \ }\{\ \textcolor{keywordflow}{return}\ var()\ /\ num;\ \}}
+\DoxyCodeLine{01427\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_a1e3c7dad54cc801ede64223a704738dc}{averagestdev}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ sqrt(averagevar());\ \}}
+\DoxyCodeLine{01428\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1statcounter_aee7c9faf2776c7f9bcbd1b00f50472da}{average}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ sum\ /\ num;\ \}}
+\DoxyCodeLine{01429\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\ \mbox{\hyperlink{structorpp_1_1statcounter_a28a7e694d76d210222b055b4d5771327}{estaverage}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \{average(),averagestdev()\};\ \ \}}
+\DoxyCodeLine{01430\ \};}
+\DoxyCodeLine{01431\ }
+\DoxyCodeLine{01433\ }
+\DoxyCodeLine{01434\ }
+\DoxyCodeLine{01437\ }
+\DoxyCodeLine{01438\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Distribution>}
+\DoxyCodeLine{01439\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1riskmeasure}{riskmeasure}}\ :\ \textcolor{keyword}{public}\ object}
+\DoxyCodeLine{01440\ \{}
+\DoxyCodeLine{01441\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01442\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ operator\ ()\ (\textcolor{keyword}{const}\ Distribution\&,}
+\DoxyCodeLine{01443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ Distribution::C\_t\&}
+\DoxyCodeLine{01444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{01445\ \ \ \ \ \textcolor{keywordtype}{double}\ operator\ ()\ (\textcolor{keyword}{const}\ Distribution\&\ d)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01446\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ operator()(d,nothing());}
+\DoxyCodeLine{01448\ \ \ \ \ \}}
+\DoxyCodeLine{01449\ \};}
+\DoxyCodeLine{01450\ }
+\DoxyCodeLine{01451\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Distribution>}
+\DoxyCodeLine{01452\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1estimableriskmeasure}{estimableriskmeasure}}\ :\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1riskmeasure}{riskmeasure}}<Distribution>}
+\DoxyCodeLine{01453\ \{}
+\DoxyCodeLine{01454\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01455\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\ operator\ ()}
+\DoxyCodeLine{01456\ \ \ \ \ \ \ \ (\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution}{empiricaldistribution}}\&\ d)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{01457\ \};}
+\DoxyCodeLine{01458\ }
+\DoxyCodeLine{01459\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Distribution>}
+\DoxyCodeLine{01460\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1parametricriskmeasure}{parametricriskmeasure}}\ :\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1riskmeasure}{riskmeasure}}<Distribution>}
+\DoxyCodeLine{01461\ \{}
+\DoxyCodeLine{01462\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01463\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1parametricriskmeasure_a876b25cabe87ae30e3bbc87fa85984d8}{setparam}}(\textcolor{keywordtype}{double}\ param)\ =\ 0;}
+\DoxyCodeLine{01464\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1parametricriskmeasure_a167477f86b3faadb1eedb473130af8b0}{getparam}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{01465\ \};}
+\DoxyCodeLine{01466\ }
+\DoxyCodeLine{01467\ }
+\DoxyCodeLine{01468\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1estimableriskmeasure}{empriricalriskmeasure}}\ =\ \mbox{\hyperlink{classorpp_1_1estimableriskmeasure}{estimableriskmeasure<empiricaldistribution>}};}
+\DoxyCodeLine{01469\ }
+\DoxyCodeLine{01470\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Distribution,\ \textcolor{keywordtype}{bool}\ negative\ =\ false>}
+\DoxyCodeLine{01471\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1MeanCVaR}{MeanCVaR}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1estimableriskmeasure}{estimableriskmeasure}}<Distribution>,}
+\DoxyCodeLine{01472\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1parametricriskmeasure}{parametricriskmeasure}}<Distribution>}
+\DoxyCodeLine{01473\ \{}
+\DoxyCodeLine{01474\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01475\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1MeanCVaR_a36ba0659c68c176faa6299e7ef306ea8}{MeanCVaR}}(probability\ alpha,\ \textcolor{keywordtype}{double}\ lambda)\ :\ falpha(alpha),}
+\DoxyCodeLine{01476\ \ \ \ \ \ \ \ \ flambda(lambda)}
+\DoxyCodeLine{01477\ \ \ \ \ \{\ \ \ \ \ \ \ \ \ assert(falpha\ <\ 1);\ \ assert(flambda\ <=1\ \&\&\ flambda\ >=0);\ \}}
+\DoxyCodeLine{01478\ }
+\DoxyCodeLine{01480\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ operator\ ()\ (}
+\DoxyCodeLine{01481\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Distribution\&\ d,}
+\DoxyCodeLine{01482\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ Distribution::C\_t\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01483\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01484\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ tbd\ static\ assert\ here}}
+\DoxyCodeLine{01485\ \ \ \ \ \ \ \ \ std::vector<atom<typename\ Distribution::I\_t>>\ a;}
+\DoxyCodeLine{01486\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!d.sorted())}
+\DoxyCodeLine{01487\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}(\textcolor{stringliteral}{"{}The\ distribution\ has\ to\ be\ sorted."{}});}
+\DoxyCodeLine{01488\ \ \ \ \ \ \ \ \ d.atoms(a,c);}
+\DoxyCodeLine{01489\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ p\ =\ 1-\/falpha;}
+\DoxyCodeLine{01490\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s\ =\ 0;}
+\DoxyCodeLine{01491\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\ =\ 0;}
+\DoxyCodeLine{01492\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mean\ =\ 0;}
+\DoxyCodeLine{01493\ \ \ \ \ \ \ \ \ assert(a.size());}
+\DoxyCodeLine{01494\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i<a.size();\ i++)}
+\DoxyCodeLine{01495\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01496\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index;}
+\DoxyCodeLine{01497\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(negative)}
+\DoxyCodeLine{01498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\ =\ i;}
+\DoxyCodeLine{01499\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\ =\ a.size()-\/1-\/i;}
+\DoxyCodeLine{01501\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ delta\ =\ std::min(a[index].p,\ p-\/s);}
+\DoxyCodeLine{01502\ \ \ \ \ \ \ \ \ \ \ \ \ mean\ +=\ a[index].x\ *\ a[index].p;}
+\DoxyCodeLine{01503\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(delta\ >\ 0)}
+\DoxyCodeLine{01504\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01505\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m+=\ a[index].x\ *\ delta;}
+\DoxyCodeLine{01506\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s\ +=\ delta;}
+\DoxyCodeLine{01507\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01508\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01509\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cvar\ =\ m\ /\ p;}
+\DoxyCodeLine{01510\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (1-\/flambda)*mean\ +\ flambda*cvar;}
+\DoxyCodeLine{01511\ \ \ \ \ \}}
+\DoxyCodeLine{01512\ }
+\DoxyCodeLine{01513\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}}\ operator\ ()\ (\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1empiricaldistribution}{empiricaldistribution}}\&\ d)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01514\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01515\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ msc,\ csc;}
+\DoxyCodeLine{01516\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ n\ =\ d.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}();}
+\DoxyCodeLine{01517\ \ \ \ \ \ \ \ \ assert(n);}
+\DoxyCodeLine{01518\ }
+\DoxyCodeLine{01519\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ p\ =\ 1-\/falpha;}
+\DoxyCodeLine{01520\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ s\ =\ 0;}
+\DoxyCodeLine{01521\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mean\ =\ 0;}
+\DoxyCodeLine{01522\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ cvar\ =\ 0;}
+\DoxyCodeLine{01523\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\ =\ 0;\ i<\ n;i++)}
+\DoxyCodeLine{01524\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01525\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ index;}
+\DoxyCodeLine{01526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(negative)}
+\DoxyCodeLine{01527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\ =\ i;}
+\DoxyCodeLine{01528\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\ =\ d.\mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}}()-\/1-\/i;}
+\DoxyCodeLine{01530\ }
+\DoxyCodeLine{01531\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\ =\ d.\mbox{\hyperlink{classorpp_1_1empiricaldistribution_a90912f53df7a55667adfe702df3492e4}{value}}(index);}
+\DoxyCodeLine{01532\ \ \ \ \ \ \ \ \ \ \ \ \ msc.\mbox{\hyperlink{structorpp_1_1statcounter_a07f1ce849ab4bececaccf1af17a01c14}{add}}(x);}
+\DoxyCodeLine{01533\ \ \ \ \ \ \ \ \ \ \ \ \ mean\ +=\ x\ /\ n;}
+\DoxyCodeLine{01534\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ double\ inc\ =\ x\ *\ (1-\/flambda);}}
+\DoxyCodeLine{01535\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ delta\ =\ std::min(1.0\ /\ n,\ p-\/s);}
+\DoxyCodeLine{01536\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(delta\ >=\ 0)}
+\DoxyCodeLine{01537\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01538\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inc\ +=\ d.value(index)\ /\ p\ *\ delta\ *\ n\ *\ flambda;}}
+\DoxyCodeLine{01539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ cvar+=\ x\ *\ delta\ /\ p;}
+\DoxyCodeLine{01540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ csc.\mbox{\hyperlink{structorpp_1_1statcounter_a07f1ce849ab4bececaccf1af17a01c14}{add}}(x);}
+\DoxyCodeLine{01541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ s\ +=\ delta;}
+\DoxyCodeLine{01542\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01543\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ sc.add(inc);}}
+\DoxyCodeLine{01544\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01545\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ res\ =\ flambda\ *\ cvar\ +\ (1-\/flambda)\ *\ mean;}
+\DoxyCodeLine{01546\ \textcolor{comment}{//\ \ \ \ \ \ \ \ assert(fabs(res\ -\/\ sc.average())\ <\ 0.00000001);}}
+\DoxyCodeLine{01547\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sd\ =\ flambda\ *\ csc.\mbox{\hyperlink{structorpp_1_1statcounter_a1e3c7dad54cc801ede64223a704738dc}{averagestdev}}()\ +\ (1-\/flambda)\ *\ msc.\mbox{\hyperlink{structorpp_1_1statcounter_a1e3c7dad54cc801ede64223a704738dc}{averagestdev}}();}
+\DoxyCodeLine{01548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ res,\ sd\ \};}
+\DoxyCodeLine{01549\ \ \ \ \ \}}
+\DoxyCodeLine{01550\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1MeanCVaR_a18eacd4f383e71fa67c79b9507e9dc97}{setparam}}(\textcolor{keywordtype}{double}\ param)}
+\DoxyCodeLine{01551\ \ \ \ \ \{}
+\DoxyCodeLine{01552\ \ \ \ \ \ \ \ \ flambda\ =\ param;}
+\DoxyCodeLine{01553\ \ \ \ \ \}}
+\DoxyCodeLine{01554\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1MeanCVaR_a17b02dab54265df6e9ca752dcafcf939}{getparam}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01555\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ flambda;}
+\DoxyCodeLine{01557\ \ \ \ \ \}}
+\DoxyCodeLine{01558\ }
+\DoxyCodeLine{01559\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{01560\ \ \ \ \ probability\ \mbox{\hyperlink{classorpp_1_1MeanCVaR_ab6fdcd32346e223885e1339e2c059a6f}{falpha}};}
+\DoxyCodeLine{01561\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1MeanCVaR_ae0f02e6f300cdd18743fc41d2bc6d92c}{flambda}};}
+\DoxyCodeLine{01562\ \};}
+\DoxyCodeLine{01563\ }
+\DoxyCodeLine{01564\ }
+\DoxyCodeLine{01565\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Distribution,\ \textcolor{keywordtype}{bool}\ negative\ =\ false>}
+\DoxyCodeLine{01566\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1CVaR}{CVaR}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1MeanCVaR}{MeanCVaR}}<Distribution,\ negative>}
+\DoxyCodeLine{01567\ \{}
+\DoxyCodeLine{01568\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{01569\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1CVaR_ac98e1cf9b6a4f0d6580b778a1ad73c9d}{CVaR}}(probability\ alpha)\ :\ \mbox{\hyperlink{classorpp_1_1MeanCVaR}{MeanCVaR}}<Distribution,negative>(alpha,1)}
+\DoxyCodeLine{01570\ \ \ \ \ \ \{\}}
+\DoxyCodeLine{01571\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1CVaR_a1f4b3c66b600970355f0fb82bb83bfa7}{setparam}}(\textcolor{keywordtype}{double}\ param)}
+\DoxyCodeLine{01572\ \ \ \ \ \{}
+\DoxyCodeLine{01573\ \ \ \ \ \ \ \ \ this-\/>falpha\ =\ param;}
+\DoxyCodeLine{01574\ \ \ \ \ \}}
+\DoxyCodeLine{01575\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1CVaR_a7ccab6f551b8e4bd17f548fb8a09053f}{getparam}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01576\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01577\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>falpha;}
+\DoxyCodeLine{01578\ \ \ \ \ \}}
+\DoxyCodeLine{01579\ \};}
+\DoxyCodeLine{01580\ }
+\DoxyCodeLine{01581\ }
+\DoxyCodeLine{01583\ }
+\DoxyCodeLine{01584\ }
+\DoxyCodeLine{01585\ }
+\DoxyCodeLine{01586\ \}\ \textcolor{comment}{//\ namespace}}
+\DoxyCodeLine{01587\ }
+\DoxyCodeLine{01588\ }
+\DoxyCodeLine{01589\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ RANDOM\_H}}
+\DoxyCodeLine{01590\ }
+
+\end{DoxyCode}

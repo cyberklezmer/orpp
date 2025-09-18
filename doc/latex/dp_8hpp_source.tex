@@ -1,0 +1,1098 @@
+\doxysection{dp.\+hpp}
+\hypertarget{dp_8hpp_source}{}\label{dp_8hpp_source}\index{orpp/dp.hpp@{orpp/dp.hpp}}
+\mbox{\hyperlink{dp_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ DP\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ DP\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{comment}{//\#include\ "{}orpp/optimization.hpp"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{random_8hpp}{orpp/random.hpp}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <fstream>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceorpp}{orpp}}}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Element>}
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1space}{space}}\ :\ \textcolor{keyword}{public}\ object}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1space_a3ae8a46b1f6f8270f88328811255aac1}{Element\_t}}\ =\ Element;}
+\DoxyCodeLine{00019\ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Criterion,}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace,}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Transition,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Reward}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ >}
+\DoxyCodeLine{00034\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1dpproblem}{dpproblem}}\ :\ \textcolor{keyword}{public}\ object}
+\DoxyCodeLine{00035\ \{}
+\DoxyCodeLine{00036\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1dpproblem_a08196563f450a4c568e2d5fd3386e71a}{StateSpace\_t}}\ =\ StateSpace;}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1dpproblem_ac4f91922410e1096f9f8aab91adc65a6}{ConstrainedActionSpace\_t}}\ =\ ConstrainedActionSpace;}
+\DoxyCodeLine{00039\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1dpproblem_a7d0ffb6bef2a835cd5831fe868175518}{dpproblem}}(\textcolor{keyword}{const}\ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ StateSpace\&\ state,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Transition\&\ transition,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Reward\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}\ )\ :}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}(\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}),\ \mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}(state),}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}(\mbox{\hyperlink{classorpp_1_1constraint}{constraint}}),}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}(transition),\ \mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}}(\mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}),\ \mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}}(\mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}})}
+\DoxyCodeLine{00049\ \ \ \ \ \{\}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}};\ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}};\ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{const}\ StateSpace\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}};\ \}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{const}\ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}};\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a69d400286a6ef86f75d763904d5736a1}{crit}}()\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}};\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{const}\ Reward\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}};\ \}}
+\DoxyCodeLine{00056\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00057\ \ \ \ \ Criterion\ \mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}};}
+\DoxyCodeLine{00058\ \ \ \ \ StateSpace\ \mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}};}
+\DoxyCodeLine{00059\ \ \ \ \ ConstrainedActionSpace\ \mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}};}
+\DoxyCodeLine{00060\ \ \ \ \ Transition\ \mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}};}
+\DoxyCodeLine{00061\ \ \ \ \ Reward\ \mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}};}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}};}
+\DoxyCodeLine{00063\ \};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Element>}
+\DoxyCodeLine{00066\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1iteratedspace}{iteratedspace}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1space}{space}}<Element>}
+\DoxyCodeLine{00067\ \{}
+\DoxyCodeLine{00068\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1iteratedspace_ac11d6a8fd3c972ca863ea89d4b9757b1}{first}}(Element\&\ e)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getfirst(e);}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1iteratedspace_ad036e8a0554bcf297bdf880c7d37dc59}{next}}(Element\&\ e)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00074\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ getnext(e);}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1iteratedspace_af576aba30c2496532771aa0bf8e9118d}{ith}}(Element\&\ e,\ index\ i)\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ getith(e,i);\}}
+\DoxyCodeLine{00078\ \ \ \ \ Element\ \mbox{\hyperlink{classorpp_1_1iteratedspace_a2d3fc9f68b7fd2048a4147e82b39211a}{operator[]\ }}(index\&\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00079\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ Element\ res;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!getith(res,i))}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}Index\ out\ of\ bounds"{}});}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00084\ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ index\ \mbox{\hyperlink{classorpp_1_1iteratedspace_a61e8a4f74cb954cb412686b078956708}{num}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ getnum();\ \}}
+\DoxyCodeLine{00086\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ getfirst(Element\&)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ getnext(Element\&\ e)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ getith(Element\&\ e,\ index\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00090\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1iteratedspace_ac11d6a8fd3c972ca863ea89d4b9757b1}{first}}(e))}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ index\ j=0;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;j<i;j++)}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1iteratedspace_ad036e8a0554bcf297bdf880c7d37dc59}{next}}(e))}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00100\ \ \ \ \ \}}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{virtual}\ index\ getnum()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00102\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ Element\ e;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1iteratedspace_ac11d6a8fd3c972ca863ea89d4b9757b1}{first}}(e))}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(index\ i=1;;i++)}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1iteratedspace_ad036e8a0554bcf297bdf880c7d37dc59}{next}}(e))}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{stringliteral}{"{}souhld\ not\ get\ here"{}};}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ \};}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ SElement,\ \textcolor{keyword}{typename}\ AElement>}
+\DoxyCodeLine{00118\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1constrainedspace}{constrainedspace}}\ :\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1iteratedspace}{iteratedspace}}<AElement>}
+\DoxyCodeLine{00119\ \{}
+\DoxyCodeLine{00120\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1constrainedspace_adb0adf8a546190ab883ae39f4299eda0}{firstfeasible}}(AElement\&\ a,\ \textcolor{keyword}{const}\ SElement\&\ s)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00122\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(this-\/>\mbox{\hyperlink{classorpp_1_1iteratedspace_ac11d6a8fd3c972ca863ea89d4b9757b1}{first}}(a))}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(isfeasible(a,s))}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1constrainedspace_aff33a475a97551172bf85b58cbc48439}{nextfeasible}}(a,s);}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00132\ \ \ \ \ \}}
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1constrainedspace_aff33a475a97551172bf85b58cbc48439}{nextfeasible}}(AElement\&\ e,\ \textcolor{keyword}{const}\ SElement\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00134\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1iteratedspace_ad036e8a0554bcf297bdf880c7d37dc59}{next}}(e))}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(isfeasible(e,c))}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00143\ \ \ \ \ \}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1constrainedspace_a694d3038524e496acd0d2684bbdc3109}{previousfeasible}}(AElement\&\ e,\ \textcolor{keyword}{const}\ SElement\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00145\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ AElement\ x;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1constrainedspace_adb0adf8a546190ab883ae39f4299eda0}{firstfeasible}}(x,\ c))}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ AElement\ prev\ =\ x;}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1constrainedspace_aff33a475a97551172bf85b58cbc48439}{nextfeasible}}(x,c))}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x\ ==\ e)}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e\ =\ prev;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00163\ \ \ \ \ \}}
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1constrainedspace_a6e46715500343fcb164fcadabc9fbaa2}{lastfeasible}}(AElement\&\ e,\ \textcolor{keyword}{const}\ SElement\&\ c)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00165\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1constrainedspace_adb0adf8a546190ab883ae39f4299eda0}{firstfeasible}}(e,\ c))}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!\mbox{\hyperlink{classorpp_1_1constrainedspace_aff33a475a97551172bf85b58cbc48439}{nextfeasible}}(e,c))}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \textcolor{comment}{//shouldnot\ get\ here}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00177\ \ \ \ \ \}}
+\DoxyCodeLine{00178\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1constrainedspace_addd225eda982fb0af8fcb3caa85f5352}{feasible}}(\textcolor{keyword}{const}\ AElement\&\ a,\ \textcolor{keyword}{const}\ SElement\&\ s)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00179\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ isfeasible(a,s);}
+\DoxyCodeLine{00181\ \ \ \ \ \}}
+\DoxyCodeLine{00182\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00183\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ isfeasible(\textcolor{keyword}{const}\ AElement\&,\ \textcolor{keyword}{const}\ SElement\&\ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00184\ \textcolor{keyword}{\ \ \ \ \ \ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00185\ \};}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ SElement,\ \textcolor{keyword}{typename}\ AElement>}
+\DoxyCodeLine{00189\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition}}}
+\DoxyCodeLine{00190\ \{}
+\DoxyCodeLine{00191\ \ \ \ \ AElement\ \mbox{\hyperlink{structorpp_1_1dpcondition_ab5ecfefd30664df57e5c46766ad2e984}{a}};}
+\DoxyCodeLine{00192\ \ \ \ \ SElement\ \mbox{\hyperlink{structorpp_1_1dpcondition_a3b18e8e675ec4d4c5487fae6edc116a9}{s}};}
+\DoxyCodeLine{00193\ \};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ }
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ StateSpace,\ \textcolor{keyword}{typename}\ ActionSpace>}
+\DoxyCodeLine{00198\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespaceorpp_adf6204db093fa2d124c82597f72ee951}{dpreward}}=function<\mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition}}<\textcolor{keyword}{typename}\ StateSpace::Element\_t,}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ActionSpace::Element\_t>>;}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00202\ \textcolor{comment}{//template\ <typename\ StateSpace,\ typename\ ActionSpace>}}
+\DoxyCodeLine{00203\ \textcolor{comment}{//using\ =mapping<typename\ StateSpace::Element\_t,}}
+\DoxyCodeLine{00204\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ typename\ ActionSpace::Element\_t>;}}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ }
+\DoxyCodeLine{00208\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1integerspace}{integerspace}}\ :\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1iteratedspace}{iteratedspace}}<unsigned\ int>}
+\DoxyCodeLine{00209\ \{}
+\DoxyCodeLine{00210\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00211\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1integerspace_a5d26fa608ae70b73f745cc5f0aefd9c9}{integerspace}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ amin,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ amax)\ :\ fmin(amin),\ fmax(amax)}
+\DoxyCodeLine{00212\ \ \ \ \ \{\}}
+\DoxyCodeLine{00213\ }
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1integerspace_a8866cea5cb309db2bf33bbc65efb230a}{max}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fmax;\ \}}
+\DoxyCodeLine{00215\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00216\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ getfirst(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ e)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00217\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ e=fmin;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fmin\ <=\ fmax;}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ getnext(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ e)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00222\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(e\ >=\ fmax)}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ e++;}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00227\ \ \ \ \ \}}
+\DoxyCodeLine{00228\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ getith(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\&\ e,\ index\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00229\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ e\ =\ i+fmin;}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ e<=fmax;}
+\DoxyCodeLine{00232\ \ \ \ \ \}}
+\DoxyCodeLine{00233\ \ \ \ \ \textcolor{keyword}{virtual}\ index\ getnum()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00234\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fmax\ -\/\ fmin\ +\ 1;}
+\DoxyCodeLine{00236\ \ \ \ \ \}}
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fmin;}
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fmax;}
+\DoxyCodeLine{00239\ \};}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ StateSpace,\ \textcolor{keyword}{typename}\ Actionspace>}
+\DoxyCodeLine{00243\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1fdistribution}{finitetransition}}}
+\DoxyCodeLine{00244\ \ =\ \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}<\textcolor{keyword}{typename}\ StateSpace::Element\_t,}
+\DoxyCodeLine{00245\ \ \ \ \mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition<typename\ StateSpace::Element\_t,typename\ Actionspace::Element\_t>}}>;}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ \textcolor{comment}{/*using\ finitedpStateSpace\ =\ integerspace;}}
+\DoxyCodeLine{00248\ \textcolor{comment}{using\ finitedpactionspace\ =\ \ constrainedspace<unsigned\ int,unsigned\ int>;}}
+\DoxyCodeLine{00249\ \textcolor{comment}{using\ finitedptransition\ =\ finitetransition<finitedpactionspace,\ finitedpactionspace>;}}
+\DoxyCodeLine{00250\ \textcolor{comment}{using\ finitedpreward\ =\ dpreward<finitedpactionspace,\ finitedpactionspace>;}}
+\DoxyCodeLine{00251\ \textcolor{comment}{*/}}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ :\ \textcolor{keyword}{public}\ std::vector<index>,\ \textcolor{keyword}{public}\ mapping<index,index>}
+\DoxyCodeLine{00255\ \{}
+\DoxyCodeLine{00256\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00257\ \ \ \ \ index\ \mbox{\hyperlink{classorpp_1_1finitepolicy_accd7fd3ed456f45706f105119a0cebae}{operator\ ()\ }}(\textcolor{keyword}{const}\ index\&\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00258\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ assert(i\ <\ this-\/>size());}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})[i];}
+\DoxyCodeLine{00261\ \ \ \ \ \}}
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1finitepolicy_a5412cde997d2f4e6f55fe7f2be056267}{operator==}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ b)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00263\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ assert(b.size()\ ==\ this-\/>size());}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<b.size();\ i++)}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((*\textcolor{keyword}{this})[i]\ !=\ b[i])}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00271\ \ \ \ \ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy_ac3149513b601629d90ffe29a06c66e5d}{finitepolicy}}(\textcolor{keyword}{const}\ std::vector<index>\ v)\ :\ std::vector<index>(v)\ \{\}}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy_ad1359fbd79e499392ee924a099e145f4}{finitepolicy}}(\textcolor{keywordtype}{unsigned}\ size)\ :\ std::vector<index>(size)\ \{\}}
+\DoxyCodeLine{00275\ \textcolor{comment}{//\ \ \ \ template\ <typename\ StateSpace>}}
+\DoxyCodeLine{00276\ \textcolor{comment}{//\ \ \ \ finitepolicy(const\ StateSpace\&\ s,\ index\ initial\ =\ 0)\ :\ std::vector<index>(s.num(),initial)\ \{\}}}
+\DoxyCodeLine{00277\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Problem>}
+\DoxyCodeLine{00278\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy_a282d388c184e19344d77f7c3153cfd95}{finitepolicy}}(\textcolor{keyword}{const}\ Problem\&\ p,\ index\ initial\ =\ 0)\ :\ std::vector<index>(p.statespace().num(),initial)\ \{\}}
+\DoxyCodeLine{00279\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy_a49eff016f170c9b88b29b20be0293f41}{finitepolicy}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ p):\ std::vector<index>(p)\ \{\}}
+\DoxyCodeLine{00280\ \};}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \textcolor{keyword}{inline}\ std::ostream\&\ \mbox{\hyperlink{namespaceorpp_ac231de3721e7704f5c02a9f352df8b7b}{operator<<}}(std::ostream\&\ os,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ p)}
+\DoxyCodeLine{00283\ \{}
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ ;\ i++)}
+\DoxyCodeLine{00285\ \ \ \ \ \{}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ os\ <<\ p[i];}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i==p.size()-\/1)}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{charliteral}{'\ '};}
+\DoxyCodeLine{00290\ \ \ \ \ \}}
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keywordflow}{return}\ os;}
+\DoxyCodeLine{00292\ \}}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ :\ \textcolor{keyword}{public}\ std::vector<double>,\ \textcolor{keyword}{public}\ mapping<index,double>}
+\DoxyCodeLine{00295\ \{}
+\DoxyCodeLine{00296\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00297\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction_a0a0cb4c9ecb507a37feeb66ad0f7a9bf}{operator\ ()\ }}(\textcolor{keyword}{const}\ index\&\ i)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00298\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ assert(i\ <\ this-\/>size());}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})[i];}
+\DoxyCodeLine{00301\ \ \ \ \ \}}
+\DoxyCodeLine{00302\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Problem>}
+\DoxyCodeLine{00303\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction_a8706f648a28e9c1e60506a938f6bbba4}{finitevaluefunction}}(\textcolor{keyword}{const}\ Problem\&\ p,\ \textcolor{keywordtype}{double}\ initial\ =\ 0)}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ :\ std::vector<double>(p.statespace().num(),initial)\ \{\}}
+\DoxyCodeLine{00305\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction_ac98ddbb4bf75311c24b332cf9dca5b1a}{finitevaluefunction}}(\textcolor{keywordtype}{unsigned}\ num,\ index\ initial\ =\ 0\ )}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ :\ std::vector<double>(num,initial)\ \{\}}
+\DoxyCodeLine{00307\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction_a24a7c139c7cac5308e6746cb87333d1d}{finitevaluefunction}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\&\ v)}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ :\ std::vector<double>(v)\ \{\}}
+\DoxyCodeLine{00309\ \};}
+\DoxyCodeLine{00310\ }
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{namespaceorpp_ae5de5ecb1c04030ca9de645d21ac3ce7}{dist}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\&\ a,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\&\ b)}
+\DoxyCodeLine{00313\ \{}
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keywordtype}{double}\ d=0;}
+\DoxyCodeLine{00315\ \ \ \ \ assert(a.size()\ ==\ b.size());}
+\DoxyCodeLine{00316\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<a.size();\ i++)}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ d\ =\ std::max(d,\ fabs(a[i]-\/b[i])\ );}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keywordflow}{return}\ d;}
+\DoxyCodeLine{00319\ \}}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ }
+\DoxyCodeLine{00323\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Criterion,}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace,}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace,}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Transition,}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Reward>}
+\DoxyCodeLine{00328\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1dpproblem}{dpproblem}}<Criterion,StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>}
+\DoxyCodeLine{00330\ \{}
+\DoxyCodeLine{00331\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00332\ \textcolor{comment}{//\ \ \ \ using\ CritDistribution\ =\ fdistribution<double,nothing>;}}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}}
+\DoxyCodeLine{00335\ \ \ \ \ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a28fc2946e68154268400fe87e7564a6b}{computationparams}}()\ :\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a8941c05f973a8f0f65c1d2c8d9f2cfa5}{fmaxevaliterations}}(std::numeric\_limits<unsigned>::max()),}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}}(0),\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ab65a329bd37a681c684edd5e5e0034b8}{fthreadbatch}}(1000),}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ac59e094621648783005e812f6d5c4dc9}{fevaltimelimit}}(std::numeric\_limits<timems>::max()),}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_adebf0e4e55bd86411f1baa10f4001963}{fpseudogradientmaxiters}}(std::numeric\_limits<unsigned>::max()),}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a43a6f4b26ad88f0f3f93db5855df0b2f}{fpseudogradienttimelimit}}(std::numeric\_limits<timems>::max()),}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a1dbab9f5353e49332f4aaab8547c3522}{fenumtimelimit}}(std::numeric\_limits<timems>::max())}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \{\}}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a8941c05f973a8f0f65c1d2c8d9f2cfa5}{fmaxevaliterations}};}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}};}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ab65a329bd37a681c684edd5e5e0034b8}{fthreadbatch}};}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ timems\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ac59e094621648783005e812f6d5c4dc9}{fevaltimelimit}};}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_adebf0e4e55bd86411f1baa10f4001963}{fpseudogradientmaxiters}};}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ timems\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a43a6f4b26ad88f0f3f93db5855df0b2f}{fpseudogradienttimelimit}};}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ timems\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a1dbab9f5353e49332f4aaab8547c3522}{fenumtimelimit}};}
+\DoxyCodeLine{00350\ \ \ \ \ \};}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ad48f58839e698ffd84ae8eb0446c4d96}{finitedpproblem}}(\textcolor{keyword}{const}\ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},}
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ StateSpace\&\ state,}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Transition\&\ transition,}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Reward\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})\ :}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1dpproblem}{dpproblem}}<Criterion,\ StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},\ state,\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},\ transition,\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}),}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}}(\mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})}
+\DoxyCodeLine{00363\ \ \ \ \ \{}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<iteratedspace<typename\ StateSpace::Element\_t>,StateSpace>::value);}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<\mbox{\hyperlink{classorpp_1_1constrainedspace}{constrainedspace}}<}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace::Element\_t,}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t>,ConstrainedActionSpace>::value);}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<finitetransition<StateSpace,ConstrainedActionSpace>,Transition>::value);}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<dpreward<StateSpace,ConstrainedActionSpace>,Reward>::value);}
+\DoxyCodeLine{00370\ \ \ \ \ \}}
+\DoxyCodeLine{00371\ }
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5}{requiredhorizon}}(\textcolor{keywordtype}{double}\ accuracy)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00374\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (log(accuracy\ *\ (1-\/this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}()))\ -\/\ log(\mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}}()))\ /\ log(\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}());}
+\DoxyCodeLine{00376\ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}}
+\DoxyCodeLine{00379\ \ \ \ \ \{}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ orpp::index\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}};}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ std::vector<finitepolicy>\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}};}
+\DoxyCodeLine{00382\ \ \ \ \ \};}
+\DoxyCodeLine{00383\ }
+\DoxyCodeLine{00384\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror<double>}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}}(index\ s0ind,}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\&\ p,}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00388\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ sc\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}}(s0ind,p\ ,\ accuracy,\ params);}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}(sc.\mbox{\hyperlink{structorpp_1_1statcounter_a7d947b1a46924fb95ea835f6ebd33825}{dist}});}
+\DoxyCodeLine{00391\ \ \ \ \ \}}
+\DoxyCodeLine{00392\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror<double>}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a642f5c6906f6d3c1b00322014acd3587}{evaluatecrit}}(index\ s0ind,}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ p,}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00396\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ sc\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}}(s0ind,\ \{\ p[s0ind],\ \{p\}\},\ accuracy,\ params);}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}(sc.\mbox{\hyperlink{structorpp_1_1statcounter_a7d947b1a46924fb95ea835f6ebd33825}{dist}});}
+\DoxyCodeLine{00399\ \ \ \ \ \}}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ae8327413954244c3437232439196f4ff}{numpolicyvalues}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00404\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ nstates\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}}().num();}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ res\ =\ 1;}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(orpp::index\ i=0;\ i<nstates;\ i++)}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace::Element\_t\ s\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}}()[i];}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a;}
+\DoxyCodeLine{00411\ }
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ n\ =\ 0;}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().firstfeasible(a,s))}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ n++;}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().nextfeasible(a,s))}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ res\ *=\ n;}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00425\ \ \ \ \ \}}
+\DoxyCodeLine{00426\ }
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}}}
+\DoxyCodeLine{00429\ \ \ \ \ \{}
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult_a09077d1147d18d7d45a06025c2bcb6cf}{p}};}
+\DoxyCodeLine{00431\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror<double>}}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult_aabafc090fe79ccd777c8ad9e4907f22b}{v}};}
+\DoxyCodeLine{00432\ \ \ \ \ \};}
+\DoxyCodeLine{00433\ }
+\DoxyCodeLine{00434\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00435\ \ \ \ \ \textcolor{keywordtype}{void}\ doenumerate(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ ap,}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ index\ s0ind,}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}}\&\ thebest,}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params,}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timems\ st)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00441\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ orpp::index\ si\ =\ ap.size();}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(si\ <\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}}().num())}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace::Element\_t\ s\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}}()[si];}
+\DoxyCodeLine{00446\ }
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ p\ =\ ap;}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ p.push\_back(0);\ \textcolor{comment}{//\ all\ the\ same\ what\ we\ push}}
+\DoxyCodeLine{00449\ }
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a;}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().first(a))}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}At\ least\ one\ action\ has\ to\ exist"{}});}
+\DoxyCodeLine{00453\ }
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ atleastonefeasible\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\ ai\ =\ 0;}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;\ ;\ ai++)}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().feasible(a,s))}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ atleastonefeasible\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p[si]\ =\ ai;}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ doenumerate(p,s0ind,accuracy,\ thebest,params,st);}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().next(a))}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!atleastonefeasible)}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}At\ least\ one\ action\ has\ to\ be\ feasible"{}});}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ assert(ai\ ==\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().num()-\/1);}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ sys::gettimems();}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t\ -\/\ st\ >\ params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a1dbab9f5353e49332f4aaab8547c3522}{fenumtimelimit}})}
+\DoxyCodeLine{00475\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}Exiting\ for\ time\ reasons"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ timelimitexception(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a1dbab9f5353e49332f4aaab8547c3522}{fenumtimelimit}});}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ res\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}}(s0ind,ap,\ accuracy\ /\ 2,\ params);}
+\DoxyCodeLine{00480\ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ ap\ <<\ \textcolor{stringliteral}{"{}:\ "{}}\ <<res.x\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ res.sd\ <<\ \textcolor{stringliteral}{"{})"{}};}
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(res.x\ >\ thebest.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult_aabafc090fe79ccd777c8ad9e4907f22b}{v}}.\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}})}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ thebest.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult_aabafc090fe79ccd777c8ad9e4907f22b}{v}}\ =\ \{res.\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}},\ accuracy\ /\ 2\};}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ thebest.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult_a09077d1147d18d7d45a06025c2bcb6cf}{p}}\ =\ ap;}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}*"{}};}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ std::endl;}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00489\ }
+\DoxyCodeLine{00490\ \ \ \ \ \}}
+\DoxyCodeLine{00491\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac7fe60296183864f965fcbf4834ddc96}{enumeratehomo}}(index\ s0ind,}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params)}
+\DoxyCodeLine{00496\ \ \ \ \ \{}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}finitedpproblem::enumerate"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ st\ =\ sys::gettimems();}
+\DoxyCodeLine{00499\ }
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}}\ thebest\ =\ \ \{\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}(*\textcolor{keyword}{this}),\ \{0,\ 0\}\ \};}
+\DoxyCodeLine{00501\ }
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ p(0U);}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ doenumerate(p,s0ind,accuracy,thebest,params,\ st);}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ }
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}finitedpproblem::enumerate\ ended"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ thebest;}
+\DoxyCodeLine{00509\ \ \ \ \ \}}
+\DoxyCodeLine{00510\ }
+\DoxyCodeLine{00511\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00512\ \ \ \ \ \ \textcolor{keywordtype}{void}\ computepath(orpp::index\ s0index,}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ p0,}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<finitepolicy>\&\ p,}
+\DoxyCodeLine{00515\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ timehorizon,}
+\DoxyCodeLine{00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>*\ results,}
+\DoxyCodeLine{00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}*\ cnt)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00518\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ *cnt\ =\ 0;}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ std::vector<double>\&\ rs\ =\ *results;}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ n=0;\ n<rs.size();\ n++)}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ discount\ =\ 1;}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ sum\ =\ 0;}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ index\ sindex\ =\ s0index;}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<=timehorizon;\ i++)}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition<unsigned\ int,unsigned\ int>}}\ c;}
+\DoxyCodeLine{00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.\mbox{\hyperlink{structorpp_1_1dpcondition_a3b18e8e675ec4d4c5487fae6edc116a9}{s}}\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}[sindex];}
+\DoxyCodeLine{00530\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i==0)}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.\mbox{\hyperlink{structorpp_1_1dpcondition_ab5ecfefd30664df57e5c46766ad2e984}{a}}\ =\ p0;}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(i<p.size())}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.\mbox{\hyperlink{structorpp_1_1dpcondition_ab5ecfefd30664df57e5c46766ad2e984}{a}}\ =\ p[i][sindex];}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.\mbox{\hyperlink{structorpp_1_1dpcondition_ab5ecfefd30664df57e5c46766ad2e984}{a}}\ =\ p[p.size()-\/1][sindex];}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sum\ +=\ discount\ *\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}}(c);}
+\DoxyCodeLine{00537\ \textcolor{comment}{//sindex\ =\ n\ \%\ 5;//}}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sindex\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}.draw(c);}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sindex\ >=\ p[0].size())}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::cerr\ <<\ \textcolor{stringliteral}{"{}natoms:\ "{}}\ <<\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}.natoms(c)\ <<\ std::endl;}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw};}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ discount\ *=\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}};}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ rs[n]\ =\ sum;}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \ \ \ (*cnt)++;}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00549\ \ \ \ \ \}}
+\DoxyCodeLine{00550\ }
+\DoxyCodeLine{00551\ \ \ \ \ \textcolor{keyword}{struct\ }observerrecord\ \{\ std::time\_t\ t;\ std::vector<unsigned>\ ns;\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{final};\ \};}
+\DoxyCodeLine{00552\ \ \ \ \ \textcolor{keywordtype}{void}\ observer(std::vector<unsigned>*\ ns\ ,\ std::vector<observerrecord>*\ obs,\ \textcolor{keywordtype}{bool}*\ semaphor,\ \textcolor{keywordtype}{int}\ \textcolor{keyword}{final})\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00553\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \ \ \ \ observerrecord\ r;}
+\DoxyCodeLine{00557\ }
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ r.t\ =\ sys().gettimems();}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ r.ns\ =\ *ns;}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ r.final\ =\ \textcolor{keyword}{final};}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \ \ \ \ obs-\/>push\_back(r);}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(*semaphor)}
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ \ \ \ \ std::this\_thread::sleep\_for\ (std::chrono::milliseconds(10));}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00566\ \ \ \ \ \}}
+\DoxyCodeLine{00567\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ }
+\DoxyCodeLine{00570\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}}(index\ s0index,}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ p,}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00574\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}}(s0index,\{\ p[s0index],\{p\}\},\ accuracy,\ params);}
+\DoxyCodeLine{00576\ \ \ \ \ \}}
+\DoxyCodeLine{00577\ }
+\DoxyCodeLine{00578\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a8c2608601c448b7a6390669e7ba88c83}{evaluateraw}}(index\ s0index,}
+\DoxyCodeLine{00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\&\ p,}
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00582\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ assert(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().isfeasible(p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}},s0index));}
+\DoxyCodeLine{00584\ \textcolor{preprocessor}{\#ifndef\ NDEBUG}}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ i++)}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ assert(p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[i].size()==this-\/>statespace().num());}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ j=0;\ j<p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[i].size();\ j++)}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}}().isfeasible(p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[i][j],j));}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00591\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00592\ }
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 2)}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ sys::logline(2)\ <<\ \textcolor{stringliteral}{"{}dpproblem::evaluateraw("{}}\ <<\ s0index}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ \{"{}};}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ i++)}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[i]\ <<\ \textcolor{stringliteral}{"{},"{}};}
+\DoxyCodeLine{00599\ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}\},\ "{}}<<\ accuracy<<\ \textcolor{stringliteral}{"{},\ ...)"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ st\ =\ sys::gettimems();}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ timehorizon\ =\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5}{requiredhorizon}}(accuracy\ /\ 2);}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ sc;}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ std::vector<observerrecord>\ obss;}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ j=0;j<params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a8941c05f973a8f0f65c1d2c8d9f2cfa5}{fmaxevaliterations}};)}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}}\ <=\ 1)}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>\ sum(1);}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ foocnt;}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ computepath(s0index,p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}},\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}},\ timehorizon,\ \&sum,\&foocnt);}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sc.\mbox{\hyperlink{structorpp_1_1statcounter_a07f1ce849ab4bececaccf1af17a01c14}{add}}(sum[0]);}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ j++;}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::thread>\ ts;}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::vector<double>>\ rs(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}},std::vector<double>(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ab65a329bd37a681c684edd5e5e0034b8}{fthreadbatch}}));}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<unsigned>\ ns(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}},0);}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Starting\ creating\ threads"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}};\ k++)}
+\DoxyCodeLine{00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts.push\_back(std::thread(\&\mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,\ StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>::computepath,}
+\DoxyCodeLine{00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{this},\ s0index,p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}},\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}},\ timehorizon,\ \&rs[k],\ \&ns[k]));}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ semaphor\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Starting\ the\ observing\ thread"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::thread\ obst(\&\mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,\ StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>::observer,\textcolor{keyword}{this},}
+\DoxyCodeLine{00632\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&ns,\&obss,\ \&semaphor,\ 0}
+\DoxyCodeLine{00633\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00634\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00635\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Join\ threads"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}};\ k++)}
+\DoxyCodeLine{00638\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts[k].join();}
+\DoxyCodeLine{00639\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00640\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Join\ observer"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00641\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ semaphor\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00642\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obst.join();}
+\DoxyCodeLine{00643\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ observer(\&ns,\&obss,\ \&semaphor,\ 1);}
+\DoxyCodeLine{00644\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00645\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Adding\ results"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00646\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}};\ k++)}
+\DoxyCodeLine{00647\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ n=0;\ n<params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ab65a329bd37a681c684edd5e5e0034b8}{fthreadbatch}};\ n++)}
+\DoxyCodeLine{00648\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sc.\mbox{\hyperlink{structorpp_1_1statcounter_a07f1ce849ab4bececaccf1af17a01c14}{add}}(rs[k][n]);}
+\DoxyCodeLine{00649\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ j+=params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}}\ *\ params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ab65a329bd37a681c684edd5e5e0034b8}{fthreadbatch}};}
+\DoxyCodeLine{00650\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00651\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}End\ fo\ loop"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00652\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00653\ }
+\DoxyCodeLine{00654\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j>10\ \&\&\ sc.\mbox{\hyperlink{structorpp_1_1statcounter_a1e3c7dad54cc801ede64223a704738dc}{averagestdev}}()\ <\ accuracy\ /\ 4)}
+\DoxyCodeLine{00655\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00656\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00657\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00658\ }
+\DoxyCodeLine{00659\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ sys::gettimems();}
+\DoxyCodeLine{00660\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t\ -\/\ st\ >\ params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ac59e094621648783005e812f6d5c4dc9}{fevaltimelimit}})}
+\DoxyCodeLine{00661\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00662\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}Exiting\ for\ time\ reasons"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00663\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ timelimitexception(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_ac59e094621648783005e812f6d5c4dc9}{fevaltimelimit}});}
+\DoxyCodeLine{00664\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00665\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00666\ }
+\DoxyCodeLine{00667\ }
+\DoxyCodeLine{00668\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{00669\ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Starting\ sort\ the\ distribution"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00670\ \ \ \ \ \ \ \ \ sc.\mbox{\hyperlink{structorpp_1_1statcounter_a7d947b1a46924fb95ea835f6ebd33825}{dist}}.\mbox{\hyperlink{classorpp_1_1empiricaldistribution_a426d14f338e12d3508da631f69489f37}{sort}}();}
+\DoxyCodeLine{00671\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 2)}
+\DoxyCodeLine{00672\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00673\ \ \ \ \ \ \ \ \ \ \ \ sys::logline(2)\ <<\ \textcolor{stringliteral}{"{}dpproblem::evaluateraw\ ended:\ n="{}}}
+\DoxyCodeLine{00674\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ sc.\mbox{\hyperlink{structorpp_1_1statcounter_a06b96b45166d25805e8debf0c43ff5c7}{num}}\ <<\ \textcolor{stringliteral}{"{},\ stdev="{}}\ <<\ sc.\mbox{\hyperlink{structorpp_1_1statcounter_a1e3c7dad54cc801ede64223a704738dc}{averagestdev}}()\ <<\ std::endl;}
+\DoxyCodeLine{00675\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00676\ \textcolor{comment}{//std::cout\ <<\ "{}Evaluateraw:\ s="{}}}
+\DoxyCodeLine{00677\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ <<\ p.size()\ <<\ "{}\ p="{}\ <<\ p[0]\ <<\ "{}\ ave="{}\ <<\ sc.average()\ <<\ std::endl;}}
+\DoxyCodeLine{00678\ }
+\DoxyCodeLine{00679\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sc;}
+\DoxyCodeLine{00680\ \ \ \ \ \}}
+\DoxyCodeLine{00681\ }
+\DoxyCodeLine{00682\ }
+\DoxyCodeLine{00683\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}};\ \}}
+\DoxyCodeLine{00684\ }
+\DoxyCodeLine{00685\ }
+\DoxyCodeLine{00686\ }
+\DoxyCodeLine{00687\ }
+\DoxyCodeLine{00688\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{pgdheteroresult}}}
+\DoxyCodeLine{00689\ \ \ \ \ \{}
+\DoxyCodeLine{00690\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror<double>}}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult_ab851dc7eb8adcd34be78d0311ec5d7c8}{v}};}
+\DoxyCodeLine{00691\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult_afb3160b706add5647bb9f4d4644cbae8}{p}};}
+\DoxyCodeLine{00692\ \ \ \ \ \};}
+\DoxyCodeLine{00693\ }
+\DoxyCodeLine{00694\ }
+\DoxyCodeLine{00695\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ bindp0\ =\ false>}
+\DoxyCodeLine{00696\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{pgdheteroresult}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a83397b5e0db27beae2cfc814d7b852e4}{pseudogradientdescent}}(}
+\DoxyCodeLine{00697\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\ s0ind,}
+\DoxyCodeLine{00698\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\&\ initps,}
+\DoxyCodeLine{00699\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00700\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params,}
+\DoxyCodeLine{00701\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ initialstep\ =\ std::numeric\_limits<unsigned>::max()}
+\DoxyCodeLine{00702\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00703\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00704\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}finitedpproblem::pseudogradientdescent,"{}};}
+\DoxyCodeLine{00705\ }
+\DoxyCodeLine{00706\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ horizon\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5}{requiredhorizon}}(accuracy\ /\ 2);}
+\DoxyCodeLine{00707\ }
+\DoxyCodeLine{00708\ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}required\ horizon:\ "{}}\ <<\ horizon\ <<\ std::endl;}
+\DoxyCodeLine{00709\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ bestv\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}}(s0ind,\ initps,\ accuracy,params);}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\ bestps\ =\ initps;}
+\DoxyCodeLine{00712\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\ iterps\ =\ initps;}
+\DoxyCodeLine{00713\ }
+\DoxyCodeLine{00714\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ st\ =\ sys::gettimems();}
+\DoxyCodeLine{00715\ }
+\DoxyCodeLine{00716\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ step\ =\ std::max(1U,std::min(initialstep,this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.num()\ /\ 2\ -\/1));}
+\DoxyCodeLine{00717\ }
+\DoxyCodeLine{00718\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_adebf0e4e55bd86411f1baa10f4001963}{fpseudogradientmaxiters}};\ i++)}
+\DoxyCodeLine{00719\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00720\ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}iteration\ "{}}\ <<\ i\ <<\ \textcolor{stringliteral}{"{}\ step\ "{}}\ <<\ step\ <<\textcolor{stringliteral}{"{}\ value="{}}\ <<\ bestv.x}
+\DoxyCodeLine{00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ p:"{}}\ <<\ iterps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}};}
+\DoxyCodeLine{00722\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ x=0;\ x<bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ x++)}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \ \textcolor{stringliteral}{"{},"{}}\ <<\ iterps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[x];}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ std::endl;}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ j=\ bindp0\ ?\ 1\ :\ 0;\ j<=iterps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ j++)}
+\DoxyCodeLine{00726\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00727\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}time="{}}\ <<\ j\ <<\ std::endl;}
+\DoxyCodeLine{00728\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ k=\ j==0\ ?\ s0ind\ :\ 0;}
+\DoxyCodeLine{00729\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;\ ;\ k++)}
+\DoxyCodeLine{00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ n\ =\ 0;\ n\ <=\ 1;\ n++\ )}
+\DoxyCodeLine{00732\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\ p\ =\ iterps;}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\&\ e\ =\ j==0\ ?\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}}\ :\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[j-\/1][k];}
+\DoxyCodeLine{00735\ }
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ atleastone\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ m=0;\ m<step;\ m++)}
+\DoxyCodeLine{00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ f=e;}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(n==0\ ?\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.previousfeasible(f,k)}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.nextfeasible(f,k))}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e\ =\ f;}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ atleastone\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00745\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!atleastone)}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(bindp0)}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j==1\ \&\&\ k==s0ind)}
+\DoxyCodeLine{00754\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}}\ =\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[0][s0ind];}
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ v\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}}(s0ind,\ p,\ accuracy,params);}
+\DoxyCodeLine{00757\ }
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}k="{}}\ <<\ k\ <<\ \textcolor{stringliteral}{"{},"{}}\ <<\ \textcolor{stringliteral}{"{}p:"{}}\ <<\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}};}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ x=0;\ x<p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ x++)}
+\DoxyCodeLine{00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \ \textcolor{stringliteral}{"{},"{}}\ <<\ p.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[x];}
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}\ =\ "{}}\ <<\ v.x\ <<\ \textcolor{stringliteral}{"{}("{}}\ <<\ v.sd\ <<\ \textcolor{stringliteral}{"{})"{}};}
+\DoxyCodeLine{00762\ }
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(v.x\ >\ bestv.x\ +\ bestv.sd)}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}*"{}};}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestv\ =\ v;}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestps\ =\ p;}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00769\ }
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ std::endl;}
+\DoxyCodeLine{00771\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j==0)}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(k==bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[j-\/1].size()-\/1)}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(step\ ==\ 1)}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ differs\ =\ iterps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}}\ !=\ bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}};}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!differs)}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ j=0;\ j<bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ j++)}
+\DoxyCodeLine{00783\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!(iterps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[j]\ ==\ bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[j]))}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ differs\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!differs)}
+\DoxyCodeLine{00791\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \ \ \ \ iterps\ =\ bestps;}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ sys::gettimems();}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t\ -\/\ st\ >\ params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a43a6f4b26ad88f0f3f93db5855df0b2f}{fpseudogradienttimelimit}})}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}Exiting\ for\ time\ reasons"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ timelimitexception(params.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a43a6f4b26ad88f0f3f93db5855df0b2f}{fpseudogradienttimelimit}});}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ step\ =\ std::max(1U,step/2);}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00802\ }
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}bestp:"{}}\ <<\ bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a5586611d757b546a6070f85ae4617d15}{p0}};}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ x=0;\ x<bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}.size();\ x++)}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{},"{}}\ <<\ bestps.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy_a156eba81bd1aa66e536ff274faf54d0c}{ps}}[x];}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}\ crit="{}}\ <<\ bestv.x\ <<\ std::endl;}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{pgdheteroresult}}\ res;}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult_afb3160b706add5647bb9f4d4644cbae8}{p}}\ =\ bestps;}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult_ab851dc7eb8adcd34be78d0311ec5d7c8}{v}}\ =\ bestv;}
+\DoxyCodeLine{00810\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00811\ \ \ \ \ \}}
+\DoxyCodeLine{00812\ }
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult}{pgdhomoresult}}}
+\DoxyCodeLine{00814\ \ \ \ \ \{}
+\DoxyCodeLine{00815\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror<double>}}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult_ad5538759c3267f332500ec22c42d3ee5}{v}};}
+\DoxyCodeLine{00816\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult_a89d5d2edabec67d44b72488f0c491bb8}{p}};}
+\DoxyCodeLine{00817\ \ \ \ \ \};}
+\DoxyCodeLine{00818\ }
+\DoxyCodeLine{00819\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult}{pgdhomoresult}}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a0caeebd57221e84b8421719e82d9a88a}{pseudogradientdescenthomo}}(}
+\DoxyCodeLine{00820\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\ s0ind,}
+\DoxyCodeLine{00821\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ initp,}
+\DoxyCodeLine{00822\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00823\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}\&\ params,}
+\DoxyCodeLine{00824\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ initialstep\ =\ std::numeric\_limits<unsigned>::max()}
+\DoxyCodeLine{00825\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00826\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00827\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}\ hp\ \{\ initp[s0ind],\ \{initp\}\ \};}
+\DoxyCodeLine{00828\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ res\ =\ pseudogradientdescent<true>(s0ind,}
+\DoxyCodeLine{00829\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ hp,accuracy,\ params,initialstep);}
+\DoxyCodeLine{00830\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ res.v,\ res.p.ps[0]\};}
+\DoxyCodeLine{00831\ \ \ \ \ \}}
+\DoxyCodeLine{00832\ }
+\DoxyCodeLine{00833\ }
+\DoxyCodeLine{00834\ }
+\DoxyCodeLine{00835\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00836\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}};}
+\DoxyCodeLine{00837\ }
+\DoxyCodeLine{00838\ \};}
+\DoxyCodeLine{00839\ }
+\DoxyCodeLine{00840\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ NestingCriterion>}
+\DoxyCodeLine{00841\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1nestedcriterion}{nestedcriterion}}\ \{}
+\DoxyCodeLine{00842\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00843\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1nestedcriterion_aec20f91403074a1cc59ec44f90aa6e66}{NestingCriterion\_t}}\ =\ NestingCriterion;}
+\DoxyCodeLine{00844\ \ \ \ \ \textcolor{keyword}{const}\ NestingCriterion\&\ \mbox{\hyperlink{classorpp_1_1nestedcriterion_a5a325328748af060697b190dc5be9398}{nesting}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fnestingcrit;\ \}}
+\DoxyCodeLine{00845\ \ \ \ \ NestingCriterion\&\ \mbox{\hyperlink{classorpp_1_1nestedcriterion_a4254f4e638e89ccbeee038399eab6cea}{nesting}}()\ \{\ \textcolor{keywordflow}{return}\ fnestingcrit;\ \}}
+\DoxyCodeLine{00846\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1nestedcriterion_aa0efd61c9c8873e9b85ddafd1c602826}{nestedcriterion}}(\textcolor{keyword}{const}\ NestingCriterion\&\ nestingcrit)\ :}
+\DoxyCodeLine{00847\ \ \ \ \ \ \ \ \ fnestingcrit(nestingcrit)\ \{\}}
+\DoxyCodeLine{00848\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00849\ \ \ \ \ NestingCriterion\ fnestingcrit;}
+\DoxyCodeLine{00850\ \};}
+\DoxyCodeLine{00851\ }
+\DoxyCodeLine{00852\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Criterion,}
+\DoxyCodeLine{00853\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace,}
+\DoxyCodeLine{00854\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace,}
+\DoxyCodeLine{00855\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Transition,}
+\DoxyCodeLine{00856\ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Reward>}
+\DoxyCodeLine{00857\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1finitehomodpproblem}{finitehomodpproblem}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00858\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>}
+\DoxyCodeLine{00859\ \{}
+\DoxyCodeLine{00860\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00861\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitehomodpproblem_a9907bd4bc0e767feeac043eef9d14177}{finitehomodpproblem}}(\textcolor{keyword}{const}\ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},}
+\DoxyCodeLine{00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ StateSpace\&\ state,}
+\DoxyCodeLine{00863\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},}
+\DoxyCodeLine{00864\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Transition\&\ transition,}
+\DoxyCodeLine{00865\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Reward\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},}
+\DoxyCodeLine{00866\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},}
+\DoxyCodeLine{00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})\ :\mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>(\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},\ state,\mbox{\hyperlink{classorpp_1_1constraint}{constraint}},}
+\DoxyCodeLine{00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ transition,\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},\mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})}
+\DoxyCodeLine{00870\ \ \ \ \ \{}
+\DoxyCodeLine{00871\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<nestedcriterion<typename\ Criterion::NestingCriterion\_t>,Criterion>::value);}
+\DoxyCodeLine{00872\ \ \ \ \ \}}
+\DoxyCodeLine{00873\ }
+\DoxyCodeLine{00874\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams}{computationparams}}:}
+\DoxyCodeLine{00875\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00876\ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>::computationparams}
+\DoxyCodeLine{00877\ \ \ \ \ \{}
+\DoxyCodeLine{00878\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams_a3bd73753f7c188caa9db7c9cf1f28d0d}{computationparams}}()\ :\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams_aad07f2cd09a4429b914a0415076ec24d}{fvaluemaxiterations}}(std::numeric\_limits<unsigned>::max())\ \{\}}
+\DoxyCodeLine{00879\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams_aad07f2cd09a4429b914a0415076ec24d}{fvaluemaxiterations}};}
+\DoxyCodeLine{00880\ \ \ \ \ \};}
+\DoxyCodeLine{00881\ }
+\DoxyCodeLine{00882\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult}{viresult}}}
+\DoxyCodeLine{00883\ \ \ \ \ \{}
+\DoxyCodeLine{00884\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_a88a339b536b16291f688bb75049986bb}{viresult}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>\&\ pr)\ :\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_a9ff6c79ab9ede601af7714c52c161eb2}{p}}(pr),\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}}(pr),\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af8f948306cddda628f192170a1543aef}{e}}(0)\ \{\}}
+\DoxyCodeLine{00886\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_a9ff6c79ab9ede601af7714c52c161eb2}{p}};}
+\DoxyCodeLine{00887\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}};}
+\DoxyCodeLine{00888\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af8f948306cddda628f192170a1543aef}{e}};}
+\DoxyCodeLine{00889\ \ \ \ \ \};}
+\DoxyCodeLine{00890\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00891\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ optimize>}
+\DoxyCodeLine{00892\ \ \ \ \ \textcolor{keywordtype}{void}\ foo()\textcolor{keyword}{\ const\ }\{\}}
+\DoxyCodeLine{00893\ }
+\DoxyCodeLine{00894\ }
+\DoxyCodeLine{00895\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ optimize>}
+\DoxyCodeLine{00896\ \ \ \ \ \textcolor{keywordtype}{void}\ evaluatestates(\textcolor{keyword}{const}\ std::vector<typename\ StateSpace::Element\_t>\&\ es,}
+\DoxyCodeLine{00897\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\&\ V,}
+\DoxyCodeLine{00898\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<typename\ ConstrainedActionSpace::Element\_t*>\ actions,}
+\DoxyCodeLine{00899\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double*>\ res)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00900\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00901\ \ \ \ \ \ \ \ \ assert(actions.size()\ ==\ es.size());}
+\DoxyCodeLine{00902\ \ \ \ \ \ \ \ \ assert(actions.size()\ ==\ res.size());}
+\DoxyCodeLine{00903\ }
+\DoxyCodeLine{00904\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<es.size();\ i++)}
+\DoxyCodeLine{00905\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00906\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace::Element\_t\ e\ =\ es[i];}
+\DoxyCodeLine{00907\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition<unsigned\ int,unsigned\ int>}}\ c;}
+\DoxyCodeLine{00908\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a;}
+\DoxyCodeLine{00909\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ bestv\ =\ minfinity<double>;}
+\DoxyCodeLine{00910\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(optimize)}
+\DoxyCodeLine{00911\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00912\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.firstfeasible(a,e))}
+\DoxyCodeLine{00913\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}At\ least\ one\ feasible\ value\ missing\ in\ value\ iteration"{}});}
+\DoxyCodeLine{00914\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00915\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00916\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ a\ =\ *(actions[i]);}
+\DoxyCodeLine{00918\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#ifndef\ NDEBUG}}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.feasible(a,e))}
+\DoxyCodeLine{00920\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}Cannot\ evaluate\ an\ infeasible\ policy."{}});}
+\DoxyCodeLine{00921\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00922\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00923\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(index\ k=0;\ ;\ k++)}
+\DoxyCodeLine{00924\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00925\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.\mbox{\hyperlink{structorpp_1_1dpcondition_a3b18e8e675ec4d4c5487fae6edc116a9}{s}}\ =\ e;}
+\DoxyCodeLine{00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ assert(i\ <\ p.size());}}
+\DoxyCodeLine{00927\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c.\mbox{\hyperlink{structorpp_1_1dpcondition_ab5ecfefd30664df57e5c46766ad2e984}{a}}\ =\ a;\ \textcolor{comment}{//\ p[i];}}
+\DoxyCodeLine{00928\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ r\ =\ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}}(c);}
+\DoxyCodeLine{00929\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<atom<double>>\ atoms;}
+\DoxyCodeLine{00930\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}.natoms(c);\ k++)}
+\DoxyCodeLine{00931\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00932\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ atom<typename\ Transition::I\_t>\ a\ =}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}(k,c);}
+\DoxyCodeLine{00934\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(a.x\ ==\ k);}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ atom<double>\ newa\ =\ \{this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}}*V[k]+r,a.p\};}
+\DoxyCodeLine{00936\ }
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ atoms.push\_back(newa);}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::sort(atoms.begin(),\ atoms.end(),\ \mbox{\hyperlink{structorpp_1_1atom_a7ad7864af92638a6e6a1d93a7496a8bc}{atom<double>::comparator}});}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ldistribution<double>\ d(atoms,\ \textcolor{keyword}{false},\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00941\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//newV[i]=this-\/>fcrit(d,nothing());}}
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{auto}\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}.nesting();}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\ =\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}(d,nothing());}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ \textcolor{keyword}{constexpr}(optimize)}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(x\ >\ bestv)}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestv\ =\ x;}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(actions[i])\ =\ a;}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.nextfeasible(a,e))}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00953\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00956\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestv\ =\ x;}
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \ \ \ \ *(res[i])\ =\ bestv;}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00962\ \ \ \ \ \}}
+\DoxyCodeLine{00963\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00965\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ optimize>}
+\DoxyCodeLine{00966\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1finitehomodpproblem_a48d3106f0a6bf981887dfe3a8310adbe}{iterate}}(\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult}{viresult}}\&\ params,}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams}{computationparams}}\&\ evalparams)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00969\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()>=1)}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(1)\ <<\ \textcolor{stringliteral}{"{}finitehomodpproblem::iterate<"{}}\ <<\ optimize\ <<\ \textcolor{stringliteral}{"{}>"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ V\ =\ params.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}};}
+\DoxyCodeLine{00973\ }
+\DoxyCodeLine{00974\ \ \ \ \ \ \ \ \ assert(V.size()\ ==\ this-\/>fstatespace.num());}
+\DoxyCodeLine{00975\ }
+\DoxyCodeLine{00976\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ error\ =\ infinity<double>;}
+\DoxyCodeLine{00977\ }
+\DoxyCodeLine{00978\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ j=0;\ ;\ j++)}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00980\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j==evalparams.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams_aad07f2cd09a4429b914a0415076ec24d}{fvaluemaxiterations}})}
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}finitehomodpproblem::iterate:\ maximum\ iterations\ reached\ without\ reaching\ the\ desired\ accuracy."{}});}
+\DoxyCodeLine{00982\ \ \ \ \ \textcolor{comment}{/*\ std::cout\ <<\ error;}}
+\DoxyCodeLine{00983\ \textcolor{comment}{\ \ \ \ for(unsigned\ k=0;\ k<V.size();\ k++)}}
+\DoxyCodeLine{00984\ \textcolor{comment}{\ \ \ \ std::cout\ <<\ "{},"{}\ <<\ V[k];}}
+\DoxyCodeLine{00985\ \textcolor{comment}{\ \ \ \ std::cout\ <<\ std::endl;*/}}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ newV(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ StateSpace::Element\_t\ e;}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}.first(e);}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(evalparams.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}}\ <=\ 1)}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00991\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(index\ i\ =\ 0;\ i\ <\ V.size();\ i++,\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}.next(e))}
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//std::vector<typename\ StateSpace::Element\_t>}}
+\DoxyCodeLine{00994\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ evaluatestates<optimize>(\{e\},\ V,\ \{\&(params.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_a9ff6c79ab9ede601af7714c52c161eb2}{p}}[i])\},\ \{\&(newV[i])\});}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00997\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ nt\ =\ std::min(evalparams.\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams_a046bfdb84e75a4d7ef7a55b49a48f8a3}{fthreadstouse}},}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{unsigned}\textcolor{keyword}{>}(V.size()));}
+\DoxyCodeLine{01001\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Number\ of\ threads\ actually\ used:\ "{}}\ <<\ nt\ <<\ std::endl;}
+\DoxyCodeLine{01003\ }
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::vector<typename\ StateSpace::Element\_t>>}
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ss(nt);}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::vector<typename\ ConstrainedActionSpace::Element\_t*>>}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aptrs(nt);}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::vector<double*>>\ vptrs(nt);}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ k\ =\ 0;}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(index\ i\ =\ 0;\ i\ <\ V.size();\ i++,\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}.next(e))}
+\DoxyCodeLine{01011\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ss[k].push\_back(e);}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aptrs[k].push\_back(\&(params.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_a9ff6c79ab9ede601af7714c52c161eb2}{p}}[i]));}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vptrs[k].push\_back(\&(newV[i]));}
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(++k\ ==\ nt)}
+\DoxyCodeLine{01016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ k=0;}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01018\ }
+\DoxyCodeLine{01019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::thread>\ ts;}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{01021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Starting\ creating\ threads"{}}\ <<\ std::endl;}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<nt;\ k++)}
+\DoxyCodeLine{01023\ \textcolor{comment}{/*ts.push\_back(std::thread(\&finitehomodpproblem<Criterion,StateSpace,ConstrainedActionSpace,}}
+\DoxyCodeLine{01024\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>::foo<optimize>,}}
+\DoxyCodeLine{01025\ \textcolor{comment}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this));*/}}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts.push\_back(std::thread(\&\mbox{\hyperlink{classorpp_1_1finitehomodpproblem}{finitehomodpproblem}}<Criterion,StateSpace,ConstrainedActionSpace,}
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>::evaluatestates<optimize>,}
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{this},\ ss[k],\ V,}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aptrs[k],}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ vptrs[k]));}
+\DoxyCodeLine{01031\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bool\ semaphor\ =\ false;}}
+\DoxyCodeLine{01032\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(sys::loglevel()\ >=\ 3)}}
+\DoxyCodeLine{01033\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ "{}Starting\ the\ observing\ thread"{}\ <<\ std::endl;}}
+\DoxyCodeLine{01034\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::thread\ obst(\&finitedpproblem<Criterion,\ StateSpace,ConstrainedActionSpace,}}
+\DoxyCodeLine{01035\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>::observer,this,}}
+\DoxyCodeLine{01036\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \&ns,\&obss,\ \&semaphor,\ 0}}
+\DoxyCodeLine{01037\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ );}}
+\DoxyCodeLine{01038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{01039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}Join\ threads"{}}\ <<\ std::endl;}
+\DoxyCodeLine{01040\ }
+\DoxyCodeLine{01041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<nt;\ k++)}
+\DoxyCodeLine{01042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ts[k].join();}
+\DoxyCodeLine{01043\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if(sys::loglevel()\ >=\ 3)}}
+\DoxyCodeLine{01044\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ "{}Join\ observer"{}\ <<\ std::endl;}}
+\DoxyCodeLine{01045\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ semaphor\ =\ true;}}
+\DoxyCodeLine{01046\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ obst.join();}}
+\DoxyCodeLine{01047\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ observer(\&ns,\&obss,\ \&semaphor,\ 1);}}
+\DoxyCodeLine{01048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()\ >=\ 3)}
+\DoxyCodeLine{01049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(3)\ <<\ \textcolor{stringliteral}{"{}End\ fo\ thread\ loop"{}}\ <<\ std::endl;}
+\DoxyCodeLine{01050\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j==0)}
+\DoxyCodeLine{01052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ error\ =\ \mbox{\hyperlink{namespaceorpp_ae5de5ecb1c04030ca9de645d21ac3ce7}{dist}}(V,newV)\ /\ (1.0-\/this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}})\ ;}
+\DoxyCodeLine{01053\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{01054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ error\ *=\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}};}
+\DoxyCodeLine{01055\ \ \ \ \ \ \ \ \ \ \ \ \ V\ =\ newV;}
+\DoxyCodeLine{01056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(error\ <\ accuracy)}
+\DoxyCodeLine{01057\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{01059\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01060\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01061\ \ \ \ \ \ \ \ \ params.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}}\ =\ V;}
+\DoxyCodeLine{01062\ \ \ \ \ \ \ \ \ params.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af8f948306cddda628f192170a1543aef}{e}}\ =\ error;}
+\DoxyCodeLine{01063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(sys::loglevel()>=1)}
+\DoxyCodeLine{01064\ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(1)\ <<\ \textcolor{stringliteral}{"{}end\ of\ finitehomodpproblem::iterate<"{}}\ <<\ optimize\ <<\ \textcolor{stringliteral}{"{}>"{}}\ <<\ std::endl;}
+\DoxyCodeLine{01065\ \ \ \ \ \}}
+\DoxyCodeLine{01066\ }
+\DoxyCodeLine{01067\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult}{viresult}}\ \mbox{\hyperlink{classorpp_1_1finitehomodpproblem_a46c001e83ea10c2e7c0067130cbdeb34}{valueiteration}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\&\ initialV,}
+\DoxyCodeLine{01068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{01069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams}{computationparams}}\&\ evalparams)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01070\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult}{viresult}}\ vr(*\textcolor{keyword}{this});}
+\DoxyCodeLine{01072\ \ \ \ \ \ \ \ \ vr.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}}\ =\ initialV;}
+\DoxyCodeLine{01073\ \ \ \ \ \ \ \ \ iterate<true>(vr,\ accuracy,\ evalparams);}
+\DoxyCodeLine{01074\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ vr;}
+\DoxyCodeLine{01075\ \ \ \ \ \}}
+\DoxyCodeLine{01076\ }
+\DoxyCodeLine{01077\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror<finitevaluefunction>}}\ \mbox{\hyperlink{classorpp_1_1finitehomodpproblem_ac86bbf60d15c3ae335484ddbb8ac84c4}{evaluate}}(}
+\DoxyCodeLine{01078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\&\ initialV,}
+\DoxyCodeLine{01079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ p,}
+\DoxyCodeLine{01080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{01081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams}{computationparams}}\&\ evalparams)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{01082\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{01083\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult}{viresult}}\ vr(*\textcolor{keyword}{this});}
+\DoxyCodeLine{01084\ \ \ \ \ \ \ \ \ vr.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_a9ff6c79ab9ede601af7714c52c161eb2}{p}}\ =\ p;}
+\DoxyCodeLine{01085\ \ \ \ \ \ \ \ \ vr.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}}\ =\ initialV;}
+\DoxyCodeLine{01086\ \ \ \ \ \ \ \ \ iterate<false>(vr,\ accuracy,\ evalparams);}
+\DoxyCodeLine{01087\ }
+\DoxyCodeLine{01088\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ vr.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af232812f6294e8bc76535bcee10f24a4}{v}},\ vr.\mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult_af8f948306cddda628f192170a1543aef}{e}}\ \};}
+\DoxyCodeLine{01089\ \ \ \ \ \}}
+\DoxyCodeLine{01090\ }
+\DoxyCodeLine{01091\ }
+\DoxyCodeLine{01092\ \};}
+\DoxyCodeLine{01093\ }
+\DoxyCodeLine{01094\ }
+\DoxyCodeLine{01095\ \}\ \textcolor{comment}{//\ namespace}}
+\DoxyCodeLine{01096\ }
+\DoxyCodeLine{01097\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ DP\_HPP}}
+\DoxyCodeLine{01098\ }
+
+\end{DoxyCode}

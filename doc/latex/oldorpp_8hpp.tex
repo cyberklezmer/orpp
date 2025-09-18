@@ -1,0 +1,97 @@
+\doxysection{oldorpp.\+hpp File Reference}
+\hypertarget{oldorpp_8hpp}{}\label{oldorpp_8hpp}\index{oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classobject}{object}}
+\item 
+class \mbox{\hyperlink{classsummary}{summary}}
+\begin{DoxyCompactList}\small\item\em work in progress, neodszkousene \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classestimator}{estimator}}
+\item 
+class \mbox{\hyperlink{classnloptuser}{nloptuser}}
+\item 
+class \mbox{\hyperlink{classempdistn}{empdistn}}
+\begin{DoxyCompactList}\small\item\em Empirical distribution on \{0,1,...\}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classmle}{mle}}
+\begin{DoxyCompactList}\small\item\em Class computing MLE estinate. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classgretl}{gretl}}
+\begin{DoxyCompactList}\small\item\em A class encapsulting calls of GRETL. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classcsvRow}{csv\+Row}}
+\begin{DoxyCompactList}\small\item\em A class handling CSV input. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classuncertain}{uncertain}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+istream \& \mbox{\hyperlink{oldorpp_8hpp_aa6772480739ef79f13002f84640749a3}{operator$>$$>$}} (istream \&str, \mbox{\hyperlink{classcsvRow}{csv\+Row}} \&data)
+\begin{DoxyCompactList}\small\item\em Operator reading a single csv row. \end{DoxyCompactList}\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_a21c9cb14b73c3eddd48586334dc17b00}{operator+}} (const vector$<$ double $>$ \&x, const vector$<$ double $>$ \&y)
+\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_a08610bc71632fd0766446b1c884b73de}{operator-\/}} (const vector$<$ double $>$ \&x, const vector$<$ double $>$ \&y)
+\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_afd5d6a3451c2416a125c91234db011a9}{operator\texorpdfstring{$\ast$}{*}}} (double c, const vector$<$ double $>$ \&x)
+\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_a5ef83867ce74b0f5dbb78ebaf405d111}{operator\texorpdfstring{$\ast$}{*}}} (const vector$<$ double $>$ \&y, double c)
+\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_a3e5ac7ea00e76bc864149be924bb6f0c}{operator/}} (const vector$<$ double $>$ \&y, double c)
+\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_a31ee355a1f88d2576612b5df36a24584}{const\+\_\+vector}} (double c, size\+\_\+t q)
+\item 
+vector$<$ double $>$ \mbox{\hyperlink{oldorpp_8hpp_a92d272fc631eb8445533b834e012a01c}{zero\+\_\+vector}} (size\+\_\+t q)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{oldorpp_8hpp_a31ee355a1f88d2576612b5df36a24584}\label{oldorpp_8hpp_a31ee355a1f88d2576612b5df36a24584} 
+\index{oldorpp.hpp@{oldorpp.hpp}!const\_vector@{const\_vector}}
+\index{const\_vector@{const\_vector}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{const\_vector()}{const\_vector()}}
+{\footnotesize\ttfamily vector$<$ double $>$ const\+\_\+vector (\begin{DoxyParamCaption}\item[{double}]{c,  }\item[{size\+\_\+t}]{q }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{oldorpp_8hpp_a5ef83867ce74b0f5dbb78ebaf405d111}\label{oldorpp_8hpp_a5ef83867ce74b0f5dbb78ebaf405d111} 
+\index{oldorpp.hpp@{oldorpp.hpp}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily vector$<$ double $>$ operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{y,  }\item[{double}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{oldorpp_8hpp_afd5d6a3451c2416a125c91234db011a9}\label{oldorpp_8hpp_afd5d6a3451c2416a125c91234db011a9} 
+\index{oldorpp.hpp@{oldorpp.hpp}!operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}}
+\index{operator\texorpdfstring{$\ast$}{*}@{operator\texorpdfstring{$\ast$}{*}}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{operator\texorpdfstring{$\ast$}{*}()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily vector$<$ double $>$ operator\texorpdfstring{$\ast$}{*} (\begin{DoxyParamCaption}\item[{double}]{c,  }\item[{const vector$<$ double $>$ \&}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{oldorpp_8hpp_a21c9cb14b73c3eddd48586334dc17b00}\label{oldorpp_8hpp_a21c9cb14b73c3eddd48586334dc17b00} 
+\index{oldorpp.hpp@{oldorpp.hpp}!operator+@{operator+}}
+\index{operator+@{operator+}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}}
+{\footnotesize\ttfamily vector$<$ double $>$ operator+ (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{x,  }\item[{const vector$<$ double $>$ \&}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{oldorpp_8hpp_a08610bc71632fd0766446b1c884b73de}\label{oldorpp_8hpp_a08610bc71632fd0766446b1c884b73de} 
+\index{oldorpp.hpp@{oldorpp.hpp}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}}
+{\footnotesize\ttfamily vector$<$ double $>$ operator-\/ (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{x,  }\item[{const vector$<$ double $>$ \&}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{oldorpp_8hpp_a3e5ac7ea00e76bc864149be924bb6f0c}\label{oldorpp_8hpp_a3e5ac7ea00e76bc864149be924bb6f0c} 
+\index{oldorpp.hpp@{oldorpp.hpp}!operator/@{operator/}}
+\index{operator/@{operator/}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{operator/()}{operator/()}}
+{\footnotesize\ttfamily vector$<$ double $>$ operator/ (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{y,  }\item[{double}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{oldorpp_8hpp_aa6772480739ef79f13002f84640749a3}\label{oldorpp_8hpp_aa6772480739ef79f13002f84640749a3} 
+\index{oldorpp.hpp@{oldorpp.hpp}!operator$>$$>$@{operator$>$$>$}}
+\index{operator$>$$>$@{operator$>$$>$}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{operator$>$$>$()}{operator>>()}}
+{\footnotesize\ttfamily istream \& operator$>$$>$ (\begin{DoxyParamCaption}\item[{istream \&}]{str,  }\item[{\mbox{\hyperlink{classcsvRow}{csv\+Row}} \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Operator reading a single csv row. 
+
+TODO\+: handle end of line \Hypertarget{oldorpp_8hpp_a92d272fc631eb8445533b834e012a01c}\label{oldorpp_8hpp_a92d272fc631eb8445533b834e012a01c} 
+\index{oldorpp.hpp@{oldorpp.hpp}!zero\_vector@{zero\_vector}}
+\index{zero\_vector@{zero\_vector}!oldorpp.hpp@{oldorpp.hpp}}
+\doxysubsubsection{\texorpdfstring{zero\_vector()}{zero\_vector()}}
+{\footnotesize\ttfamily vector$<$ double $>$ zero\+\_\+vector (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{q }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+

@@ -1,0 +1,128 @@
+\doxysection{orpp\+::ijdistribution\texorpdfstring{$<$}{<} F, S, M \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1ijdistribution}{}\label{classorpp_1_1ijdistribution}\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+
+
+Iterative joint distribution,.  
+
+
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::ijdistribution\texorpdfstring{$<$}{<} F, S, M \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::ijdistribution\texorpdfstring{$<$}{<} F, S, M \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1ijdistribution_a4b4b86929ac9395071caef456033c88a}{F\+\_\+t}} = F
+\item 
+using \mbox{\hyperlink{classorpp_1_1ijdistribution_a31c56989a121f6e4348716490afaba84}{S\+\_\+t}} = S
+\item 
+using \mbox{\hyperlink{classorpp_1_1ijdistribution_a97bb29d60b3756f42c9d50bf5c35e001}{M\+\_\+t}} = M
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1jdistribution}{orpp\+::jdistribution$<$ F\+::\+I\+\_\+t, S\+::\+I\+\_\+t, F\+::\+C\+\_\+t $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1jdistribution_a3cbd5c02c1ab71c33815265037819a9e}{F\+\_\+t}} = F
+\item 
+using \mbox{\hyperlink{classorpp_1_1jdistribution_ac4582646c681241b93a47b677ead288d}{S\+\_\+t}} = S
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1ijdistribution_ae7122dc5d1c55604f8bd16a450b8a1c6}{ijdistribution}} (const F \&f, const S \&s)
+\item 
+const F \& \mbox{\hyperlink{classorpp_1_1ijdistribution_a7fd8bfee1e2a065470b63ce58e45b006}{first}} () const
+\item 
+const S \& \mbox{\hyperlink{classorpp_1_1ijdistribution_af26c7e0203c640ac2601dcd9740b9666}{second}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename F, typename S, typename M$>$\newline
+class orpp\+::ijdistribution$<$ F, S, M $>$}
+Iterative joint distribution,. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em F} & the first distribution \\
+\hline
+{\em S} & the second distribution \\
+\hline
+{\em M} & a mapping om the {\ttfamily pair$<$condition of F, condition of S$>$} into {\ttfamily condition of {\ttfamily F}} \\
+\hline
+\end{DoxyTemplParams}
+Tne condtition of the distribution is the same type as that of {\ttfamily F}. The distribution itself is defined iteratively by {\itshape F}\texorpdfstring{$\vert$}{|}(condition of {\itshape F}) and {\itshape S}\texorpdfstring{$\vert$}{|}{\itshape M}(value of {\itshape F},condition of {\itshape F}) 
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classorpp_1_1ijdistribution_a4b4b86929ac9395071caef456033c88a}\label{classorpp_1_1ijdistribution_a4b4b86929ac9395071caef456033c88a} 
+\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}!F\_t@{F\_t}}
+\index{F\_t@{F\_t}!orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+\doxysubsubsection{\texorpdfstring{F\_t}{F\_t}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution}}$<$ F, S, M $>$\+::\+F\+\_\+t =  F}
+
+\Hypertarget{classorpp_1_1ijdistribution_a97bb29d60b3756f42c9d50bf5c35e001}\label{classorpp_1_1ijdistribution_a97bb29d60b3756f42c9d50bf5c35e001} 
+\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}!M\_t@{M\_t}}
+\index{M\_t@{M\_t}!orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+\doxysubsubsection{\texorpdfstring{M\_t}{M\_t}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution}}$<$ F, S, M $>$\+::\+M\+\_\+t =  M}
+
+\Hypertarget{classorpp_1_1ijdistribution_a31c56989a121f6e4348716490afaba84}\label{classorpp_1_1ijdistribution_a31c56989a121f6e4348716490afaba84} 
+\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}!S\_t@{S\_t}}
+\index{S\_t@{S\_t}!orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+\doxysubsubsection{\texorpdfstring{S\_t}{S\_t}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution}}$<$ F, S, M $>$\+::\+S\+\_\+t =  S}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1ijdistribution_ae7122dc5d1c55604f8bd16a450b8a1c6}\label{classorpp_1_1ijdistribution_ae7122dc5d1c55604f8bd16a450b8a1c6} 
+\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}!ijdistribution@{ijdistribution}}
+\index{ijdistribution@{ijdistribution}!orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+\doxysubsubsection{\texorpdfstring{ijdistribution()}{ijdistribution()}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+\mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution}}$<$ F, S, M $>$\+::ijdistribution (\begin{DoxyParamCaption}\item[{const F \&}]{f,  }\item[{const S \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1ijdistribution_a7fd8bfee1e2a065470b63ce58e45b006}\label{classorpp_1_1ijdistribution_a7fd8bfee1e2a065470b63ce58e45b006} 
+\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}!first@{first}}
+\index{first@{first}!orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+\doxysubsubsection{\texorpdfstring{first()}{first()}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+const F \& \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution}}$<$ F, S, M $>$\+::first (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1ijdistribution_af26c7e0203c640ac2601dcd9740b9666}\label{classorpp_1_1ijdistribution_af26c7e0203c640ac2601dcd9740b9666} 
+\index{orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}!second@{second}}
+\index{second@{second}!orpp::ijdistribution$<$ F, S, M $>$@{orpp::ijdistribution$<$ F, S, M $>$}}
+\doxysubsubsection{\texorpdfstring{second()}{second()}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+const S \& \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution}}$<$ F, S, M $>$\+::second (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

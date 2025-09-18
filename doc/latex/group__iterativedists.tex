@@ -1,0 +1,88 @@
+\doxysubsection{Iteratively defined distributions}
+\hypertarget{group__iterativedists}{}\label{group__iterativedists}\index{Iteratively defined distributions@{Iteratively defined distributions}}
+Collaboration diagram for Iteratively defined distributions\+:
+% FIG 0
+\doxysubsubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution$<$ F, S, M $>$}}
+\begin{DoxyCompactList}\small\item\em Iterative joint distribution,. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1uijmapping}{orpp\+::uijmapping$<$ D, R, M $>$}}
+\begin{DoxyCompactList}\small\item\em Helper class, used as {\ttfamily M} in {\ttfamily uijdistribution}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1mijdistribution}{orpp\+::mijdistribution$<$ F, S, M $>$}}
+\begin{DoxyCompactList}\small\item\em MC iterative distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1fijdistribution}{orpp\+::fijdistribution$<$ F, S, M $>$}}
+\begin{DoxyCompactList}\small\item\em Monte Carlo iterative distribution with finite support. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1zeta}{orpp\+::zeta$<$ X, R $>$}}
+\begin{DoxyCompactList}\small\item\em Base class for scenario restrictions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution$<$ E, D, Z $>$}}
+\begin{DoxyCompactList}\small\item\em Iteratively defined std\+::vector distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1mivdistribution}{orpp\+::mivdistribution$<$ E, D, Z, M $>$}}
+\begin{DoxyCompactList}\small\item\em MC version of \doxylink{classorpp_1_1ivdistribution}{ivdistribution}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename F , typename S , typename M  = idmapping$<$typename F\+::\+I\+\_\+t$>$$>$ }\\using \mbox{\hyperlink{group__iterativedists_gaffedae336e5c752f214a76a54ebc6383}{orpp\+::uijdistribution}} = \mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution}}$<$ F, S, \mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}$<$ typename F\+::\+I\+\_\+t, typename S\+::\+C\+\_\+t, M $>$ $>$
+\begin{DoxyCompactList}\small\item\em Unconditional iterative distribution. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename F , typename S , typename M $>$ }\\using \mbox{\hyperlink{group__iterativedists_ga4c1674f08cf31ccea085d55693def0e2}{orpp\+::umijdistribution}} = \mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution}}$<$ F, S, \mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}$<$ typename F\+::\+I\+\_\+t, typename S\+::\+C\+\_\+t, M $>$ $>$
+\begin{DoxyCompactList}\small\item\em Unconditional MC iterative distribution. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename X  = double$>$ }\\using \mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{orpp\+::scenario}} = std\+::vector$<$ X $>$
+\begin{DoxyCompactList}\small\item\em Scenario (history) of a stochastic process with values in {\ttfamily X}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsubsection{Detailed Description}
+
+
+\doxysubsubsection{Typedef Documentation}
+\Hypertarget{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}\label{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786} 
+\index{Iteratively defined distributions@{Iteratively defined distributions}!scenario@{scenario}}
+\index{scenario@{scenario}!Iteratively defined distributions@{Iteratively defined distributions}}
+\doxysubsubsubsection{\texorpdfstring{scenario}{scenario}}
+{\footnotesize\ttfamily template$<$typename X  = double$>$ \\
+using \mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{orpp\+::scenario}} = typedef std\+::vector$<$X$>$}
+
+
+
+Scenario (history) of a stochastic process with values in {\ttfamily X}. 
+
+\Hypertarget{group__iterativedists_gaffedae336e5c752f214a76a54ebc6383}\label{group__iterativedists_gaffedae336e5c752f214a76a54ebc6383} 
+\index{Iteratively defined distributions@{Iteratively defined distributions}!uijdistribution@{uijdistribution}}
+\index{uijdistribution@{uijdistribution}!Iteratively defined distributions@{Iteratively defined distributions}}
+\doxysubsubsubsection{\texorpdfstring{uijdistribution}{uijdistribution}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M  = idmapping$<$typename F\+::\+I\+\_\+t$>$$>$ \\
+using \mbox{\hyperlink{group__iterativedists_gaffedae336e5c752f214a76a54ebc6383}{orpp\+::uijdistribution}} = typedef \mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution}}$<$F,S,\mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}$<$typename F\+::\+I\+\_\+t,typename S\+::\+C\+\_\+t,M$>$ $>$}
+
+
+
+Unconditional iterative distribution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em F} & the first distribution \\
+\hline
+{\em S} & the second distribution \\
+\hline
+{\em M} & s mspping from the value of {\ttfamily F} into the condition of \textbackslash{}f S\\
+\hline
+\end{DoxyTemplParams}
+By default, {\ttfamily M} is the identity from value of {\ttfamily F} into condition of {\ttfamily S}. If those types differ, then {\ttfamily M} should be explicitly specified. \Hypertarget{group__iterativedists_ga4c1674f08cf31ccea085d55693def0e2}\label{group__iterativedists_ga4c1674f08cf31ccea085d55693def0e2} 
+\index{Iteratively defined distributions@{Iteratively defined distributions}!umijdistribution@{umijdistribution}}
+\index{umijdistribution@{umijdistribution}!Iteratively defined distributions@{Iteratively defined distributions}}
+\doxysubsubsubsection{\texorpdfstring{umijdistribution}{umijdistribution}}
+{\footnotesize\ttfamily template$<$typename F , typename S , typename M $>$ \\
+using \mbox{\hyperlink{group__iterativedists_ga4c1674f08cf31ccea085d55693def0e2}{orpp\+::umijdistribution}} = typedef \mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution}}$<$F,S,\mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}$<$typename F\+::\+I\+\_\+t,typename S\+::\+C\+\_\+t,M$>$ $>$}
+
+
+
+Unconditional MC iterative distribution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em F} & the first distribution \\
+\hline
+{\em S} & the second distribution \\
+\hline
+{\em M} & s mspping from the value of {\ttfamily F} into the condition of \textbackslash{}f S\\
+\hline
+\end{DoxyTemplParams}
+See \doxylink{group__iterativedists_gaffedae336e5c752f214a76a54ebc6383}{uijdistribution} 

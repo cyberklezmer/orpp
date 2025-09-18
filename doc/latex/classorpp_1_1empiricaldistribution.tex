@@ -1,0 +1,141 @@
+\doxysection{orpp\+::empiricaldistribution Class Reference}
+\hypertarget{classorpp_1_1empiricaldistribution}{}\label{classorpp_1_1empiricaldistribution}\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::empiricaldistribution\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::empiricaldistribution\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1empiricaldistribution_ab453a4c184b34b90a177443ea13d75b7}{empiricaldistribution}} ()
+\item 
+\mbox{\hyperlink{classorpp_1_1empiricaldistribution_aff420ae7492c34e21842b5aa1eb65407}{empiricaldistribution}} (const std\+::vector$<$ double $>$ \&\mbox{\hyperlink{classorpp_1_1equipdistribution_a42899be4c5769ccdb8ce8cdf218a30b1}{values}})
+\item 
+void \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a6a85ec1888e182548a24709881f4d26c}{add}} (double v)
+\item 
+void \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a426d14f338e12d3508da631f69489f37}{sort}} ()
+\item 
+double \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a90912f53df7a55667adfe702df3492e4}{value}} (unsigned i)
+\item 
+double \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a6e252888d747a604931f3fb53461a6d5}{value}} (unsigned i) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1empiricaldistribution_a26ea3c000c5a6fb921ac4e5627b38fc7}{p}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1equipdistribution}{orpp\+::equipdistribution$<$ double, true $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1equipdistribution_a4f780aba39d37f19d999679c36918b32}{equipdistribution}} (const std\+::vector$<$ double $>$ \&values, bool sorted)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1fdistribution}{orpp\+::fdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ $>$ \&a, const C \&c) const
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_a3e088625e270923ababc08c78da34436}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ $>$ \&a) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}} (const C \&c) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a364bc69a59992019b60577513b79bc7e}{natoms}} () const
+\item 
+double \mbox{\hyperlink{classorpp_1_1fdistribution_aea085685c1b4c0c130ae91be696bda3a}{mean}} (const C \&c, double prec=0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator()}} (unsigned int i, const C \&c) const
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619}{operator()}} (unsigned int i) const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1equipdistribution}{orpp\+::equipdistribution$<$ double, true $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ double $>$ \& \mbox{\hyperlink{classorpp_1_1equipdistribution_a42899be4c5769ccdb8ce8cdf218a30b1}{values}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}} (const C \&c) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1empiricaldistribution_ab453a4c184b34b90a177443ea13d75b7}\label{classorpp_1_1empiricaldistribution_ab453a4c184b34b90a177443ea13d75b7} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!empiricaldistribution@{empiricaldistribution}}
+\index{empiricaldistribution@{empiricaldistribution}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{empiricaldistribution()}{empiricaldistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily orpp\+::empiricaldistribution\+::empiricaldistribution (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1empiricaldistribution_aff420ae7492c34e21842b5aa1eb65407}\label{classorpp_1_1empiricaldistribution_aff420ae7492c34e21842b5aa1eb65407} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!empiricaldistribution@{empiricaldistribution}}
+\index{empiricaldistribution@{empiricaldistribution}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{empiricaldistribution()}{empiricaldistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily orpp\+::empiricaldistribution\+::empiricaldistribution (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ double $>$ \&}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1empiricaldistribution_a6a85ec1888e182548a24709881f4d26c}\label{classorpp_1_1empiricaldistribution_a6a85ec1888e182548a24709881f4d26c} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!add@{add}}
+\index{add@{add}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily void orpp\+::empiricaldistribution\+::add (\begin{DoxyParamCaption}\item[{double}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1empiricaldistribution_a26ea3c000c5a6fb921ac4e5627b38fc7}\label{classorpp_1_1empiricaldistribution_a26ea3c000c5a6fb921ac4e5627b38fc7} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!p@{p}}
+\index{p@{p}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{p()}{p()}}
+{\footnotesize\ttfamily double orpp\+::empiricaldistribution\+::p (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1empiricaldistribution_a426d14f338e12d3508da631f69489f37}\label{classorpp_1_1empiricaldistribution_a426d14f338e12d3508da631f69489f37} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!sort@{sort}}
+\index{sort@{sort}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{sort()}{sort()}}
+{\footnotesize\ttfamily void orpp\+::empiricaldistribution\+::sort (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1empiricaldistribution_a90912f53df7a55667adfe702df3492e4}\label{classorpp_1_1empiricaldistribution_a90912f53df7a55667adfe702df3492e4} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!value@{value}}
+\index{value@{value}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double orpp\+::empiricaldistribution\+::value (\begin{DoxyParamCaption}\item[{unsigned}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1empiricaldistribution_a6e252888d747a604931f3fb53461a6d5}\label{classorpp_1_1empiricaldistribution_a6e252888d747a604931f3fb53461a6d5} 
+\index{orpp::empiricaldistribution@{orpp::empiricaldistribution}!value@{value}}
+\index{value@{value}!orpp::empiricaldistribution@{orpp::empiricaldistribution}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double orpp\+::empiricaldistribution\+::value (\begin{DoxyParamCaption}\item[{unsigned}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,200 @@
+\doxysection{orpp\+::ivdistribution\texorpdfstring{$<$}{<} E, D, Z \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1ivdistribution}{}\label{classorpp_1_1ivdistribution}\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+
+
+Iteratively defined std\+::vector distribution.  
+
+
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::ivdistribution\texorpdfstring{$<$}{<} E, D, Z \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::ivdistribution\texorpdfstring{$<$}{<} E, D, Z \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} = typename D\+::\+I\+\_\+t
+\item 
+using \mbox{\hyperlink{classorpp_1_1ivdistribution_a680ebde66ab5c282ce0468b91a89540d}{E\+\_\+t}} = E
+\item 
+using \mbox{\hyperlink{classorpp_1_1ivdistribution_af24cb512b919b623021f652e9123c429}{Z\+\_\+t}} = Z
+\item 
+using \mbox{\hyperlink{classorpp_1_1ivdistribution_ae514308e895d3f41a71d554b337e6588}{D\+\_\+t}} = D
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1vdistribution}{orpp\+::vdistribution$<$ D\+::\+I\+\_\+t, nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1vdistribution_ac45fdc3efa7adb4d514e5517a40b6f54}{X\+\_\+t}} = D\+::\+I\+\_\+t
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1ivdistribution_aa28ea9d8afb5bd9cc96e8af8ab9f86d3}{ivdistribution}} (const E \&\mbox{\hyperlink{classorpp_1_1ivdistribution_a6c366229a5a44cd527812b11b88d7732}{e}}, const std\+::vector$<$ D $>$ \&\mbox{\hyperlink{classorpp_1_1ivdistribution_af361916fc9e635dd3413f220cab15159}{d}})
+\item 
+\mbox{\hyperlink{classorpp_1_1ivdistribution_a2805de9884b5fafaa4082aba36fa6994}{ivdistribution}} (const E \&\mbox{\hyperlink{classorpp_1_1ivdistribution_a6c366229a5a44cd527812b11b88d7732}{e}}, const D \&\mbox{\hyperlink{classorpp_1_1ivdistribution_af361916fc9e635dd3413f220cab15159}{d}}, unsigned int \mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}})
+\item 
+Z\+::\+R\+\_\+t \mbox{\hyperlink{classorpp_1_1ivdistribution_ac4515bb67c9bb3e1ecff728e82b81fb3}{z}} (const \mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{scenario}}$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ \&s) const
+\begin{DoxyCompactList}\small\item\em usable only if {\ttfamily E} is \doxylink{classorpp_1_1diracdistribution}{diracdistribution} \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a5342002f1d9e83bd615020fb220ab717}{draw}} () const
+\begin{DoxyCompactList}\small\item\em not sure whether I use it \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classorpp_1_1ivdistribution_a1566bcbd12da7782c0dd494439f25c4d}{atoms}} (const std\+::vector$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ \&s, std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ $>$ \&a) const
+\item 
+const D \& \mbox{\hyperlink{classorpp_1_1ivdistribution_af361916fc9e635dd3413f220cab15159}{d}} (unsigned int i) const
+\item 
+const E \& \mbox{\hyperlink{classorpp_1_1ivdistribution_a6c366229a5a44cd527812b11b88d7732}{e}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1vdistribution}{orpp\+::vdistribution$<$ D\+::\+I\+\_\+t, nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual unsigned int \mbox{\hyperlink{classorpp_1_1ivdistribution_af08897f5bcb01d18886e61b845dea0f6}{dim\+\_\+is}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename E, typename D, typename Z$>$\newline
+class orpp\+::ivdistribution$<$ E, D, Z $>$}
+Iteratively defined std\+::vector distribution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em D} & conditional distribution of the std\+::vector\textquotesingle{}s component \\
+\hline
+{\em Z} & mapping from a history of the distribution into the condition of {\ttfamily D} \\
+\hline
+\end{DoxyTemplParams}
+The distribution is defned iteratively, the {\itshape i-\/th} component being conditioned by {\ttfamily \{Z\}(s)}\$ where {\ttfamily s} is the scenario containing previous values of the std\+::vector. Template parameter {\ttfamily Z} has to be a descendant of \doxylink{classorpp_1_1zeta}{zeta}\texorpdfstring{$<$}{<}{\ttfamily X}, {\ttfamily C\texorpdfstring{$>$}{>}} where {\ttfamily X} is the type of {\ttfamily D\textquotesingle{}s} values and {\ttfamily C} is the type of its condition. 
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classorpp_1_1ivdistribution_ae514308e895d3f41a71d554b337e6588}\label{classorpp_1_1ivdistribution_ae514308e895d3f41a71d554b337e6588} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!D\_t@{D\_t}}
+\index{D\_t@{D\_t}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{D\_t}{D\_t}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::\+D\+\_\+t =  D}
+
+\Hypertarget{classorpp_1_1ivdistribution_a680ebde66ab5c282ce0468b91a89540d}\label{classorpp_1_1ivdistribution_a680ebde66ab5c282ce0468b91a89540d} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!E\_t@{E\_t}}
+\index{E\_t@{E\_t}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{E\_t}{E\_t}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::\+E\+\_\+t =  E}
+
+\Hypertarget{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}\label{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!X\_t@{X\_t}}
+\index{X\_t@{X\_t}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{X\_t}{X\_t}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::\+X\+\_\+t =  typename D\+::\+I\+\_\+t}
+
+\Hypertarget{classorpp_1_1ivdistribution_af24cb512b919b623021f652e9123c429}\label{classorpp_1_1ivdistribution_af24cb512b919b623021f652e9123c429} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!Z\_t@{Z\_t}}
+\index{Z\_t@{Z\_t}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{Z\_t}{Z\_t}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+using \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::\+Z\+\_\+t =  Z}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1ivdistribution_aa28ea9d8afb5bd9cc96e8af8ab9f86d3}\label{classorpp_1_1ivdistribution_aa28ea9d8afb5bd9cc96e8af8ab9f86d3} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!ivdistribution@{ivdistribution}}
+\index{ivdistribution@{ivdistribution}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{ivdistribution()}{ivdistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+\mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::ivdistribution (\begin{DoxyParamCaption}\item[{const E \&}]{e,  }\item[{const std\+::vector$<$ D $>$ \&}]{d }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1ivdistribution_a2805de9884b5fafaa4082aba36fa6994}\label{classorpp_1_1ivdistribution_a2805de9884b5fafaa4082aba36fa6994} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!ivdistribution@{ivdistribution}}
+\index{ivdistribution@{ivdistribution}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{ivdistribution()}{ivdistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+\mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::ivdistribution (\begin{DoxyParamCaption}\item[{const E \&}]{e,  }\item[{const D \&}]{d,  }\item[{unsigned int}]{dim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1ivdistribution_a1566bcbd12da7782c0dd494439f25c4d}\label{classorpp_1_1ivdistribution_a1566bcbd12da7782c0dd494439f25c4d} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!atoms@{atoms}}
+\index{atoms@{atoms}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{atoms()}{atoms()}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+void \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::atoms (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ \&}]{s,  }\item[{std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ $>$ \&}]{a }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+may be used only if {\ttfamily D} is a descendant of \doxylink{classorpp_1_1fdistribution}{fdistribution}
+
+TBD maybe adding this functionality to fdistribution wwould be more clean... \Hypertarget{classorpp_1_1ivdistribution_af361916fc9e635dd3413f220cab15159}\label{classorpp_1_1ivdistribution_af361916fc9e635dd3413f220cab15159} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!d@{d}}
+\index{d@{d}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{d()}{d()}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+const D \& \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::d (\begin{DoxyParamCaption}\item[{unsigned int}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1ivdistribution_af08897f5bcb01d18886e61b845dea0f6}\label{classorpp_1_1ivdistribution_af08897f5bcb01d18886e61b845dea0f6} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!dim\_is@{dim\_is}}
+\index{dim\_is@{dim\_is}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{dim\_is()}{dim\_is()}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+virtual unsigned int \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::dim\+\_\+is (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classorpp_1_1vdistribution}{orpp\+::vdistribution$<$ D\+::\+I\+\_\+t, nothing $>$}}.
+
+\Hypertarget{classorpp_1_1ivdistribution_a5342002f1d9e83bd615020fb220ab717}\label{classorpp_1_1ivdistribution_a5342002f1d9e83bd615020fb220ab717} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!draw@{draw}}
+\index{draw@{draw}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+std\+::vector$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::draw (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+not sure whether I use it 
+
+\Hypertarget{classorpp_1_1ivdistribution_a6c366229a5a44cd527812b11b88d7732}\label{classorpp_1_1ivdistribution_a6c366229a5a44cd527812b11b88d7732} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!e@{e}}
+\index{e@{e}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{e()}{e()}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+const E \& \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::e (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1ivdistribution_ac4515bb67c9bb3e1ecff728e82b81fb3}\label{classorpp_1_1ivdistribution_ac4515bb67c9bb3e1ecff728e82b81fb3} 
+\index{orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}!z@{z}}
+\index{z@{z}!orpp::ivdistribution$<$ E, D, Z $>$@{orpp::ivdistribution$<$ E, D, Z $>$}}
+\doxysubsubsection{\texorpdfstring{z()}{z()}}
+{\footnotesize\ttfamily template$<$typename E , typename D , typename Z $>$ \\
+Z\+::\+R\+\_\+t \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution}}$<$ E, D, Z $>$\+::z (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{scenario}}$<$ \mbox{\hyperlink{classorpp_1_1ivdistribution_a656acf75341e6c568fee711f66d6cf34}{X\+\_\+t}} $>$ \&}]{s }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+usable only if {\ttfamily E} is \doxylink{classorpp_1_1diracdistribution}{diracdistribution} 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

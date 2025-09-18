@@ -1,0 +1,68 @@
+\doxysection{orpp/dp.hpp File Reference}
+\hypertarget{dp_8hpp}{}\label{dp_8hpp}\index{orpp/dp.hpp@{orpp/dp.hpp}}
+{\ttfamily \#include "{}orpp/random.\+hpp"{}}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+Include dependency graph for dp.\+hpp\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classorpp_1_1space}{orpp\+::space$<$ Element $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}
+\begin{DoxyCompactList}\small\item\em Base abstract class -\/ dp problem. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1iteratedspace}{orpp\+::iteratedspace$<$ Element $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1constrainedspace}{orpp\+::constrainedspace$<$ SElement, AElement $>$}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1dpcondition}{orpp\+::dpcondition$<$ SElement, AElement $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1integerspace}{orpp\+::integerspace}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1finitepolicy}{orpp\+::finitepolicy}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{orpp\+::finitevaluefunction}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{orpp\+::finitedpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::computationparams}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{orpp\+::finitedpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::heteropolicy}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{orpp\+::finitedpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::enumresult}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{orpp\+::finitedpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::pgdheteroresult}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult}{orpp\+::finitedpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::pgdhomoresult}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1nestedcriterion}{orpp\+::nestedcriterion$<$ Nesting\+Criterion $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1finitehomodpproblem}{orpp\+::finitehomodpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1computationparams}{orpp\+::finitehomodpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::computationparams}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitehomodpproblem_1_1viresult}{orpp\+::finitehomodpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::viresult}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceorpp}{orpp}}
+\begin{DoxyCompactList}\small\item\em A class encapsulting calls of gnuplot. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename State\+Space , typename Action\+Space $>$ }\\using \mbox{\hyperlink{namespaceorpp_adf6204db093fa2d124c82597f72ee951}{orpp\+::dpreward}} = function$<$ \mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition}}$<$ typename State\+Space\+::\+Element\+\_\+t, typename Action\+Space\+::\+Element\+\_\+t $>$ $>$
+\item 
+{\footnotesize template$<$typename State\+Space , typename Actionspace $>$ }\\using \mbox{\hyperlink{namespaceorpp_a96ff46919608450b77b1351e4d09f42d}{orpp\+::finitetransition}} = \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}$<$ typename State\+Space\+::\+Element\+\_\+t, \mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition}}$<$ typename State\+Space\+::\+Element\+\_\+t, typename Actionspace\+::\+Element\+\_\+t $>$ $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{namespaceorpp_ac231de3721e7704f5c02a9f352df8b7b}{orpp\+::operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&p)
+\item 
+double \mbox{\hyperlink{namespaceorpp_ae5de5ecb1c04030ca9de645d21ac3ce7}{orpp\+::dist}} (const \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}} \&a, const \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}} \&b)
+\end{DoxyCompactItemize}

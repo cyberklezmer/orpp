@@ -1,0 +1,74 @@
+\doxysection{orpp.\+hpp File Reference}
+\hypertarget{orpp_8hpp}{}\label{orpp_8hpp}\index{orpp.hpp@{orpp.hpp}}
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$random$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+Include dependency graph for orpp.\+hpp\+:
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classorpp_1_1object}{orpp\+::object}}
+\begin{DoxyCompactList}\small\item\em Base class. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1exception}{orpp\+::exception}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1sys}{orpp\+::sys}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1timelimitexception}{orpp\+::timelimitexception}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1nothing}{orpp\+::nothing}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1mapping}{orpp\+::mapping$<$ D, R $>$}}
+\begin{DoxyCompactList}\small\item\em Base class for mappings. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1idmapping}{orpp\+::idmapping$<$ I $>$}}
+\begin{DoxyCompactList}\small\item\em Identity mapping. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1nomapping}{orpp\+::nomapping$<$ I $>$}}
+\begin{DoxyCompactList}\small\item\em Mapping having no value. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1efunction}{orpp\+::efunction}}
+\begin{DoxyCompactList}\small\item\em Function from Eucleidean space. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1convexefunction}{orpp\+::convexefunction}}
+\begin{DoxyCompactList}\small\item\em Convex function from an Eucleidean space. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1subdifefunction}{orpp\+::subdifefunction}}
+\begin{DoxyCompactList}\small\item\em Function with defined subdifferential. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1linearfunction}{orpp\+::linearfunction}}
+\begin{DoxyCompactList}\small\item\em Linear function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceorpp}{orpp}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{using}} \mbox{\hyperlink{group__sysclasses_ga5017a9c575fe61c93f0df38d90f934f5}{orpp\+::probability}} = \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{double}}
+\item 
+\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{using}} \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{orpp\+::timems}} = \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{unsigned}}
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{typename}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} $>$ }\\\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{using}} \mbox{\hyperlink{group__sysclasses_ga59c6cb9e2bbfcbe4c24109e769d07fed}{orpp\+::ptr}} = std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} $>$
+\begin{DoxyCompactList}\small\item\em Heap pointer to {\ttfamily T}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{using}} \mbox{\hyperlink{group__general_ga314972dcb52e98b34f918660e97bf48f}{orpp\+::index}} = \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{unsigned}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{int}}
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{typename}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{D}} $>$ }\\\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{using}} \mbox{\hyperlink{group__fns_gac0f379d93162b91b2aa71e13a5f7b06f}{orpp\+::function}} = \mbox{\hyperlink{classorpp_1_1mapping}{mapping}}$<$ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{D}}, \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{double}} $>$
+\begin{DoxyCompactList}\small\item\em Function (mapping from {\ttfamily D} to real numbers) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{typename}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}  = double$>$ }\\\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{constexpr}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} \mbox{\hyperlink{group__general_ga120072e73e7efca0232e3a74c1ef21f8}{orpp\+::nan}} =std\+::numeric\+\_\+limits$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}$>$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{\+::quiet\+\_\+\+NaN}}()
+\item 
+{\footnotesize template$<$typename T  = double$>$ }\\constexpr T \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{orpp\+::infinity}} =std\+::numeric\+\_\+limits$<$T$>$\+::infinity()
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{typename}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}  = double$>$ }\\\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{constexpr}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} \mbox{\hyperlink{group__general_ga24cba742f7982fbad5d86504ab49c75b}{orpp\+::minfinity}} = -\/\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{infinity}}$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}$>$
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{typename}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}  = double$>$ }\\\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{constexpr}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} \mbox{\hyperlink{group__general_ga279ba059332c139b11fa739d24faf704}{orpp\+::max}} = std\+::numeric\+\_\+limits$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}$>$\+::max()
+\item 
+{\footnotesize template$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{typename}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} $>$ }\\\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{constexpr}} \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}} \mbox{\hyperlink{group__general_ga6e56aef2bdc2d0a0b4cd3c439fba064f}{orpp\+::min}} = std\+::numeric\+\_\+limits$<$\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}$>$\+::min()
+\item 
+\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{constexpr}} \mbox{\hyperlink{structorpp_1_1nothing}{nothing}} \mbox{\hyperlink{group__fns_ga1752a567fbd91b6883e7922096a62028}{orpp\+::na}}
+\begin{DoxyCompactList}\small\item\em A class bearing no information (alternative to {\ttfamily void}) \end{DoxyCompactList}\end{DoxyCompactItemize}

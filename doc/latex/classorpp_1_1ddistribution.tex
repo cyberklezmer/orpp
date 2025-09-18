@@ -1,0 +1,112 @@
+\doxysection{orpp\+::ddistribution\texorpdfstring{$<$}{<} I, C \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1ddistribution}{}\label{classorpp_1_1ddistribution}\index{orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}}
+
+
+Discrete distribution.  
+
+
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::ddistribution\texorpdfstring{$<$}{<} I, C \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::ddistribution\texorpdfstring{$<$}{<} I, C \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator()}} (unsigned int i, const C \&c) const
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619}{operator()}} (unsigned int i) const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}{is\+\_\+sorted}} () const =0
+\item 
+I \mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}} (const C \&c) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename I, typename C$>$\newline
+class orpp\+::ddistribution$<$ I, C $>$}
+Discrete distribution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em I} & type of the values \\
+\hline
+{\em C} & type of the condition \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}\label{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899} 
+\index{orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}!drawuniv@{drawuniv}}
+\index{drawuniv@{drawuniv}!orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}}
+\doxysubsubsection{\texorpdfstring{drawuniv()}{drawuniv()}}
+{\footnotesize\ttfamily template$<$typename I , typename C $>$ \\
+I \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution}}$<$ I, C $>$\+::drawuniv (\begin{DoxyParamCaption}\item[{const C \&}]{c }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+generates an uniform variable {\ttfamily u} and goes through the probabilities until their sum exceeds {\ttfamily u}. May be very slow \Hypertarget{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}\label{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2} 
+\index{orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}!is\_sorted@{is\_sorted}}
+\index{is\_sorted@{is\_sorted}!orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}}
+\doxysubsubsection{\texorpdfstring{is\_sorted()}{is\_sorted()}}
+{\footnotesize\ttfamily template$<$typename I , typename C $>$ \\
+virtual bool \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution}}$<$ I, C $>$\+::is\+\_\+sorted (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+\Hypertarget{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619}\label{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619} 
+\index{orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename I , typename C $>$ \\
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution}}$<$ I, C $>$\+::operator() (\begin{DoxyParamCaption}\item[{unsigned int}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}\label{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af} 
+\index{orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename I , typename C $>$ \\
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution}}$<$ I, C $>$\+::operator() (\begin{DoxyParamCaption}\item[{unsigned int}]{i,  }\item[{const C \&}]{c }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}\label{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7} 
+\index{orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}!sorted@{sorted}}
+\index{sorted@{sorted}!orpp::ddistribution$<$ I, C $>$@{orpp::ddistribution$<$ I, C $>$}}
+\doxysubsubsection{\texorpdfstring{sorted()}{sorted()}}
+{\footnotesize\ttfamily template$<$typename I , typename C $>$ \\
+bool \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution}}$<$ I, C $>$\+::sorted (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

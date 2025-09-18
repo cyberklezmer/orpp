@@ -1,0 +1,134 @@
+\doxysection{orpp/random.hpp File Reference}
+\hypertarget{random_8hpp}{}\label{random_8hpp}\index{orpp/random.hpp@{orpp/random.hpp}}
+{\ttfamily \#include "{}orpp.\+hpp"{}}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+Include dependency graph for random.\+hpp\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1valuewitherror}{orpp\+::valuewitherror$<$ E $>$}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1realestimate}{orpp\+::realestimate}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}
+\begin{DoxyCompactList}\small\item\em Base class. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1markovdistribution}{orpp\+::markovdistribution$<$ I $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1jdistribution}{orpp\+::jdistribution$<$ F, S, C $>$}}
+\begin{DoxyCompactList}\small\item\em Joint distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1vdistribution}{orpp\+::vdistribution$<$ X, C $>$}}
+\begin{DoxyCompactList}\small\item\em std\+::vector distribution \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}
+\begin{DoxyCompactList}\small\item\em Monte Carlo distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1cdfdistribution}{orpp\+::cdfdistribution$<$ C $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution$<$ C $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1scaleddistribution}{orpp\+::scaleddistribution$<$ D $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1truncateddistribution}{orpp\+::truncateddistribution$<$ D $>$}}
+\begin{DoxyCompactList}\small\item\em not tested yet \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1arqdistribution}{orpp\+::arqdistribution$<$ D $>$}}
+\begin{DoxyCompactList}\small\item\em tbd own draw \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1multiplieddistribution}{orpp\+::multiplieddistribution$<$ D $>$}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1atom}{orpp\+::atom$<$ I $>$}}
+\begin{DoxyCompactList}\small\item\em Atom of \#ddistribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}
+\begin{DoxyCompactList}\small\item\em Discrete distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1fdistribution}{orpp\+::fdistribution$<$ I, C $>$}}
+\begin{DoxyCompactList}\small\item\em Finite discrete distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1ldistribution}{orpp\+::ldistribution$<$ I, sortable $>$}}
+\begin{DoxyCompactList}\small\item\em List defined distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1equipdistribution}{orpp\+::equipdistribution$<$ I, sortable $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1altldistribution}{orpp\+::altldistribution$<$ I $>$}}
+\begin{DoxyCompactList}\small\item\em Alternative lists defined distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1lvdistribution}{orpp\+::lvdistribution$<$ X $>$}}
+\begin{DoxyCompactList}\small\item\em List defined std\+::vector distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1diracdistribution}{orpp\+::diracdistribution$<$ I $>$}}
+\begin{DoxyCompactList}\small\item\em Dirac distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1discretization}{orpp\+::discretization$<$ D, C $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1meanvardistribution}{orpp\+::meanvardistribution$<$ D $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1fmeanvardistribution}{orpp\+::fmeanvardistribution$<$ D $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1ijdistribution}{orpp\+::ijdistribution$<$ F, S, M $>$}}
+\begin{DoxyCompactList}\small\item\em Iterative joint distribution,. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1uijmapping}{orpp\+::uijmapping$<$ D, R, M $>$}}
+\begin{DoxyCompactList}\small\item\em Helper class, used as {\ttfamily M} in {\ttfamily uijdistribution}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1mijdistribution}{orpp\+::mijdistribution$<$ F, S, M $>$}}
+\begin{DoxyCompactList}\small\item\em MC iterative distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1fijdistribution}{orpp\+::fijdistribution$<$ F, S, M $>$}}
+\begin{DoxyCompactList}\small\item\em Monte Carlo iterative distribution with finite support. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1zeta}{orpp\+::zeta$<$ X, R $>$}}
+\begin{DoxyCompactList}\small\item\em Base class for scenario restrictions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1ivdistribution}{orpp\+::ivdistribution$<$ E, D, Z $>$}}
+\begin{DoxyCompactList}\small\item\em Iteratively defined std\+::vector distribution. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1mivdistribution}{orpp\+::mivdistribution$<$ E, D, Z, M $>$}}
+\begin{DoxyCompactList}\small\item\em MC version of \doxylink{classorpp_1_1ivdistribution}{ivdistribution}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1empiricaldistribution}{orpp\+::empiricaldistribution}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1statcounter}{orpp\+::statcounter}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1riskmeasure}{orpp\+::riskmeasure$<$ Distribution $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1estimableriskmeasure}{orpp\+::estimableriskmeasure$<$ Distribution $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1parametricriskmeasure}{orpp\+::parametricriskmeasure$<$ Distribution $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1MeanCVaR}{orpp\+::\+Mean\+CVa\+R$<$ Distribution, negative $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1CVaR}{orpp\+::\+CVa\+R$<$ Distribution, negative $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceorpp}{orpp}}
+\begin{DoxyCompactList}\small\item\em A class encapsulting calls of gnuplot. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename F , typename S , typename M  = idmapping$<$typename F\+::\+I\+\_\+t$>$$>$ }\\using \mbox{\hyperlink{group__iterativedists_gaffedae336e5c752f214a76a54ebc6383}{orpp\+::uijdistribution}} = \mbox{\hyperlink{classorpp_1_1ijdistribution}{ijdistribution}}$<$ F, S, \mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}$<$ typename F\+::\+I\+\_\+t, typename S\+::\+C\+\_\+t, M $>$ $>$
+\begin{DoxyCompactList}\small\item\em Unconditional iterative distribution. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename F , typename S , typename M $>$ }\\using \mbox{\hyperlink{group__iterativedists_ga4c1674f08cf31ccea085d55693def0e2}{orpp\+::umijdistribution}} = \mbox{\hyperlink{classorpp_1_1mijdistribution}{mijdistribution}}$<$ F, S, \mbox{\hyperlink{classorpp_1_1uijmapping}{uijmapping}}$<$ typename F\+::\+I\+\_\+t, typename S\+::\+C\+\_\+t, M $>$ $>$
+\begin{DoxyCompactList}\small\item\em Unconditional MC iterative distribution. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename X  = double$>$ }\\using \mbox{\hyperlink{group__iterativedists_gaf9a07dd2aac0a935453e08623821a786}{orpp\+::scenario}} = std\+::vector$<$ X $>$
+\begin{DoxyCompactList}\small\item\em Scenario (history) of a stochastic process with values in {\ttfamily X}. \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{group__Risk_gaa7f7e5e5e923b1b287d62a331284917a}{orpp\+::empriricalriskmeasure}} = \mbox{\hyperlink{classorpp_1_1estimableriskmeasure}{estimableriskmeasure}}$<$ \mbox{\hyperlink{classorpp_1_1empiricaldistribution}{empiricaldistribution}} $>$
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{group__General_ga5f93ace9d45c70eb349fa47e7946b066}{orpp\+::esignificance}} \{ \newline
+\mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a28803ae574c87a4b2743ba2592ee5223}{orpp\+::enotsignificant}}
+, \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066adf704dd22f7a1f12fa96ab8e7e632a77}{orpp\+::e10percentsignificant}}
+, \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a11f241919296804091fa013cefa3ccd9}{orpp\+::e5percensignificant}}
+, \mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066a868bf50c76334821a7ced7a9f0331fa1}{orpp\+::e1percentsignificant}}
+, \newline
+\mbox{\hyperlink{group__General_gga5f93ace9d45c70eb349fa47e7946b066afad18e71ccec63e0fb82045f014f1183}{orpp\+::enumsignificances}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{group__General_gade517de265faebea44df3d7db7ba5f50}{orpp\+::stars}} (\mbox{\hyperlink{group__General_ga5f93ace9d45c70eb349fa47e7946b066}{esignificance}} s)
+\item 
+\mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \mbox{\hyperlink{group__General_ga2b1b180489c053b2cd09e23a2e4864f0}{orpp\+::operator+}} (const \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \&a, \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \&b)
+\item 
+\mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \mbox{\hyperlink{group__General_ga109445676d777ab17748246ca2cc003b}{orpp\+::operator-\/}} (const \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \&a, \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \&b)
+\item 
+{\footnotesize template$<$typename X $>$ }\\\mbox{\hyperlink{classorpp_1_1lvdistribution}{lvdistribution}}$<$ X $>$ \mbox{\hyperlink{group__discretedisc_gace950755f650d29d49f45cc22ff10b80}{orpp\+::operator\texorpdfstring{$\ast$}{*}}} (const \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}$<$ X, nothing $>$ \&x, const \mbox{\hyperlink{classorpp_1_1fdistribution}{fdistribution}}$<$ X, nothing $>$ \&y)
+\begin{DoxyCompactList}\small\item\em Product distribution. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr double \mbox{\hyperlink{group__Distributions_ga4e020bf05d865ce56a1b95fc761e7ad8}{orpp\+::probabilitytolerance}} = 1e-\/6
+\end{DoxyCompactItemize}

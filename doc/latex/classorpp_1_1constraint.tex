@@ -1,0 +1,99 @@
+\doxysection{orpp\+::constraint Class Reference}
+\hypertarget{classorpp_1_1constraint}{}\label{classorpp_1_1constraint}\index{orpp::constraint@{orpp::constraint}}
+
+
+Base class of decision problems\textquotesingle{} constraints.  
+
+
+
+
+{\ttfamily \#include $<$optimization.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::constraint\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::constraint\+:
+% FIG 1
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \{ \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{eq}}
+, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16a6a96f23ba831912ab68b0fa2ae003f40}{geq}}
+, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16abbc162814a5ad6713e593a79b1c3aafa}{leq}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1constraint_ac92f93bd73b7c6051804ff87abd59035}{constraint}} (unsigned int \mbox{\hyperlink{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c}{xdim}}, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}}=\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{eq}})
+\item 
+\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}} () const
+\item 
+void \mbox{\hyperlink{classorpp_1_1constraint_a601749c799e3877f8baa7876845f8a6c}{settype}} (\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}})
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c}{xdim}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base class of decision problems\textquotesingle{} constraints. 
+
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}\label{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16} 
+\index{orpp::constraint@{orpp::constraint}!type@{type}}
+\index{type@{type}!orpp::constraint@{orpp::constraint}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{orpp\+::constraint\+::type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{eq@{eq}!orpp::constraint@{orpp::constraint}}\index{orpp::constraint@{orpp::constraint}!eq@{eq}}}\Hypertarget{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}\label{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe} 
+eq&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{geq@{geq}!orpp::constraint@{orpp::constraint}}\index{orpp::constraint@{orpp::constraint}!geq@{geq}}}\Hypertarget{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16a6a96f23ba831912ab68b0fa2ae003f40}\label{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16a6a96f23ba831912ab68b0fa2ae003f40} 
+geq&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{leq@{leq}!orpp::constraint@{orpp::constraint}}\index{orpp::constraint@{orpp::constraint}!leq@{leq}}}\Hypertarget{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16abbc162814a5ad6713e593a79b1c3aafa}\label{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16abbc162814a5ad6713e593a79b1c3aafa} 
+leq&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1constraint_ac92f93bd73b7c6051804ff87abd59035}\label{classorpp_1_1constraint_ac92f93bd73b7c6051804ff87abd59035} 
+\index{orpp::constraint@{orpp::constraint}!constraint@{constraint}}
+\index{constraint@{constraint}!orpp::constraint@{orpp::constraint}}
+\doxysubsubsection{\texorpdfstring{constraint()}{constraint()}}
+{\footnotesize\ttfamily orpp\+::constraint\+::constraint (\begin{DoxyParamCaption}\item[{unsigned int}]{xdim,  }\item[{\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}}}]{t = {\ttfamily \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{eq}}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1constraint_a601749c799e3877f8baa7876845f8a6c}\label{classorpp_1_1constraint_a601749c799e3877f8baa7876845f8a6c} 
+\index{orpp::constraint@{orpp::constraint}!settype@{settype}}
+\index{settype@{settype}!orpp::constraint@{orpp::constraint}}
+\doxysubsubsection{\texorpdfstring{settype()}{settype()}}
+{\footnotesize\ttfamily void orpp\+::constraint\+::settype (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}}}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}\label{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293} 
+\index{orpp::constraint@{orpp::constraint}!t@{t}}
+\index{t@{t}!orpp::constraint@{orpp::constraint}}
+\doxysubsubsection{\texorpdfstring{t()}{t()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} orpp\+::constraint\+::t (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c}\label{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c} 
+\index{orpp::constraint@{orpp::constraint}!xdim@{xdim}}
+\index{xdim@{xdim}!orpp::constraint@{orpp::constraint}}
+\doxysubsubsection{\texorpdfstring{xdim()}{xdim()}}
+{\footnotesize\ttfamily unsigned int orpp\+::constraint\+::xdim (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{optimization_8hpp}{optimization.\+hpp}}\end{DoxyCompactItemize}

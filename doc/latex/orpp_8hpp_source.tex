@@ -1,0 +1,379 @@
+\doxysection{orpp.\+hpp}
+\hypertarget{orpp_8hpp_source}{}\label{orpp_8hpp_source}\mbox{\hyperlink{orpp_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ ORPP\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ ORPP\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <iostream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <assert.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <time.h>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceorpp}{orpp}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00025\ \textcolor{comment}{//\ TBD\ inherit\ all\ fron\ this}}
+\DoxyCodeLine{00027\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1object}{object}}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{group__general_gaecdd076a7a750f291d3e78134fb03c6c}{\string~object}}()\ \{\}}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00034\ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__sysclasses_ga5017a9c575fe61c93f0df38d90f934f5}{probability}}\ =\ double;}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1exception}{exception}}:\ \textcolor{keyword}{public}\ std::runtime\_error}
+\DoxyCodeLine{00038\ \{}
+\DoxyCodeLine{00039\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \mbox{\hyperlink{group__general_ga50ee359fb3191c4d628e9e5620bce22f}{exception}}(\textcolor{keyword}{const}\ std::string\&\ s)\ :\ std::runtime\_error(s)\ \{\}}
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{group__general_ga0ff5f88d11a50d1f502b62c69e33f9a7}{exception}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}*\ s)\ :\ std::runtime\_error(s)\ \{\}}
+\DoxyCodeLine{00042\ \ \ \ \ \mbox{\hyperlink{group__general_ga46ae0cc8bcaebf0c16e7005ce0f3f963}{exception}}(\textcolor{keyword}{const}\ std::ostringstream\&\ s)\ :\ std::runtime\_error(s.str())\ \{\}}
+\DoxyCodeLine{00043\ \};}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ =\ unsigned;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1sys}{sys}}}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{classorpp_1_1sys}{sys}}\&\ self()}
+\DoxyCodeLine{00050\ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{classorpp_1_1sys}{sys}}\ s;}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ s;}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00055\ \ \ \ \ \mbox{\hyperlink{group__general_gacb0d69dbfd63349b353e72b6be72e7eb}{sys}}()\ :\ fout(0),\ flog(0),\ floglevel(0),\ ferr(0),\ funiform(0.0,1.0),}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ fstarttime(\mbox{\hyperlink{group__general_gaea70cad3d414b48754c9fa450c31826e}{abstimems}}()),\ flastlinetime(0)}
+\DoxyCodeLine{00057\ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \mbox{\hyperlink{group__general_ga658da62a45c32c4eada65da4766de613}{\string~sys}}()}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga531c5b181fef5a89a4cacc3de4590c57}{setout}}(std::ostream\&\ o)}
+\DoxyCodeLine{00065\ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ self().fout\ =\ \&o;}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gac1d52bb5860c9b5a04bc66c961ffbac9}{resetout}}()}
+\DoxyCodeLine{00072\ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ self().fout\ =\ 0;}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gafbc52bc9cf0719d74feeeafbed94c2fb}{setlog}}(std::ostream\&\ l)}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ self().flog\ =\ \&l;}
+\DoxyCodeLine{00079\ \ \ \ \ \}}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga74a2f15d4615d7c436c602c71e3cca4e}{resetlog}}()}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ self().flog=0;}
+\DoxyCodeLine{00083\ \ \ \ \ \}}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gab5a2287563058d93fbd84ae007bdb81d}{setloglevel}}(\textcolor{keywordtype}{unsigned}\ l)}
+\DoxyCodeLine{00087\ \ \ \ \ \{}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ self().floglevel\ =\ l;}
+\DoxyCodeLine{00089\ \ \ \ \ \}}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga41edafe63d3176370bef3d57218ab4d9}{seterr}}(std::ostream\&\ e)}
+\DoxyCodeLine{00092\ \ \ \ \ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ self().ferr\ =\ \&e;}
+\DoxyCodeLine{00094\ \ \ \ \ \}}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga8261ac34507db62269f9ace264c2e074}{reseterr}}()}
+\DoxyCodeLine{00096\ \ \ \ \ \{}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ self().ferr\ =\ 0;}
+\DoxyCodeLine{00098\ \ \ \ \ \}}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga7804673cfae20e33ea445e1ef8ff52b2}{setoutputfolder}}(\textcolor{keyword}{const}\ std::string\&\ afolder)}
+\DoxyCodeLine{00101\ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ self().foutputfolder\ =\ afolder;}
+\DoxyCodeLine{00103\ \ \ \ \ \}}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gaf93f0e091562caa0d204d5e131e1a7b6}{settmpfolder}}(\textcolor{keyword}{const}\ std::string\&\ afolder)}
+\DoxyCodeLine{00106\ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ self().ftmpfolder\ =\ afolder;}
+\DoxyCodeLine{00108\ \ \ \ \ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{static}\ std::ostream\&\ \mbox{\hyperlink{group__general_gade525277cb57492680cecde0dcc83b44}{out}}()}
+\DoxyCodeLine{00111\ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().fout\ ?\ *(self().fout)\ :\ std::cout;}
+\DoxyCodeLine{00113\ \ \ \ \ \}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{static}\ std::ostream\&\ \mbox{\hyperlink{group__general_ga5c77ef31acefb3f554116c89ede9909c}{log}}()}
+\DoxyCodeLine{00115\ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().flog\ ?\ *(self().flog)\ :\ std::clog;}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{static}\ std::ostream\&\ \mbox{\hyperlink{group__general_ga675a26c9532f1c3d1fec6a477e5dfc69}{logline}}(\textcolor{keywordtype}{unsigned}\ level=0)}
+\DoxyCodeLine{00119\ \ \ \ \ \{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ tm\ =\ \mbox{\hyperlink{group__general_ga540838a0d54256d5c63d237b7ed58d8e}{gettimems}}();}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga5c77ef31acefb3f554116c89ede9909c}{log}}()\ <<\ tm\ <<\ \textcolor{stringliteral}{"{},"{}}\ <<\ tm\ -\/\ self().flastlinetime\ <<\ \textcolor{stringliteral}{"{},"{}};}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ self().flastlinetime\ =\ tm;}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<level;\ i++)}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga5c77ef31acefb3f554116c89ede9909c}{log}}()\ <<\ \textcolor{stringliteral}{"{},"{}};}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__general_ga5c77ef31acefb3f554116c89ede9909c}{log}}();}
+\DoxyCodeLine{00128\ \ \ \ \ \}}
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{group__general_ga3d8946f647fca023f62d33ee8769d5b1}{loglevel}}()}
+\DoxyCodeLine{00130\ \ \ \ \ \{}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().floglevel;}
+\DoxyCodeLine{00132\ \ \ \ \ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{static}\ std::ostream\&\ \mbox{\hyperlink{group__general_ga0672ea01762456d43a77d21aac1ba65a}{err}}()}
+\DoxyCodeLine{00135\ \ \ \ \ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().ferr\ ?\ *(self().ferr)\ :\ std::cerr;}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{group__general_ga6db10332adb14717f855d5fcc0f5eb67}{outputfolder}}()}
+\DoxyCodeLine{00140\ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().foutputfolder;}
+\DoxyCodeLine{00142\ \ \ \ \ \}}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{group__general_ga29112e251af99629042fad3e3352f394}{tmpfolder}}()}
+\DoxyCodeLine{00145\ \ \ \ \ \{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().ftmpfolder;}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \mbox{\hyperlink{group__general_ga540838a0d54256d5c63d237b7ed58d8e}{gettimems}}()}
+\DoxyCodeLine{00150\ \ \ \ \ \{}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__general_gaea70cad3d414b48754c9fa450c31826e}{abstimems}}()\ -\/\ self().fstarttime;}
+\DoxyCodeLine{00152\ \ \ \ \ \}}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \mbox{\hyperlink{group__general_gaea70cad3d414b48754c9fa450c31826e}{abstimems}}()}
+\DoxyCodeLine{00155\ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ now\_ms\ =\ std::chrono::time\_point\_cast<std::chrono::milliseconds>(std::chrono::system\_clock::now());}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ epoch\ =\ now\_ms.time\_since\_epoch();}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ value\ =\ std::chrono::duration\_cast<std::chrono::milliseconds>(epoch);}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value.count();}
+\DoxyCodeLine{00160\ \ \ \ \ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gac8e9579eb81a6829065e94f98b711846}{seed}}()}
+\DoxyCodeLine{00165\ \ \ \ \ \{}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ self().fengine.seed(time(0));}
+\DoxyCodeLine{00167\ \ \ \ \ \}}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga7af496aef894f0bf335d033efa1c7a23}{seed}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ aseed)}
+\DoxyCodeLine{00171\ \ \ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ self().fengine.seed(aseed);}
+\DoxyCodeLine{00173\ \ \ \ \ \}}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__general_ga898ef70b6f6e613367f5a6487855b031}{uniform}}()}
+\DoxyCodeLine{00177\ \ \ \ \ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().funiform(self().fengine);}
+\DoxyCodeLine{00179\ \ \ \ \ \}}
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{static}\ std::default\_random\_engine\&\ \mbox{\hyperlink{group__general_ga120e76af2bb398e642d81f2c813da6ef}{engine}}()}
+\DoxyCodeLine{00182\ \ \ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ self().fengine;}
+\DoxyCodeLine{00184\ \ \ \ \ \};}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gac4eb3a03f7c6cfe2a6b7da15c0745505}{set}}(\textcolor{keyword}{const}\ std::string\&\ var,\ \textcolor{keyword}{const}\ std::string\&\ val)}
+\DoxyCodeLine{00187\ \ \ \ \ \{}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<self().fenv.size();\ i++)}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(self().fenv[i].first\ ==\ var)}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ self().fenv[i].second\ =\ val;}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ self().fenv.push\_back(\{var,val\});}
+\DoxyCodeLine{00197\ \ \ \ \ \}}
+\DoxyCodeLine{00198\ \ \ \ \ \textcolor{keyword}{static}\ std::pair<bool,std::string>\ \mbox{\hyperlink{group__general_ga65c5736a291f5e34b5c2dab13f422bde}{get}}(\textcolor{keyword}{const}\ std::string\&\ var)}
+\DoxyCodeLine{00199\ \ \ \ \ \{}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<self().fenv.size();\ i++)}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(self().fenv[i].first\ ==\ var)}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \textcolor{keyword}{true},\ self().fenv[i].second\ \};}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \textcolor{keyword}{false},\ \textcolor{stringliteral}{"{}"{}}\ \};}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00208\ \ \ \ \ std::ostream*\ fout;}
+\DoxyCodeLine{00209\ \ \ \ \ std::ostream*\ flog;}
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ floglevel;}
+\DoxyCodeLine{00211\ \ \ \ \ std::ostream*\ ferr;}
+\DoxyCodeLine{00212\ \ \ \ \ std::default\_random\_engine\ fengine;}
+\DoxyCodeLine{00213\ \ \ \ \ std::uniform\_real\_distribution<double>\ funiform;}
+\DoxyCodeLine{00214\ \ \ \ \ std::string\ foutputfolder;}
+\DoxyCodeLine{00215\ \ \ \ \ std::string\ ftmpfolder;}
+\DoxyCodeLine{00216\ \ \ \ \ std::vector<std::pair<std::string,std::string>>\ fenv;}
+\DoxyCodeLine{00217\ \ \ \ \ \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \ fstarttime;}
+\DoxyCodeLine{00218\ \ \ \ \ \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \ flastlinetime;}
+\DoxyCodeLine{00219\ \};}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ }
+\DoxyCodeLine{00222\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1timelimitexception}{timelimitexception}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1exception}{exception}}}
+\DoxyCodeLine{00223\ \{}
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ message(\mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}})}
+\DoxyCodeLine{00225\ \ \ \ \ \{}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ std::ostringstream\ e;}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ e\ <<\ \textcolor{stringliteral}{"{}Time\ limit\ "{}}\ <<\ \mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}}\ <<\ \textcolor{stringliteral}{"{}\ reached"{}};}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ e.str();}
+\DoxyCodeLine{00229\ \ \ \ \ \}}
+\DoxyCodeLine{00230\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00232\ \ \ \ \ \mbox{\hyperlink{group__general_ga6bcd2ed91379318e438152ecdbe79dfc}{timelimitexception}}(\mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}},\textcolor{keyword}{const}\ T\&\ s)\ :\ \mbox{\hyperlink{classorpp_1_1exception}{exception}}(s),\ flimit(\mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}})\ \{\}}
+\DoxyCodeLine{00233\ \ \ \ \ \mbox{\hyperlink{group__general_gab31ba1b9a1395fd833f171b6a2594c8f}{timelimitexception}}(\mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}})\ :\ \mbox{\hyperlink{classorpp_1_1exception}{exception}}(message(\mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}})),\ flimit(\mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}})\ \{\}}
+\DoxyCodeLine{00234\ \ \ \ \ \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ \mbox{\hyperlink{group__general_gacb6cdbf2f23e8099ac39016b5ddfb8e0}{limit}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ flimit;\ \}}
+\DoxyCodeLine{00235\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00236\ \ \ \ \ \mbox{\hyperlink{group__sysclasses_ga533c2704a2cb9b81aa1b48c963f7ba1a}{timems}}\ flimit;}
+\DoxyCodeLine{00237\ \};}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00241\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00242\ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__sysclasses_ga59c6cb9e2bbfcbe4c24109e769d07fed}{ptr}}=std::shared\_ptr<T>;}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00245\ }
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00247\ }
+\DoxyCodeLine{00250\ }
+\DoxyCodeLine{00251\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T=\textcolor{keywordtype}{double}>}
+\DoxyCodeLine{00252\ \textcolor{keyword}{constexpr}\ T\ \mbox{\hyperlink{group__general_ga120072e73e7efca0232e3a74c1ef21f8}{nan}}=std::numeric\_limits<T>::quiet\_NaN();}
+\DoxyCodeLine{00253\ }
+\DoxyCodeLine{00254\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T=\textcolor{keywordtype}{double}>}
+\DoxyCodeLine{00255\ \textcolor{keyword}{constexpr}\ T\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{infinity}}=std::numeric\_limits<T>::infinity();}
+\DoxyCodeLine{00256\ }
+\DoxyCodeLine{00257\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T=\textcolor{keywordtype}{double}>}
+\DoxyCodeLine{00258\ \textcolor{keyword}{constexpr}\ T\ \mbox{\hyperlink{group__general_ga24cba742f7982fbad5d86504ab49c75b}{minfinity}}\ =\ -\/\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{infinity<T>}};}
+\DoxyCodeLine{00259\ }
+\DoxyCodeLine{00260\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T=\textcolor{keywordtype}{double}>}
+\DoxyCodeLine{00261\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}\ \mbox{\hyperlink{group__general_ga279ba059332c139b11fa739d24faf704}{max}}\ =\ std::numeric\_limits<T>::max();}
+\DoxyCodeLine{00262\ }
+\DoxyCodeLine{00263\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00264\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{T}}\ \mbox{\hyperlink{group__general_ga6e56aef2bdc2d0a0b4cd3c439fba064f}{min}}\ =\ std::numeric\_limits<T>::min();}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1nothing}{nothing}}\ \{\};}
+\DoxyCodeLine{00268\ }
+\DoxyCodeLine{00269\ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__general_ga314972dcb52e98b34f918660e97bf48f}{index}}\ =\ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{int}};}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00276\ }
+\DoxyCodeLine{00277\ \textcolor{keyword}{constexpr}\ \mbox{\hyperlink{structorpp_1_1nothing}{nothing}}\ \mbox{\hyperlink{group__fns_ga1752a567fbd91b6883e7922096a62028}{na}};}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00282\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D,\textcolor{keyword}{typename}\ R>}
+\DoxyCodeLine{00283\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1mapping}{mapping}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1object}{object}}}
+\DoxyCodeLine{00284\ \{}
+\DoxyCodeLine{00285\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__general_gacd07650ec4110e61df282fb739d9cbeb}{D\_t}}=\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{D}};}
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{group__general_ga86b2095c397a804cc10956fa54a71ceb}{R\_t}}=\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{R}};}
+\DoxyCodeLine{00288\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{R}}\ \mbox{\hyperlink{group__general_gaac03924a5ad41a84046011ebd147f548}{operator()\ }}(\textcolor{keyword}{const}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{D}}\&\ )\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00289\ \};}
+\DoxyCodeLine{00290\ }
+\DoxyCodeLine{00292\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ D>}
+\DoxyCodeLine{00293\ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1mapping}{function}}\ =\ \mbox{\hyperlink{classorpp_1_1mapping}{mapping<D,double>}};}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00296\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00297\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1idmapping}{idmapping}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mapping}{mapping}}<I,I>}
+\DoxyCodeLine{00298\ \{}
+\DoxyCodeLine{00299\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{I}}\ \mbox{\hyperlink{group__general_ga0e86608d9cd1fcc4131a3671157d58b4}{operator()\ }}(\textcolor{keyword}{const}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{I}}\&\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}};\ \}}
+\DoxyCodeLine{00301\ \};}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00306\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ I>}
+\DoxyCodeLine{00307\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1nomapping}{nomapping}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mapping}{mapping}}<I,nothing>}
+\DoxyCodeLine{00308\ \{}
+\DoxyCodeLine{00309\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00310\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{structorpp_1_1nothing}{nothing}}\ \mbox{\hyperlink{group__general_gad7c661170a7fdcdb5e2ad5ac42a882b7}{operator()\ }}(\textcolor{keyword}{const}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{I}}\&\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}})\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__fns_ga1752a567fbd91b6883e7922096a62028}{na}};\ \}}
+\DoxyCodeLine{00311\ \};}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00314\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1efunction}{efunction}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1mapping}{function}}<std::vector<double>>}
+\DoxyCodeLine{00315\ \{}
+\DoxyCodeLine{00316\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00317\ \ \ \ \ \mbox{\hyperlink{group__general_gac0a3f2dc0f5284a110c3e3b538d4c79c}{efunction}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}})\ :\ fxdim(\mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}})\ \{\}}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ fxdim;\ \}}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__general_gafe83173b40f75bace94bd85cb86abdb2}{operator()\ }}(\textcolor{keyword}{const}\ std::vector<double>\&\ x)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00320\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{assert}}(x.size()\ ==\ fxdim);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ value\_is(x);}
+\DoxyCodeLine{00323\ \ \ \ \ \}}
+\DoxyCodeLine{00324\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00325\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ fxdim;}
+\DoxyCodeLine{00326\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ value\_is(\textcolor{keyword}{const}\ std::vector<double>\&\ x)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00327\ \};}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00330\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1convexefunction}{convexefunction}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1efunction}{efunction}}}
+\DoxyCodeLine{00331\ \{}
+\DoxyCodeLine{00332\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00333\ \ \ \ \ \mbox{\hyperlink{group__general_ga549935cd35ff7ede40b4ed8ffa87ef2f}{convexefunction}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}})\ :\ \mbox{\hyperlink{classorpp_1_1efunction}{efunction}}(\mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}})\ \{\}}
+\DoxyCodeLine{00334\ \};}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00337\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1subdifefunction}{subdifefunction}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1convexefunction}{convexefunction}}}
+\DoxyCodeLine{00338\ \{}
+\DoxyCodeLine{00339\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00340\ \ \ \ \ \mbox{\hyperlink{group__general_ga69236ba1fa96648cc1940eab5b1ed62f}{subdifefunction}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim)\ :\ \mbox{\hyperlink{classorpp_1_1convexefunction}{convexefunction}}(dim)\ \{\}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ std::vector<double>\ \mbox{\hyperlink{group__general_ga805bf037b6e1ea9d4b5f1f5e0feb7a92}{sg}}(\textcolor{keyword}{const}\ std::vector<double>\&\ x)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00343\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ sg\_is(x);}
+\DoxyCodeLine{00345\ \ \ \ \ \}}
+\DoxyCodeLine{00346\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00347\ \ \ \ \textcolor{keyword}{virtual}\ std::vector<double>\ sg\_is(\textcolor{keyword}{const}\ std::vector<double>\&\ x)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00348\ \};}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00351\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1linearfunction}{linearfunction}}:\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1subdifefunction}{subdifefunction}}}
+\DoxyCodeLine{00352\ \{}
+\DoxyCodeLine{00353\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00354\ \ \ \ \ \mbox{\hyperlink{group__general_ga0c044793864008895073a61dd86df766}{linearfunction}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dim):}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1subdifefunction}{subdifefunction}}(dim),\ fc(dim)\ \{\}}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \mbox{\hyperlink{group__general_ga0c4aa92d935453ad5def2e9c5e75beaf}{linearfunction}}(std::vector<double>\ \mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}}):}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1subdifefunction}{subdifefunction}}(\mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}}.size()),\ fc(\mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}})\ \{\}}
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_ga8bc0e0db42e6cc51e1476196f0a9d329}{setc}}(\textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}})}
+\DoxyCodeLine{00361\ \ \ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{assert}}(\mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}}.size()==\mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}}());}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ fc\ =\ \mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}};}
+\DoxyCodeLine{00364\ \ \ \ \ \}}
+\DoxyCodeLine{00365\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group__general_gac8072876c95d2b5dd08606211b0f500b}{setc}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}},\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}})}
+\DoxyCodeLine{00366\ \ \ \ \ \{}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{assert}}(\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}<fc.size());}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ fc[\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}]\ =\ \mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}};}
+\DoxyCodeLine{00369\ \ \ \ \ \}}
+\DoxyCodeLine{00370\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__general_ga07186ec1c4357ddf4584681db1961ea1}{c}}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}})\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00371\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{assert}}(\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}\ <\ fc.size());}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fc[\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}];}
+\DoxyCodeLine{00374\ \ \ \ \ \}}
+\DoxyCodeLine{00375\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<double>\&\ \mbox{\hyperlink{group__general_ga3bdc8e0422d34fc122f97c4c1533bb7a}{c}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00376\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fc;}
+\DoxyCodeLine{00378\ \ \ \ \ \}}
+\DoxyCodeLine{00379\ }
+\DoxyCodeLine{00380\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<double>\ sg\_is(\textcolor{keyword}{const}\ std::vector<double>\&\ x)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00382\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{assert}}(x.size()==\mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}}());}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fc;}
+\DoxyCodeLine{00385\ \ \ \ \ \}}
+\DoxyCodeLine{00386\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ value\_is(\textcolor{keyword}{const}\ std::vector<double>\&\ x)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00387\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{assert}}(x.size()==\mbox{\hyperlink{group__general_ga6b9b006a6486587a54d06e2e38c4eebc}{xdim}}());}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{s}}=0;}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}=0;\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}<fc.size();\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}++)}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{s}}\ +=\ fc[\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}]\ *\ x[\mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{i}}];}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{group__general_ga73ea3dcd8ef135ef09a9ddd29981c401}{s}};}
+\DoxyCodeLine{00393\ \ \ \ \ \}}
+\DoxyCodeLine{00394\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00395\ \ \ \ \ std::vector<double>\ fc;}
+\DoxyCodeLine{00396\ \};}
+\DoxyCodeLine{00397\ }
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ }
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \}\ \textcolor{comment}{//\ namespace}}
+\DoxyCodeLine{00404\ }
+\DoxyCodeLine{00405\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ ORPP\_HPP}}
+\DoxyCodeLine{00406\ }
+
+\end{DoxyCode}

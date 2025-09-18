@@ -1,0 +1,138 @@
+\doxysection{nloptuser Class Reference}
+\hypertarget{classnloptuser}{}\label{classnloptuser}\index{nloptuser@{nloptuser}}
+
+
+{\ttfamily \#include $<$oldorpp.\+hpp$>$}
+
+
+
+Inheritance diagram for nloptuser\+:
+% FIG 0
+
+
+Collaboration diagram for nloptuser\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classnloptuser_a98c56549fcf04a4a0b21f2ca624c23db}{setmaxtime}} (double m)
+\item 
+void \mbox{\hyperlink{classnloptuser_a650367780232585746d1c92e1198abad}{setftolrel}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_a8d90cdff2ba336d00c76d0447ada5119}{setxtolrel}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_a012283692ec629a565e93475ab7b1735}{setftolabs}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_aeba9e7a24368f18d9f7111eaa08c3e5d}{setxtolabs}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_a1f6c97d01f3f7026e931f7b4d2e33563}{setgradient}} (bool g)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classobject_a19562885680264bf861ba03b2e713b0c}{setlogging}} (\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} al=\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}})
+\item 
+bool \mbox{\hyperlink{classobject_a00411d9c6c86f9cdb3db728eb3ce882b}{islogging}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classnloptuser_aaf32eeedb382e514c83372689658797b}{nloptuser}} (nlopt\+::algorithm aalg, bool amax)
+\item 
+virtual double \mbox{\hyperlink{classnloptuser_abbbb3509fd5c047d70f36e31f2f6d0ef}{objf}} (const vector$<$ double $>$ \&x, vector$<$ double $>$ \&g)=0
+\item 
+double \mbox{\hyperlink{classnloptuser_a2dfcab9327dbc3cf72fd60229bf0ffd6}{opt}} (const vector$<$ paraminfo $>$ \&params, vector$<$ paramresult $>$ \&result)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_a04aad740887b47c735b9ed9078e45d77}{object}} ()
+\item 
+virtual \mbox{\hyperlink{classobject_a6233244b77a2794b456e5eee6964806d}{\texorpdfstring{$\sim$}{\string~}object}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \{ \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa32b207eaae85c46e0c1576e3242c9c9}{nologging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa6589c21d3d5347fd1e306419c3dae19}{extendedlogging}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \mbox{\hyperlink{classobject_a16be6bd5605b5df8120272924a88d2f2}{logging}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+ofstream \mbox{\hyperlink{classobject_a272d13822c00cec48d2ae6391a91adbd}{nulstream}}
+\item 
+ostream \& \mbox{\hyperlink{classobject_a6749b1b5cef09026c908edad043a4421}{lout}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classnloptuser_aaf32eeedb382e514c83372689658797b}\label{classnloptuser_aaf32eeedb382e514c83372689658797b} 
+\index{nloptuser@{nloptuser}!nloptuser@{nloptuser}}
+\index{nloptuser@{nloptuser}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{nloptuser()}{nloptuser()}}
+{\footnotesize\ttfamily nloptuser\+::nloptuser (\begin{DoxyParamCaption}\item[{nlopt\+::algorithm}]{aalg,  }\item[{bool}]{amax }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classnloptuser_abbbb3509fd5c047d70f36e31f2f6d0ef}\label{classnloptuser_abbbb3509fd5c047d70f36e31f2f6d0ef} 
+\index{nloptuser@{nloptuser}!objf@{objf}}
+\index{objf@{objf}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{objf()}{objf()}}
+{\footnotesize\ttfamily virtual double nloptuser\+::objf (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{x,  }\item[{vector$<$ double $>$ \&}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+\Hypertarget{classnloptuser_a2dfcab9327dbc3cf72fd60229bf0ffd6}\label{classnloptuser_a2dfcab9327dbc3cf72fd60229bf0ffd6} 
+\index{nloptuser@{nloptuser}!opt@{opt}}
+\index{opt@{opt}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{opt()}{opt()}}
+{\footnotesize\ttfamily double nloptuser\+::opt (\begin{DoxyParamCaption}\item[{const vector$<$ paraminfo $>$ \&}]{params,  }\item[{vector$<$ paramresult $>$ \&}]{result }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+\Hypertarget{classnloptuser_a012283692ec629a565e93475ab7b1735}\label{classnloptuser_a012283692ec629a565e93475ab7b1735} 
+\index{nloptuser@{nloptuser}!setftolabs@{setftolabs}}
+\index{setftolabs@{setftolabs}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{setftolabs()}{setftolabs()}}
+{\footnotesize\ttfamily void nloptuser\+::setftolabs (\begin{DoxyParamCaption}\item[{double}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classnloptuser_a650367780232585746d1c92e1198abad}\label{classnloptuser_a650367780232585746d1c92e1198abad} 
+\index{nloptuser@{nloptuser}!setftolrel@{setftolrel}}
+\index{setftolrel@{setftolrel}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{setftolrel()}{setftolrel()}}
+{\footnotesize\ttfamily void nloptuser\+::setftolrel (\begin{DoxyParamCaption}\item[{double}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classnloptuser_a1f6c97d01f3f7026e931f7b4d2e33563}\label{classnloptuser_a1f6c97d01f3f7026e931f7b4d2e33563} 
+\index{nloptuser@{nloptuser}!setgradient@{setgradient}}
+\index{setgradient@{setgradient}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{setgradient()}{setgradient()}}
+{\footnotesize\ttfamily void nloptuser\+::setgradient (\begin{DoxyParamCaption}\item[{bool}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classnloptuser_a98c56549fcf04a4a0b21f2ca624c23db}\label{classnloptuser_a98c56549fcf04a4a0b21f2ca624c23db} 
+\index{nloptuser@{nloptuser}!setmaxtime@{setmaxtime}}
+\index{setmaxtime@{setmaxtime}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{setmaxtime()}{setmaxtime()}}
+{\footnotesize\ttfamily void nloptuser\+::setmaxtime (\begin{DoxyParamCaption}\item[{double}]{m }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classnloptuser_aeba9e7a24368f18d9f7111eaa08c3e5d}\label{classnloptuser_aeba9e7a24368f18d9f7111eaa08c3e5d} 
+\index{nloptuser@{nloptuser}!setxtolabs@{setxtolabs}}
+\index{setxtolabs@{setxtolabs}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{setxtolabs()}{setxtolabs()}}
+{\footnotesize\ttfamily void nloptuser\+::setxtolabs (\begin{DoxyParamCaption}\item[{double}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classnloptuser_a8d90cdff2ba336d00c76d0447ada5119}\label{classnloptuser_a8d90cdff2ba336d00c76d0447ada5119} 
+\index{nloptuser@{nloptuser}!setxtolrel@{setxtolrel}}
+\index{setxtolrel@{setxtolrel}!nloptuser@{nloptuser}}
+\doxysubsubsection{\texorpdfstring{setxtolrel()}{setxtolrel()}}
+{\footnotesize\ttfamily void nloptuser\+::setxtolrel (\begin{DoxyParamCaption}\item[{double}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{oldorpp_8hpp}{oldorpp.\+hpp}}\end{DoxyCompactItemize}

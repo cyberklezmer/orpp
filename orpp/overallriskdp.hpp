@@ -551,6 +551,103 @@ public:
 
 
 
+    heuristicresult enumheuristic(index s0ind, double accuracy,
+                              const std::vector<finitepolicy>& allpolicies,
+                              const computationparams& params) const
+    {
+        assert(allpolicies.size());
+        sys::logline() << "overallriskproblem::enumheuristic" << std::endl;
+
+        auto st = sys::gettimems();
+
+        finitepolicy bestp = allpolicies[0];
+        finitepolicy lastp = bestp;
+
+        double iota = this->fcrit.getparam();
+
+        finitevaluefunction initV(this->fstatespace.num(),0);
+
+        double lastvalueofcrit = 0;
+        double resultingvalueofcrit = 0;
+
+
+        for(unsigned i=0; ; i++)
+        {
+            nestedproblem problem(this->fcrit,
+                                  this->fstatespace,
+                                  this->fconstraint,
+                                  this->ftransition,this->freward,
+                                  this->fgamma,
+                                  this->fmaxreward);
+
+            problem.setriskaversion(iota);
+
+            finitepolicy best = lastp;
+            bool firstround = true;
+            double homocrit = 0;
+            for (const auto& pol : allpolicies)
+            {
+
+                auto res = problem.evaluate(initV,pol,accuracy / 2, params.fnestedparams);
+                double val = res.x[s0ind];
+                bool better = firstround || val > homocrit + accuracy / 2;
+                if(better)
+                {
+                    best = pol;
+                    homocrit = val;
+                    firstround = false;
+                }
+                if(sys::loglevel()>=2)
+                {
+                    sys::log() << "p:" << pol << " v(" << s0ind << ")=" << res.x[s0ind];
+                    if(better)
+                        sys::log() << "*";
+                    sys::log() << std::endl;
+                }
+
+                initV = res.x;
+            }
+
+            double valueofcrit = this->evaluatecrit(s0ind,best,accuracy,params).x;
+            sys::logline() << "iteration " << i << " iota=" << iota << ", p="
+                           << bestp << ", homocrit=" << homocrit
+                           << ", overalcrit=" << valueofcrit
+                           << std::endl;
+
+
+            if(i > 0)
+            {
+                if(valueofcrit <= lastvalueofcrit + accuracy
+                    || i==params.fheuristicmaxiters-1)
+                {
+                    resultingvalueofcrit = lastvalueofcrit;
+                    bestp = lastp;
+                    break;
+                }
+            }
+            lastp=best;
+            lastvalueofcrit = valueofcrit;
+
+            iota = findiota(problem,lastp,valueofcrit,finitevaluefunction(problem), s0ind, accuracy, params.fnestedparams);
+            auto t = sys::gettimems();
+            if(t - st > params.fopttimelimit)
+            {
+                sys::logline() << "Exiting for time reasons" << std::endl;
+                throw timelimitexception(params.fopttimelimit);
+            }
+        }
+        heuristicresult res(*this);
+        res.p = bestp;
+        res.v = resultingvalueofcrit;
+        res.e = accuracy;
+        res.iota = iota;
+        sys::logline() << "huristic ended: ";
+        res.output(sys::log());
+        return res;
+    }
+
+
+
     double lipschitzconstant() const
     {
         return frmlipshitzfactor * this->maxreward() / (1 - this->gamma());

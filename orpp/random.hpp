@@ -189,9 +189,9 @@ public:
     }
     probability cdf(double x, const C& c) const
     {
-        if(x <= orpp::min<double>())
+        if(x <= orpp::min<double>)
             return 0;
-        else if(x >= orpp::max<double>())
+        else if(x >= orpp::max<double>)
             return 1;
         else
             cdf_is(x,c);
@@ -491,6 +491,9 @@ protected:
     }
 };
 
+
+
+
 /// \brief Finite discrete distribution
 /// \tparam I type of the values
 /// \tparam C type of the condition
@@ -571,6 +574,53 @@ private:
             return this->drawuniv(c);
     }
 };
+
+template <typename D>
+class scaledfdistribution: virtual public fdistribution<double,typename D::C_t>
+{
+public:
+    scaledfdistribution(const D& d, double factor) : fD(d), fFactor(factor)
+    {  }
+private:
+    /// atoms must be sorted TBD
+    virtual atom<double> atom_is(unsigned int i, const typename D::C_t& c) const
+    {
+        auto a = fD(i,c);
+        atom<double> b;
+        b.p = a.p;
+        b.x = fFactor * a.x;
+        return b;
+    }
+    virtual unsigned natoms_is(const typename D::C_t& c) const
+    {
+        return fD.natoms(c);
+    }
+protected:
+    virtual bool is_sorted() const
+    { return fFactor > 0.0 ? fD.sorted() : false; }
+    /// generates an uniform variable \p u and goes through the probabilities
+    /// until their sum exceeds \p u. May be very slow
+    D fD;
+    double fFactor;
+};
+
+
+template <typename C /*, bool listdef = false */ >
+class fintdistribution: virtual public fdistribution<int,C>
+{
+private:
+    virtual unsigned int min_is(const C& c) const = 0;
+    virtual unsigned int max_is(const C& c) const  = 0;
+    virtual unsigned int natoms_is(const C& c) const { return max_is(c) - min_is(c)+1; }
+    virtual probability probability_is(int, const C&) const = 0;
+    virtual atom<int> atom_is(unsigned int i, const C& c) const
+    {
+        auto v = i+min_is(c);
+        atom<int> a = {v, probabilty_is(v) };
+        return a;
+    }
+};
+
 
 
 /// \brief List defined distribution
@@ -653,6 +703,161 @@ private:
     virtual bool is_sorted() const { return fsorted; }
     virtual bool is_equiprobable(const nothing&) const { return fequiprobable; }
 };
+
+
+// Convolution of two finite discrete distributions (independent).
+// Result: distribution of X+Y with double-valued support.
+// merge_eps controls how close two sums must be to be merged into one atom.
+template <typename I, typename J>
+ldistribution<double, /*sortable=*/true>
+convolution(const fdistribution<I, nothing>& A,
+            const fdistribution<J, nothing>& B,
+            double merge_eps = 0.0)
+{
+    static_assert(std::is_convertible<I,double>::value,
+                  "I must be convertible to double");
+    static_assert(std::is_convertible<J,double>::value,
+                  "J must be convertible to double");
+
+    if (merge_eps <= 0.0) {
+        // Use a small absolute tolerance; feel free to tweak if your project
+        // prefers relative merging.
+        merge_eps = std::max(1e-12, probabilitytolerance);
+    }
+
+    // Pull atoms from inputs
+    std::vector<atom<I>> ai;
+    std::vector<atom<J>> aj;
+    A.atoms(ai);
+    B.atoms(aj);
+
+    assert(!ai.empty() && !aj.empty());
+
+    // Build all pairwise sums/probabilities
+    std::vector<atom<double>> tmp;
+    tmp.reserve(ai.size() * aj.size());
+    for (const auto& a : ai) {
+        for (const auto& b : aj) {
+            atom<double> c;
+            c.x = static_cast<double>(a.x) + static_cast<double>(b.x);
+            c.p = a.p * b.p;
+            tmp.push_back(c);
+        }
+    }
+
+    // Sort by support value
+    std::sort(tmp.begin(), tmp.end(),
+              [](const atom<double>& l, const atom<double>& r) {
+                  return l.x < r.x;
+              });
+
+    // Merge adjacent atoms that are within merge_eps on x
+    std::vector<atom<double>> merged;
+    merged.reserve(tmp.size());
+    for (const auto& a : tmp) {
+        if (merged.empty() || std::fabs(a.x - merged.back().x) > merge_eps) {
+            merged.push_back(a);
+        } else {
+            merged.back().p += a.p;
+            // Keep support at the earlier x to preserve sortedness.
+            // (Optionally, you could average the x's, but then you'd need to
+            //  be careful about accumulating numeric drift.)
+        }
+    }
+
+#ifndef NDEBUG
+    // Probabilities should sum to ~1
+    probability psum = 0.0;
+    for (const auto& a : merged) psum += a.p;
+    assert(std::fabs(psum - 1.0) < 1e-9);
+#endif
+
+    // ldistribution expects: atoms, equiprobable?, sorted?
+    // Our atoms are not necessarily equiprobable; they are sorted.
+    return ldistribution<double, /*sortable=*/true>
+         (merged, /*equiprobable=*/false, /*sorted=*/true);
+}
+
+// Mixture of finite discrete distributions.
+// Given components {D_k} and weights {w_k}, returns distribution of Z where
+//    P(Z = x) = sum_k w_k * P_k(x).
+// merge_eps controls how close two support points must be to be merged.
+//
+// Note: The function is named `mixture` (not convolution), since it forms a
+// convex combination of distributions.
+
+
+// Generic mixture: works for any Dist that provides
+//  - using support_type = ...;
+//  - void atoms(std::vector<atom<support_type>>& out) const;
+//
+// Returns ldistribution<double,true>, merging near-equal support points.
+
+template <class Dist>
+ldistribution<double, /*sortable=*/true>
+mixture(const std::vector<Dist>& list,
+        const std::vector<probability>& weights,
+        double merge_eps = 0.0)
+{
+    using X = typename Dist::I_t;
+    static_assert(std::is_convertible<X,double>::value,
+                  "support_type must be convertible to double");
+
+    assert(!list.empty());
+    assert(list.size() == weights.size());
+
+    if (merge_eps <= 0.0)
+        merge_eps = std::max(1e-12, probabilitytolerance);
+
+    // Normalize weights (and sanity-check)
+    probability wsum = 0.0;
+    for (auto w : weights) { assert(w >= 0.0); wsum += w; }
+    assert(wsum > 0.0);
+    const probability inv = (std::fabs(wsum - 1.0) < 1e-15) ? 1.0 : 1.0/wsum;
+
+    // Collect weighted atoms
+    std::vector<atom<double>> tmp;
+    size_t total_atoms = 0;
+    for (const auto& D : list) {
+        std::vector<atom<X>> a;
+        D.atoms(a);
+        assert(!a.empty());
+        total_atoms += a.size();
+    }
+    tmp.reserve(total_atoms);
+
+    for (size_t k = 0; k < list.size(); ++k) {
+        const probability wk = weights[k] * inv;
+        if (wk == 0.0) continue;
+
+        std::vector<atom<X>> a;
+        list[k].atoms(a);
+        for (const auto& t : a)
+            tmp.push_back({ static_cast<double>(t.x), wk * t.p });
+    }
+
+    // Sort & merge close x's
+    std::sort(tmp.begin(), tmp.end(), [](auto& l, auto& r){ return l.x < r.x; });
+
+    std::vector<atom<double>> merged;
+    merged.reserve(tmp.size());
+    for (const auto& a : tmp) {
+        if (merged.empty() || std::fabs(a.x - merged.back().x) > merge_eps)
+            merged.push_back(a);
+        else
+            merged.back().p += a.p;
+    }
+
+#ifndef NDEBUG
+    probability psum = 0.0;
+    for (const auto& a : merged) psum += a.p;
+    assert(std::fabs(psum - 1.0) < 1e-9);
+#endif
+
+    return { merged, /*equiprobable=*/false, /*sorted=*/true };
+}
+
+
 
 
 template <typename I, bool sortable=false>
@@ -794,7 +999,7 @@ class diracdistribution: public ldistribution<I>
     }
 public:
     diracdistribution(const I& a)
-        : ldistribution<I>(point(a)) {}
+        : ldistribution<I>(point(a), true) {}
     I x() const
     {
         atom<I> a = (*this)(0);
@@ -1475,6 +1680,8 @@ public:
     MeanCVaR(probability alpha, double lambda) : falpha(alpha),
         flambda(lambda)
     {         assert(falpha < 1);  assert(flambda <=1 && flambda >=0); }
+
+    using riskmeasure<Distribution>::operator();  // <— chatgpt advice
 
     /// tbd can be done for sorted ddistribution
     virtual double operator () (

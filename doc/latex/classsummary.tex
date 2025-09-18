@@ -1,0 +1,95 @@
+\doxysection{summary Class Reference}
+\hypertarget{classsummary}{}\label{classsummary}\index{summary@{summary}}
+
+
+work in progress, neodszkousene  
+
+
+
+
+{\ttfamily \#include $<$oldorpp.\+hpp$>$}
+
+
+
+Inheritance diagram for summary\+:
+% FIG 0
+
+
+Collaboration diagram for summary\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const vector$<$ unsigned int $>$ \& \mbox{\hyperlink{classsummary_a6cbe93b48af52f33c62258af7346aa53}{histogram}} (double binw, double lower, double upper)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classobject_a19562885680264bf861ba03b2e713b0c}{setlogging}} (\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} al=\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}})
+\item 
+bool \mbox{\hyperlink{classobject_a00411d9c6c86f9cdb3db728eb3ce882b}{islogging}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual unsigned int \mbox{\hyperlink{classsummary_a0b30bfe7cb6bf648e729d0922784f6dd}{getN}} () const =0
+\item 
+virtual double \mbox{\hyperlink{classsummary_a9090227017e22947eabb87598709a361}{X}} (unsigned int i) const =0
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_a04aad740887b47c735b9ed9078e45d77}{object}} ()
+\item 
+virtual \mbox{\hyperlink{classobject_a6233244b77a2794b456e5eee6964806d}{\texorpdfstring{$\sim$}{\string~}object}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \{ \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa32b207eaae85c46e0c1576e3242c9c9}{nologging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa6589c21d3d5347fd1e306419c3dae19}{extendedlogging}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \mbox{\hyperlink{classobject_a16be6bd5605b5df8120272924a88d2f2}{logging}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+ofstream \mbox{\hyperlink{classobject_a272d13822c00cec48d2ae6391a91adbd}{nulstream}}
+\item 
+ostream \& \mbox{\hyperlink{classobject_a6749b1b5cef09026c908edad043a4421}{lout}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+work in progress, neodszkousene 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classsummary_a0b30bfe7cb6bf648e729d0922784f6dd}\label{classsummary_a0b30bfe7cb6bf648e729d0922784f6dd} 
+\index{summary@{summary}!getN@{getN}}
+\index{getN@{getN}!summary@{summary}}
+\doxysubsubsection{\texorpdfstring{getN()}{getN()}}
+{\footnotesize\ttfamily virtual unsigned int summary\+::getN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+\Hypertarget{classsummary_a6cbe93b48af52f33c62258af7346aa53}\label{classsummary_a6cbe93b48af52f33c62258af7346aa53} 
+\index{summary@{summary}!histogram@{histogram}}
+\index{histogram@{histogram}!summary@{summary}}
+\doxysubsubsection{\texorpdfstring{histogram()}{histogram()}}
+{\footnotesize\ttfamily const vector$<$ unsigned int $>$ \& summary\+::histogram (\begin{DoxyParamCaption}\item[{double}]{binw,  }\item[{double}]{lower,  }\item[{double}]{upper }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classsummary_a9090227017e22947eabb87598709a361}\label{classsummary_a9090227017e22947eabb87598709a361} 
+\index{summary@{summary}!X@{X}}
+\index{X@{X}!summary@{summary}}
+\doxysubsubsection{\texorpdfstring{X()}{X()}}
+{\footnotesize\ttfamily virtual double summary\+::X (\begin{DoxyParamCaption}\item[{unsigned int}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{oldorpp_8hpp}{oldorpp.\+hpp}}\end{DoxyCompactItemize}

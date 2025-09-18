@@ -1,0 +1,83 @@
+\doxysection{orpp\+::discretization\texorpdfstring{$<$}{<} D, C \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1discretization}{}\label{classorpp_1_1discretization}\index{orpp::discretization$<$ D, C $>$@{orpp::discretization$<$ D, C $>$}}
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::discretization\texorpdfstring{$<$}{<} D, C \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::discretization\texorpdfstring{$<$}{<} D, C \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1discretization_a6c5636f6e6d6258dd3e3e0fb662e43ec}{discretization}} (const D \&d, unsigned int n)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1fdistribution}{orpp\+::fdistribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ double $>$ $>$ \&a, const C \&c) const
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_a3e088625e270923ababc08c78da34436}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ double $>$ $>$ \&a) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}} (const C \&c) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a364bc69a59992019b60577513b79bc7e}{natoms}} () const
+\item 
+double \mbox{\hyperlink{classorpp_1_1fdistribution_aea085685c1b4c0c130ae91be696bda3a}{mean}} (const C \&c, double prec=0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator()}} (unsigned int i, const C \&c) const
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619}{operator()}} (unsigned int i) const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}{is\+\_\+sorted}} () const =0
+\item 
+I \mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}} (const C \&c) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1discretization_a6c5636f6e6d6258dd3e3e0fb662e43ec}\label{classorpp_1_1discretization_a6c5636f6e6d6258dd3e3e0fb662e43ec} 
+\index{orpp::discretization$<$ D, C $>$@{orpp::discretization$<$ D, C $>$}!discretization@{discretization}}
+\index{discretization@{discretization}!orpp::discretization$<$ D, C $>$@{orpp::discretization$<$ D, C $>$}}
+\doxysubsubsection{\texorpdfstring{discretization()}{discretization()}}
+{\footnotesize\ttfamily template$<$typename D , typename C $>$ \\
+\mbox{\hyperlink{classorpp_1_1discretization}{orpp\+::discretization}}$<$ D, C $>$\+::discretization (\begin{DoxyParamCaption}\item[{const D \&}]{d,  }\item[{unsigned int}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

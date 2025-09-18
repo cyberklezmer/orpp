@@ -1,0 +1,137 @@
+\doxysection{orpp\+::arqdistribution\texorpdfstring{$<$}{<} D \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1arqdistribution}{}\label{classorpp_1_1arqdistribution}\index{orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}}
+
+
+tbd own draw  
+
+
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::arqdistribution\texorpdfstring{$<$}{<} D \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::arqdistribution\texorpdfstring{$<$}{<} D \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1arqdistribution_a9a524ae042b0420e8a4607ea109286cd}{arqdistribution}} (double \mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}}=1)
+\item 
+\mbox{\hyperlink{classorpp_1_1arqdistribution_a89bb4e807d7ec20f0933a58587945c98}{arqdistribution}} (const D \&d, double \mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}}=1)
+\item 
+double \mbox{\hyperlink{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}{a}} () const
+\item 
+const D \& \mbox{\hyperlink{classorpp_1_1arqdistribution_ab93dae04432b1a91c7fc12f25413dd26}{srcd}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution$<$ double $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}} (probability p) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db}{quantile}} (probability p, const double \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1cdfdistribution}{orpp\+::cdfdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_a62897e6e2896e78bdd544f70da10b287}{cdf}} (double x) const
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_aec99dbe58218f1ded0d715724e09a58a}{cdf}} (double x, const C \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_a047b424718d27d90887540a95bbc8513}{mean}} (const C \&c, double prec=0.\+0) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_ad80866200b2a7a33a676829c87d1cb92}{mean}} (double prec=0.\+0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = double
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution$<$ double $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1qdistribution_af41a1cffabe3ef8cf1eff97c30e3f02b}{mean\+\_\+is}} (const double \&c, double prec) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1realdistribution_a2ffc8119af94c02fd8a267f887249f2a}{mean\+\_\+is}} (const C \&, double) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename D$>$\newline
+class orpp\+::arqdistribution$<$ D $>$}
+tbd own draw 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1arqdistribution_a9a524ae042b0420e8a4607ea109286cd}\label{classorpp_1_1arqdistribution_a9a524ae042b0420e8a4607ea109286cd} 
+\index{orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}!arqdistribution@{arqdistribution}}
+\index{arqdistribution@{arqdistribution}!orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{arqdistribution()}{arqdistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+\mbox{\hyperlink{classorpp_1_1arqdistribution}{orpp\+::arqdistribution}}$<$ D $>$\+::arqdistribution (\begin{DoxyParamCaption}\item[{double}]{a = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1arqdistribution_a89bb4e807d7ec20f0933a58587945c98}\label{classorpp_1_1arqdistribution_a89bb4e807d7ec20f0933a58587945c98} 
+\index{orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}!arqdistribution@{arqdistribution}}
+\index{arqdistribution@{arqdistribution}!orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{arqdistribution()}{arqdistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+\mbox{\hyperlink{classorpp_1_1arqdistribution}{orpp\+::arqdistribution}}$<$ D $>$\+::arqdistribution (\begin{DoxyParamCaption}\item[{const D \&}]{d,  }\item[{double}]{a = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c}\label{classorpp_1_1arqdistribution_a52b7d75c096be66bba4384f1183b761c} 
+\index{orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}!a@{a}}
+\index{a@{a}!orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{a()}{a()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+double \mbox{\hyperlink{classorpp_1_1arqdistribution}{orpp\+::arqdistribution}}$<$ D $>$\+::a (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1arqdistribution_ab93dae04432b1a91c7fc12f25413dd26}\label{classorpp_1_1arqdistribution_ab93dae04432b1a91c7fc12f25413dd26} 
+\index{orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}!srcd@{srcd}}
+\index{srcd@{srcd}!orpp::arqdistribution$<$ D $>$@{orpp::arqdistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{srcd()}{srcd()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+const D \& \mbox{\hyperlink{classorpp_1_1arqdistribution}{orpp\+::arqdistribution}}$<$ D $>$\+::srcd (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,49 @@
+\doxysection{orpp/optimization.hpp File Reference}
+\hypertarget{optimization_8hpp}{}\label{optimization_8hpp}\index{orpp/optimization.hpp@{orpp/optimization.hpp}}
+{\ttfamily \#include "{}orpp.\+hpp"{}}\newline
+Include dependency graph for optimization.\+hpp\+:
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+union \mbox{\hyperlink{unionorpp_1_1mixedvar}{orpp\+::mixedvar}}
+\begin{DoxyCompactList}\small\item\em Mixed decision variable. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range$<$ V $>$}}
+\begin{DoxyCompactList}\small\item\em Range (interval of possible values) of variables {\ttfamily V}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1ranges}{orpp\+::ranges$<$ V $>$}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1constraint}{orpp\+::constraint}}
+\begin{DoxyCompactList}\small\item\em Base class of decision problems\textquotesingle{} constraints. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1constraints}{orpp\+::constraints$<$ G $>$}}
+\begin{DoxyCompactList}\small\item\em Vector-\/like container of constraints. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1criterion}{orpp\+::criterion}}
+\begin{DoxyCompactList}\small\item\em Base class for decision criterions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1feasibilityset}{orpp\+::feasibilityset$<$ Element $>$}}
+\begin{DoxyCompactList}\small\item\em Base class for feasibility sets. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1linearconstraint}{orpp\+::linearconstraint}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceorpp}{orpp}}
+\begin{DoxyCompactList}\small\item\em A class encapsulting calls of gnuplot. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{group__pvar_gaf21074d70d39868304e8358e8b9f3e03}{orpp\+::realvar}} = double
+\begin{DoxyCompactList}\small\item\em Real decision variable. \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{group__pvar_gabd4797024e50c04f32e1b1cd6153f880}{orpp\+::intvar}} = long
+\begin{DoxyCompactList}\small\item\em Integer decision variable. \end{DoxyCompactList}\item 
+using \mbox{\hyperlink{group__pvar_ga6b7f6c1b016a71a10d5743895d411d73}{orpp\+::binvar}} = bool
+\begin{DoxyCompactList}\small\item\em Binary decision variable. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename V $>$ }\\using \mbox{\hyperlink{group__pvar_ga7e1c8b085b2b79c2fa8e4edb00c6428a}{orpp\+::variables}} = std\+::vector$<$ V $>$
+\begin{DoxyCompactList}\small\item\em Vector of variables of type {\ttfamily V}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{constraint\+::type}} \mbox{\hyperlink{group__problems_gab8bf77efb4f99ad89732e78fdac40610}{orpp\+::eq}} = constraint\+::eq
+\item 
+const \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{constraint\+::type}} \mbox{\hyperlink{group__problems_ga7de59df889334c607bff3f9c01c3e26c}{orpp\+::leq}} = constraint\+::leq
+\item 
+const \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{constraint\+::type}} \mbox{\hyperlink{group__problems_gad8f2ac09abbb3fe76614e448a07687ac}{orpp\+::geq}} = constraint\+::geq
+\end{DoxyCompactItemize}

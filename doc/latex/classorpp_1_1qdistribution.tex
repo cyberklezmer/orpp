@@ -1,0 +1,105 @@
+\doxysection{orpp\+::qdistribution\texorpdfstring{$<$}{<} C \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1qdistribution}{}\label{classorpp_1_1qdistribution}\index{orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}}
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::qdistribution\texorpdfstring{$<$}{<} C \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::qdistribution\texorpdfstring{$<$}{<} C \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}} (probability p) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db}{quantile}} (probability p, const C \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1cdfdistribution}{orpp\+::cdfdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_a62897e6e2896e78bdd544f70da10b287}{cdf}} (double x) const
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_aec99dbe58218f1ded0d715724e09a58a}{cdf}} (double x, const C \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_a047b424718d27d90887540a95bbc8513}{mean}} (const C \&c, double prec=0.\+0) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_ad80866200b2a7a33a676829c87d1cb92}{mean}} (double prec=0.\+0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1qdistribution_af41a1cffabe3ef8cf1eff97c30e3f02b}{mean\+\_\+is}} (const C \&c, double prec) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = double
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1qdistribution_af41a1cffabe3ef8cf1eff97c30e3f02b}\label{classorpp_1_1qdistribution_af41a1cffabe3ef8cf1eff97c30e3f02b} 
+\index{orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}!mean\_is@{mean\_is}}
+\index{mean\_is@{mean\_is}!orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}}
+\doxysubsubsection{\texorpdfstring{mean\_is()}{mean\_is()}}
+{\footnotesize\ttfamily template$<$typename C $>$ \\
+virtual double \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution}}$<$ C $>$\+::mean\+\_\+is (\begin{DoxyParamCaption}\item[{const C \&}]{c,  }\item[{double}]{prec }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classorpp_1_1realdistribution_a2ffc8119af94c02fd8a267f887249f2a}{orpp\+::realdistribution$<$ C $>$}}.
+
+\Hypertarget{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}\label{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2} 
+\index{orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}!quantile@{quantile}}
+\index{quantile@{quantile}!orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}}
+\doxysubsubsection{\texorpdfstring{quantile()}{quantile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename C $>$ \\
+double \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution}}$<$ C $>$\+::quantile (\begin{DoxyParamCaption}\item[{probability}]{p }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db}\label{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db} 
+\index{orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}!quantile@{quantile}}
+\index{quantile@{quantile}!orpp::qdistribution$<$ C $>$@{orpp::qdistribution$<$ C $>$}}
+\doxysubsubsection{\texorpdfstring{quantile()}{quantile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename C $>$ \\
+double \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution}}$<$ C $>$\+::quantile (\begin{DoxyParamCaption}\item[{probability}]{p,  }\item[{const C \&}]{c }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

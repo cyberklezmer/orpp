@@ -1,0 +1,85 @@
+\doxysection{orpp\+::altldistribution\texorpdfstring{$<$}{<} I \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1altldistribution}{}\label{classorpp_1_1altldistribution}\index{orpp::altldistribution$<$ I $>$@{orpp::altldistribution$<$ I $>$}}
+
+
+Alternative lists defined distribution.  
+
+
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::altldistribution\texorpdfstring{$<$}{<} I \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::altldistribution\texorpdfstring{$<$}{<} I \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1fdistribution}{orpp\+::fdistribution$<$ I, unsigned int $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ $>$ \&a, const unsigned int \&c) const
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_a3e088625e270923ababc08c78da34436}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ $>$ \&a) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}} (const unsigned int \&c) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a364bc69a59992019b60577513b79bc7e}{natoms}} () const
+\item 
+double \mbox{\hyperlink{classorpp_1_1fdistribution_aea085685c1b4c0c130ae91be696bda3a}{mean}} (const unsigned int \&c, double prec=0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator()}} (unsigned int i, const C \&c) const
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619}{operator()}} (unsigned int i) const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{classorpp_1_1ddistribution_ab49f9289b6c32357eead32dbea5058a2}{is\+\_\+sorted}} () const =0
+\item 
+I \mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}} (const C \&c) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename I$>$\newline
+class orpp\+::altldistribution$<$ I $>$}
+Alternative lists defined distribution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em I} & type of the values\\
+\hline
+\end{DoxyTemplParams}
+The atoms sets are based on the condition (of type {\ttfamily unsigned int}). 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}
