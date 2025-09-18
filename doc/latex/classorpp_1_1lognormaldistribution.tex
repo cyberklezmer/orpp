@@ -1,0 +1,124 @@
+\doxysection{orpp\+::lognormaldistribution Class Reference}
+\hypertarget{classorpp_1_1lognormaldistribution}{}\label{classorpp_1_1lognormaldistribution}\index{orpp::lognormaldistribution@{orpp::lognormaldistribution}}
+
+
+{\ttfamily \#include $<$boostdist.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::lognormaldistribution\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::lognormaldistribution\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1lognormaldistribution_a0e24bdc2a8e5a6752c459e576b70d093}{lognormaldistribution}} (double \mbox{\hyperlink{classorpp_1_1lognormaldistribution_a1c59f6795bdf52268052d63f62fd56fb}{mu}}, double \mbox{\hyperlink{classorpp_1_1lognormaldistribution_aa18f7f4fca5423636112f131bee32952}{sigma}})
+\item 
+double \mbox{\hyperlink{classorpp_1_1lognormaldistribution_a1c59f6795bdf52268052d63f62fd56fb}{mu}} () const
+\item 
+double \mbox{\hyperlink{classorpp_1_1lognormaldistribution_aa18f7f4fca5423636112f131bee32952}{sigma}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1boostdistribution}{orpp\+::boostdistribution$<$ boost\+::math\+::lognormal\+\_\+distribution$<$ double $>$ $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1boostdistribution_a673196c08964cd16ed03d4a0bac719d6}{boostdistribution}} ()
+\item 
+\mbox{\hyperlink{classorpp_1_1boostdistribution_aa242f6fbfb170fd6c5a8d30ec79b298d}{boostdistribution}} (const boost\+::math\+::lognormal\+\_\+distribution$<$ double $>$ \&d)
+\item 
+const boost\+::math\+::lognormal\+\_\+distribution$<$ double $>$ \& \mbox{\hyperlink{classorpp_1_1boostdistribution_aaced7a95ccf455876686730e621eb7dd}{d}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution$<$ nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}} (probability p) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db}{quantile}} (probability p, const nothing \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1cdfdistribution}{orpp\+::cdfdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_a62897e6e2896e78bdd544f70da10b287}{cdf}} (double x) const
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_aec99dbe58218f1ded0d715724e09a58a}{cdf}} (double x, const C \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_a047b424718d27d90887540a95bbc8513}{mean}} (const C \&c, double prec=0.\+0) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_ad80866200b2a7a33a676829c87d1cb92}{mean}} (double prec=0.\+0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = double
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution$<$ nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1qdistribution_af41a1cffabe3ef8cf1eff97c30e3f02b}{mean\+\_\+is}} (const nothing \&c, double prec) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1realdistribution_a2ffc8119af94c02fd8a267f887249f2a}{mean\+\_\+is}} (const C \&, double) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1lognormaldistribution_a0e24bdc2a8e5a6752c459e576b70d093}\label{classorpp_1_1lognormaldistribution_a0e24bdc2a8e5a6752c459e576b70d093} 
+\index{orpp::lognormaldistribution@{orpp::lognormaldistribution}!lognormaldistribution@{lognormaldistribution}}
+\index{lognormaldistribution@{lognormaldistribution}!orpp::lognormaldistribution@{orpp::lognormaldistribution}}
+\doxysubsubsection{\texorpdfstring{lognormaldistribution()}{lognormaldistribution()}}
+{\footnotesize\ttfamily orpp\+::lognormaldistribution\+::lognormaldistribution (\begin{DoxyParamCaption}\item[{double}]{mu,  }\item[{double}]{sigma }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1lognormaldistribution_a1c59f6795bdf52268052d63f62fd56fb}\label{classorpp_1_1lognormaldistribution_a1c59f6795bdf52268052d63f62fd56fb} 
+\index{orpp::lognormaldistribution@{orpp::lognormaldistribution}!mu@{mu}}
+\index{mu@{mu}!orpp::lognormaldistribution@{orpp::lognormaldistribution}}
+\doxysubsubsection{\texorpdfstring{mu()}{mu()}}
+{\footnotesize\ttfamily double orpp\+::lognormaldistribution\+::mu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1lognormaldistribution_aa18f7f4fca5423636112f131bee32952}\label{classorpp_1_1lognormaldistribution_aa18f7f4fca5423636112f131bee32952} 
+\index{orpp::lognormaldistribution@{orpp::lognormaldistribution}!sigma@{sigma}}
+\index{sigma@{sigma}!orpp::lognormaldistribution@{orpp::lognormaldistribution}}
+\doxysubsubsection{\texorpdfstring{sigma()}{sigma()}}
+{\footnotesize\ttfamily double orpp\+::lognormaldistribution\+::sigma (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{boostdist_8hpp}{boostdist.\+hpp}}\end{DoxyCompactItemize}

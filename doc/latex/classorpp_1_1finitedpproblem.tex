@@ -1,0 +1,196 @@
+\doxysection{orpp\+::finitedpproblem\texorpdfstring{$<$}{<} Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1finitedpproblem}{}\label{classorpp_1_1finitedpproblem}\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+
+
+{\ttfamily \#include $<$dp.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::finitedpproblem\texorpdfstring{$<$}{<} Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::finitedpproblem\texorpdfstring{$<$}{<} Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{pgdheteroresult}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult}{pgdhomoresult}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1finitedpproblem_ad48f58839e698ffd84ae8eb0446c4d96}{finitedpproblem}} (const Criterion \&\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}, const State\+Space \&state, const Constrained\+Action\+Space \&\mbox{\hyperlink{classorpp_1_1constraint}{constraint}}, const Transition \&transition, const Reward \&\mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}, double \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}, double \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5}{requiredhorizon}} (double accuracy) const
+\item 
+\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}$<$ double $>$ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}} (index s0ind, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}} \&p, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}$<$ double $>$ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a642f5c6906f6d3c1b00322014acd3587}{evaluatecrit}} (index s0ind, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&p, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1finitedpproblem_ae8327413954244c3437232439196f4ff}{numpolicyvalues}} () const
+\item 
+\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac7fe60296183864f965fcbf4834ddc96}{enumeratehomo}} (index s0ind, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params)
+\item 
+\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}} (index s0index, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&p, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_a8c2608601c448b7a6390669e7ba88c83}{evaluateraw}} (index s0index, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}} \&p, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}} () const
+\item 
+{\footnotesize template$<$bool bindp0 = false$>$ }\\\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{pgdheteroresult}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_a83397b5e0db27beae2cfc814d7b852e4}{pseudogradientdescent}} (orpp\+::index s0ind, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}} \&initps, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params, unsigned initialstep=std\+::numeric\+\_\+limits$<$ unsigned $>$\+::max()) const
+\item 
+\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult}{pgdhomoresult}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_a0caeebd57221e84b8421719e82d9a88a}{pseudogradientdescenthomo}} (orpp\+::index s0ind, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&initp, double accuracy, const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&params, unsigned initialstep=std\+::numeric\+\_\+limits$<$ unsigned $>$\+::max()) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1dpproblem_a7d0ffb6bef2a835cd5831fe868175518}{dpproblem}} (const Criterion \&\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}, const State\+Space \&state, const Constrained\+Action\+Space \&\mbox{\hyperlink{classorpp_1_1constraint}{constraint}}, const Transition \&transition, const Reward \&\mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}, double \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}})
+\item 
+double \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}} () const
+\item 
+const Constrained\+Action\+Space \& \mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}} () const
+\item 
+const State\+Space \& \mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}} () const
+\item 
+const Criterion \& \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}} () const
+\item 
+Criterion \& \mbox{\hyperlink{classorpp_1_1dpproblem_a69d400286a6ef86f75d763904d5736a1}{crit}} ()
+\item 
+const Reward \& \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+Criterion \mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}
+\item 
+State\+Space \mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}
+\item 
+Constrained\+Action\+Space \mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}
+\item 
+Transition \mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}
+\item 
+Reward \mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}}
+\item 
+double \mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1dpproblem_a08196563f450a4c568e2d5fd3386e71a}{State\+Space\+\_\+t}} = State\+Space
+\item 
+using \mbox{\hyperlink{classorpp_1_1dpproblem_ac4f91922410e1096f9f8aab91adc65a6}{Constrained\+Action\+Space\+\_\+t}} = Constrained\+Action\+Space
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1finitedpproblem_ad48f58839e698ffd84ae8eb0446c4d96}\label{classorpp_1_1finitedpproblem_ad48f58839e698ffd84ae8eb0446c4d96} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!finitedpproblem@{finitedpproblem}}
+\index{finitedpproblem@{finitedpproblem}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{finitedpproblem()}{finitedpproblem()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::finitedpproblem (\begin{DoxyParamCaption}\item[{const Criterion \&}]{crit,  }\item[{const State\+Space \&}]{state,  }\item[{const Constrained\+Action\+Space \&}]{constraint,  }\item[{const Transition \&}]{transition,  }\item[{const Reward \&}]{reward,  }\item[{double}]{gamma,  }\item[{double}]{maxreward }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1finitedpproblem_ac7fe60296183864f965fcbf4834ddc96}\label{classorpp_1_1finitedpproblem_ac7fe60296183864f965fcbf4834ddc96} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!enumeratehomo@{enumeratehomo}}
+\index{enumeratehomo@{enumeratehomo}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{enumeratehomo()}{enumeratehomo()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1enumresult}{enumresult}} \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::enumeratehomo (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_a642f5c6906f6d3c1b00322014acd3587}\label{classorpp_1_1finitedpproblem_a642f5c6906f6d3c1b00322014acd3587} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!evaluatecrit@{evaluatecrit}}
+\index{evaluatecrit@{evaluatecrit}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{evaluatecrit()}{evaluatecrit()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}$<$ double $>$ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::evaluatecrit (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{p,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}\label{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!evaluatecrit@{evaluatecrit}}
+\index{evaluatecrit@{evaluatecrit}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{evaluatecrit()}{evaluatecrit()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}$<$ double $>$ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::evaluatecrit (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}} \&}]{p,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}\label{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!evaluateraw@{evaluateraw}}
+\index{evaluateraw@{evaluateraw}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{evaluateraw()}{evaluateraw()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}} \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::evaluateraw (\begin{DoxyParamCaption}\item[{index}]{s0index,  }\item[{const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{p,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_a8c2608601c448b7a6390669e7ba88c83}\label{classorpp_1_1finitedpproblem_a8c2608601c448b7a6390669e7ba88c83} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!evaluateraw@{evaluateraw}}
+\index{evaluateraw@{evaluateraw}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{evaluateraw()}{evaluateraw()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}} \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::evaluateraw (\begin{DoxyParamCaption}\item[{index}]{s0index,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}} \&}]{p,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}\label{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!maxreward@{maxreward}}
+\index{maxreward@{maxreward}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{maxreward()}{maxreward()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+double \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::maxreward (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_ae8327413954244c3437232439196f4ff}\label{classorpp_1_1finitedpproblem_ae8327413954244c3437232439196f4ff} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!numpolicyvalues@{numpolicyvalues}}
+\index{numpolicyvalues@{numpolicyvalues}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{numpolicyvalues()}{numpolicyvalues()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+unsigned \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::numpolicyvalues (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_a83397b5e0db27beae2cfc814d7b852e4}\label{classorpp_1_1finitedpproblem_a83397b5e0db27beae2cfc814d7b852e4} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!pseudogradientdescent@{pseudogradientdescent}}
+\index{pseudogradientdescent@{pseudogradientdescent}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{pseudogradientdescent()}{pseudogradientdescent()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+template$<$bool bindp0 = false$>$ \\
+\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdheteroresult}{pgdheteroresult}} \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::pseudogradientdescent (\begin{DoxyParamCaption}\item[{orpp\+::index}]{s0ind,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1heteropolicy}{heteropolicy}} \&}]{initps,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params,  }\item[{unsigned}]{initialstep = {\ttfamily std\+:\+:numeric\+\_\+limits$<$unsigned$>$\+:\+:max()} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_a0caeebd57221e84b8421719e82d9a88a}\label{classorpp_1_1finitedpproblem_a0caeebd57221e84b8421719e82d9a88a} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!pseudogradientdescenthomo@{pseudogradientdescenthomo}}
+\index{pseudogradientdescenthomo@{pseudogradientdescenthomo}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{pseudogradientdescenthomo()}{pseudogradientdescenthomo()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1pgdhomoresult}{pgdhomoresult}} \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::pseudogradientdescenthomo (\begin{DoxyParamCaption}\item[{orpp\+::index}]{s0ind,  }\item[{const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{initp,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{computationparams}} \&}]{params,  }\item[{unsigned}]{initialstep = {\ttfamily std\+:\+:numeric\+\_\+limits$<$unsigned$>$\+:\+:max()} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5}\label{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!requiredhorizon@{requiredhorizon}}
+\index{requiredhorizon@{requiredhorizon}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{requiredhorizon()}{requiredhorizon()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+unsigned \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::requiredhorizon (\begin{DoxyParamCaption}\item[{double}]{accuracy }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}\label{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe} 
+\index{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}!fmaxreward@{fmaxreward}}
+\index{fmaxreward@{fmaxreward}!orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::finitedpproblem$<$ Criterion, StateSpace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{fmaxreward}{fmaxreward}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename State\+Space , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+double \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem}}$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$\+::fmaxreward\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{dp_8hpp}{dp.\+hpp}}\end{DoxyCompactItemize}

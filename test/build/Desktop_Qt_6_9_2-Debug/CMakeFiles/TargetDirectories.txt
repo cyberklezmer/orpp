@@ -1,0 +1,3 @@
+/home/martin/Work/orpp/test/build/Desktop_Qt_6_9_2-Debug/CMakeFiles/radp.dir
+/home/martin/Work/orpp/test/build/Desktop_Qt_6_9_2-Debug/CMakeFiles/edit_cache.dir
+/home/martin/Work/orpp/test/build/Desktop_Qt_6_9_2-Debug/CMakeFiles/rebuild_cache.dir

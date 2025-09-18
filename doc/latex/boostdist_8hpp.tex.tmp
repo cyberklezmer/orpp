@@ -1,0 +1,25 @@
+\doxysection{orpp/boostdist.hpp File Reference}
+\hypertarget{boostdist_8hpp}{}\label{boostdist_8hpp}\index{orpp/boostdist.hpp@{orpp/boostdist.hpp}}
+{\ttfamily \#include "{}orpp/random.\+hpp"{}}\newline
+{\ttfamily \#include $<$boost/math/distributions.\+hpp$>$}\newline
+Include dependency graph for boostdist.\+hpp\+:
+% FIG 0
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classorpp_1_1boostdistribution}{orpp\+::boostdistribution$<$ B $>$}}
+\begin{DoxyCompactList}\small\item\em tbd own draw \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classorpp_1_1lognormaldistribution}{orpp\+::lognormaldistribution}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespaceorpp}{orpp}}
+\begin{DoxyCompactList}\small\item\em A class encapsulting calls of gnuplot. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{group__realdists_ga324cdb68bc9647d53d45f55190fb54f1}{orpp\+::stdnormaldistribution}} = \mbox{\hyperlink{classorpp_1_1boostdistribution}{boostdistribution}}$<$ boost\+::math\+::normal\+\_\+distribution$<$ double $>$ $>$
+\item 
+using \mbox{\hyperlink{group__realdists_ga0797d82fb3e541108c24e2ec0bdfcea8}{orpp\+::normaldistribution}} = \mbox{\hyperlink{classorpp_1_1scaleddistribution}{scaleddistribution}}$<$ \mbox{\hyperlink{group__realdists_ga324cdb68bc9647d53d45f55190fb54f1}{stdnormaldistribution}} $>$
+\end{DoxyCompactItemize}

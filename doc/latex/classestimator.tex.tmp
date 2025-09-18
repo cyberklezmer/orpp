@@ -1,0 +1,98 @@
+\doxysection{estimator Class Reference}
+\hypertarget{classestimator}{}\label{classestimator}\index{estimator@{estimator}}
+
+
+{\ttfamily \#include $<$oldorpp.\+hpp$>$}
+
+
+
+Inheritance diagram for estimator\+:
+% FIG 0
+
+
+Collaboration diagram for estimator\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classestimator_a1095ce929af0edcf48ff9d5263aa1f95}{estimator}} (const vector$<$ paraminfo $>$ \&aparams)
+\item 
+virtual double \mbox{\hyperlink{classestimator_af12e2a76deb56f9adc6bf841527b743a}{estimate}} (vector$<$ paramresult $>$ \&result, bool stds=false)=0
+\begin{DoxyCompactList}\small\item\em {\ttfamily initialpars.\+size()==0} means no ninitial parameter \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classobject_a19562885680264bf861ba03b2e713b0c}{setlogging}} (\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} al=\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}})
+\item 
+bool \mbox{\hyperlink{classobject_a00411d9c6c86f9cdb3db728eb3ce882b}{islogging}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+const vector$<$ paraminfo $>$ \& \mbox{\hyperlink{classestimator_abaaecf12abdbd756b6a327564dd821d3}{getparams}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_a04aad740887b47c735b9ed9078e45d77}{object}} ()
+\item 
+virtual \mbox{\hyperlink{classobject_a6233244b77a2794b456e5eee6964806d}{\texorpdfstring{$\sim$}{\string~}object}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \{ \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa32b207eaae85c46e0c1576e3242c9c9}{nologging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa6589c21d3d5347fd1e306419c3dae19}{extendedlogging}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \mbox{\hyperlink{classobject_a16be6bd5605b5df8120272924a88d2f2}{logging}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+ofstream \mbox{\hyperlink{classobject_a272d13822c00cec48d2ae6391a91adbd}{nulstream}}
+\item 
+ostream \& \mbox{\hyperlink{classobject_a6749b1b5cef09026c908edad043a4421}{lout}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classestimator_a1095ce929af0edcf48ff9d5263aa1f95}\label{classestimator_a1095ce929af0edcf48ff9d5263aa1f95} 
+\index{estimator@{estimator}!estimator@{estimator}}
+\index{estimator@{estimator}!estimator@{estimator}}
+\doxysubsubsection{\texorpdfstring{estimator()}{estimator()}}
+{\footnotesize\ttfamily estimator\+::estimator (\begin{DoxyParamCaption}\item[{const vector$<$ paraminfo $>$ \&}]{aparams }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classestimator_af12e2a76deb56f9adc6bf841527b743a}\label{classestimator_af12e2a76deb56f9adc6bf841527b743a} 
+\index{estimator@{estimator}!estimate@{estimate}}
+\index{estimate@{estimate}!estimator@{estimator}}
+\doxysubsubsection{\texorpdfstring{estimate()}{estimate()}}
+{\footnotesize\ttfamily virtual double estimator\+::estimate (\begin{DoxyParamCaption}\item[{vector$<$ paramresult $>$ \&}]{result,  }\item[{bool}]{stds = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+{\ttfamily initialpars.\+size()==0} means no ninitial parameter 
+
+
+
+Implemented in \mbox{\hyperlink{classmle_ac61f67fad14ff55bb9405f5c9de3d0c8}{mle}}.
+
+\Hypertarget{classestimator_abaaecf12abdbd756b6a327564dd821d3}\label{classestimator_abaaecf12abdbd756b6a327564dd821d3} 
+\index{estimator@{estimator}!getparams@{getparams}}
+\index{getparams@{getparams}!estimator@{estimator}}
+\doxysubsubsection{\texorpdfstring{getparams()}{getparams()}}
+{\footnotesize\ttfamily const vector$<$ paraminfo $>$ \& estimator\+::getparams (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{oldorpp_8hpp}{oldorpp.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,197 @@
+\doxysection{csv.\+hpp}
+\hypertarget{csv_8hpp_source}{}\label{csv_8hpp_source}\index{orpp/csv.hpp@{orpp/csv.hpp}}
+\mbox{\hyperlink{csv_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ CSV\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ CSV\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <sstream>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}orpp.hpp"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceorpp}{orpp}}}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{char}\ sep=','>}
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1csv}{csv}}\ :\ \textcolor{keyword}{private}\ std::vector<std::vector<std::string>>}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ getstr(std::istream\&\ is)}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}};}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ is.get(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ quotes\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}==\textcolor{charliteral}{'"{}'})}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ quotes\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ is.get(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}};}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}==sep\ \&\&\ !quotes)\ ||\ is.eof())}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}==\textcolor{charliteral}{'"{}'}\ \&\&\ quotes)}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ is.get(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}!=\textcolor{charliteral}{'"{}'}\ ||\ is.eof())}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}.push\_back(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ is.get(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}};}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{static}\ std::vector<std::vector<std::string>>\ getvecs(\textcolor{keyword}{const}\ std::string\&\ fn,\ \textcolor{keywordtype}{size\_t}\ initialsize)}
+\DoxyCodeLine{00043\ \ \ \ \ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ std::vector<vector<std::string>>\ res(initialsize);}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ std::ifstream\ file(fn);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!file.is\_open())}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ std::ostringstream\ es;}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ es\ <<\ \textcolor{stringliteral}{"{}cannot\ open\ csv\ file:\ "{}}\ <<\ fn\ ;}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(es);}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ std::string\ line;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ reserve\ =\ 1;}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ index\ =\ 0;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (getline(file,\ line))}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ ls\ =\ line.size();}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(line[ls-\/1]==\textcolor{charliteral}{'\(\backslash\)r'})}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(ls==1)}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ line.resize(ls-\/1);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ row;}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ row.reserve(reserve);}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ std::istringstream\ is(line);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(;;)}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ s\ =\ getstr(is);}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ row.push\_back(s);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(is.eof())}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ reserve\ =\ std::max(row.size(),reserve);}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(index\ <\ initialsize)}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res[index]\ =\ row;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res.push\_back(row);}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ index++;}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ res.resize(index);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ c2excel(\textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}})}
+\DoxyCodeLine{00090\ \ \ \ \ \{}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ std::ostringstream\ os;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ numchars\ =\ \textcolor{charliteral}{'Z'}-\/\textcolor{charliteral}{'A'}+1;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}\ >=\ numchars)}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ os\ <<\ static\_cast<char>(\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}\ /\ numchars\ -\/\ 1\ +\ \textcolor{charliteral}{'A'}\ );}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ os\ <<\ static\_cast<char>(\ (\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}\ \%\ numchars)\ +\ \textcolor{charliteral}{'A'}\ );}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.str();}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{static}\ std::string\ c2excel(\textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}},\ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}})}
+\DoxyCodeLine{00100\ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ std::ostringstream\ os;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ os\ <<\ c2excel(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}})\ <<\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}+1;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ os.str();}
+\DoxyCodeLine{00104\ \ \ \ \ \}}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ (*this).size();\}}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}(\textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}})\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00109\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}>=(*this).size())}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ std::ostringstream\ e;}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ e\ <<\ fn\ <<\ \textcolor{stringliteral}{"{}\ does\ not\ have\ "{}}\ <<\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}+1\ <<\ \textcolor{stringliteral}{"{}\ lines"{}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(e);}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})[\mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}].size();}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{const}\ std::string\&\ \mbox{\hyperlink{classorpp_1_1csv_a5f0d54a10e2e720eb0695f682fa77d00}{operator()}}(\textcolor{keywordtype}{unsigned}\ i,\ \textcolor{keywordtype}{unsigned}\ j)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00119\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ std::ostringstream\ e;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i>=(*this).size())}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \ \ \ \ e\ <<\ fn\ <<\ \textcolor{stringliteral}{"{}\ does\ not\ have\ "{}}\ <<\ i+1\ <<\ \textcolor{stringliteral}{"{}\ lines"{}};}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(e);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j>=(*\textcolor{keyword}{this})[i].size())}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ e\ <<\ \textcolor{stringliteral}{"{}Line\ "{}}\ <<\ i+1}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ in\ file\ "{}}\ <<\ fn}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ does\ not\ have\ "{}}\ <<\ j+1}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ columns\ (column\ "{}}\ <<\ c2excel(j)\ <<\ \textcolor{stringliteral}{"{})."{}};}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(e);}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*\textcolor{keyword}{this})[i][j];}
+\DoxyCodeLine{00135\ \ \ \ \ \}}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_a80ab925c1a8ba1f01c2ad061e0581925}{getunsigned}}(\textcolor{keywordtype}{unsigned}\ i,\ \textcolor{keywordtype}{unsigned}\ j)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00138\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ res;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}\ =\ (*this)(i,j);}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ stoul(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (...)\ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::ostringstream\ e;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e\ <<\ \textcolor{stringliteral}{"{}Cannot\ convert\ '"{}}\ <<\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}\ <<}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ to\ unsigned\ in\ file\ "{}}\ <<\ fn}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ c2excel(i,j);}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(e);}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00151\ \ \ \ \ \}}
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1csv_af6f4fdd282a8122e87a2072a9e0f951e}{getdouble}}(\textcolor{keywordtype}{unsigned}\ i,\ \textcolor{keywordtype}{unsigned}\ j)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00154\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ res;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}\ =\ (*this)(i,j);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ res\ =\ stod(\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}});}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (...)\ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::ostringstream\ e;}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ e\ <<\ \textcolor{stringliteral}{"{}Cannot\ convert\ '"{}}\ <<\ \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'\ to\ double\ in\ file\ "{}}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ fn\ <<\ \textcolor{stringliteral}{"{},\ "{}}\ <<\ c2excel(i,j);}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(e);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00167\ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_a5ac63e26e10025820d42b8c695355dd2}{findinrow}}(\textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}},\textcolor{keyword}{const}\ std::string\&\ s)}
+\DoxyCodeLine{00169\ \ \ \ \ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<this-\/>\mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}}(r);\ i++)}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((*\textcolor{keyword}{this})(\mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}},i).find(s)==0)}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ i;}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ std::ostringstream\ os;}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ os\ <<\ \textcolor{stringliteral}{"{}String\ '"{}}\ <<\ s}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}'\ cannot\ be\ found\ in\ row\ "{}}\ <<\ \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}+1}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ \textcolor{stringliteral}{"{}\ of\ file\ "{}}\ <<\ fn\ <<\ std::endl;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(os);}
+\DoxyCodeLine{00180\ \ \ \ \ \}}
+\DoxyCodeLine{00181\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1csv_a37be7349f8b56500213cccd6f6c20b8d}{csv}}(\textcolor{keyword}{const}\ std::string\&\ afn,\ \textcolor{keywordtype}{size\_t}\ initialsize=1)\ :}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ std::vector<std::vector<std::string>>(getvecs(afn,\ initialsize)),}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ fn(afn)}
+\DoxyCodeLine{00184\ \ \ \ \ \{\}}
+\DoxyCodeLine{00185\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00186\ \ \ \ \ \textcolor{keyword}{const}\ std::string\ fn;}
+\DoxyCodeLine{00187\ \};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00189\ \};\ \textcolor{comment}{//\ namespace}}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ CSV\_HPP}}
+
+\end{DoxyCode}

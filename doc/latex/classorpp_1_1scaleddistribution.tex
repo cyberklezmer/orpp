@@ -1,0 +1,135 @@
+\doxysection{orpp\+::scaleddistribution\texorpdfstring{$<$}{<} D \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1scaleddistribution}{}\label{classorpp_1_1scaleddistribution}\index{orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}}
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::scaleddistribution\texorpdfstring{$<$}{<} D \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::scaleddistribution\texorpdfstring{$<$}{<} D \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1scaleddistribution_a19f58a6715c54454e55db78f84a96538}{scaleddistribution}} (double \mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}}, double \mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}})
+\item 
+\mbox{\hyperlink{classorpp_1_1scaleddistribution_a537d47c2e9b4d986c6ab3ad59eafb36b}{scaleddistribution}} (const D \&d, double \mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}}, double \mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}})
+\item 
+const D \& \mbox{\hyperlink{classorpp_1_1scaleddistribution_a9aafd4bbefd40e23d30b82febabe1157}{srcd}} () const
+\begin{DoxyCompactList}\small\item\em returns the distribution which whas scalled \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}{m}} () const
+\item 
+double \mbox{\hyperlink{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}{sd}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1qdistribution}{orpp\+::qdistribution$<$ nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_ad4e7470df57d0fe14d7fc8a70527d9f2}{quantile}} (probability p) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1qdistribution_a38f90035466a038f3f75ba74f064d4db}{quantile}} (probability p, const nothing \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1cdfdistribution}{orpp\+::cdfdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_a62897e6e2896e78bdd544f70da10b287}{cdf}} (double x) const
+\item 
+probability \mbox{\hyperlink{classorpp_1_1cdfdistribution_aec99dbe58218f1ded0d715724e09a58a}{cdf}} (double x, const C \&c) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_a047b424718d27d90887540a95bbc8513}{mean}} (const C \&c, double prec=0.\+0) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1realdistribution_ad80866200b2a7a33a676829c87d1cb92}{mean}} (double prec=0.\+0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ double, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = double
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1realdistribution}{orpp\+::realdistribution$<$ C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1realdistribution_a2ffc8119af94c02fd8a267f887249f2a}{mean\+\_\+is}} (const C \&, double) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1scaleddistribution_a19f58a6715c54454e55db78f84a96538}\label{classorpp_1_1scaleddistribution_a19f58a6715c54454e55db78f84a96538} 
+\index{orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}!scaleddistribution@{scaleddistribution}}
+\index{scaleddistribution@{scaleddistribution}!orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{scaleddistribution()}{scaleddistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+\mbox{\hyperlink{classorpp_1_1scaleddistribution}{orpp\+::scaleddistribution}}$<$ D $>$\+::scaleddistribution (\begin{DoxyParamCaption}\item[{double}]{m,  }\item[{double}]{sd }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1scaleddistribution_a537d47c2e9b4d986c6ab3ad59eafb36b}\label{classorpp_1_1scaleddistribution_a537d47c2e9b4d986c6ab3ad59eafb36b} 
+\index{orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}!scaleddistribution@{scaleddistribution}}
+\index{scaleddistribution@{scaleddistribution}!orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{scaleddistribution()}{scaleddistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+\mbox{\hyperlink{classorpp_1_1scaleddistribution}{orpp\+::scaleddistribution}}$<$ D $>$\+::scaleddistribution (\begin{DoxyParamCaption}\item[{const D \&}]{d,  }\item[{double}]{m,  }\item[{double}]{sd }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca}\label{classorpp_1_1scaleddistribution_a21e9f6ef5c04a0e605c6d553378449ca} 
+\index{orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}!m@{m}}
+\index{m@{m}!orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{m()}{m()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+double \mbox{\hyperlink{classorpp_1_1scaleddistribution}{orpp\+::scaleddistribution}}$<$ D $>$\+::m (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1}\label{classorpp_1_1scaleddistribution_a8c05bba582f668149adfc7f0a94e78f1} 
+\index{orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}!sd@{sd}}
+\index{sd@{sd}!orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{sd()}{sd()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+double \mbox{\hyperlink{classorpp_1_1scaleddistribution}{orpp\+::scaleddistribution}}$<$ D $>$\+::sd (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1scaleddistribution_a9aafd4bbefd40e23d30b82febabe1157}\label{classorpp_1_1scaleddistribution_a9aafd4bbefd40e23d30b82febabe1157} 
+\index{orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}!srcd@{srcd}}
+\index{srcd@{srcd}!orpp::scaleddistribution$<$ D $>$@{orpp::scaleddistribution$<$ D $>$}}
+\doxysubsubsection{\texorpdfstring{srcd()}{srcd()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+const D \& \mbox{\hyperlink{classorpp_1_1scaleddistribution}{orpp\+::scaleddistribution}}$<$ D $>$\+::srcd (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+returns the distribution which whas scalled 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

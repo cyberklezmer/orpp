@@ -1,0 +1,578 @@
+\doxysection{overallriskdp.\+hpp}
+\hypertarget{overallriskdp_8hpp_source}{}\label{overallriskdp_8hpp_source}\index{orpp/overallriskdp.hpp@{orpp/overallriskdp.hpp}}
+\mbox{\hyperlink{overallriskdp_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ OVERALLRISKDP\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ OVERALLRISKDP\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <boost/math/tools/roots.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{dp_8hpp}{orpp/dp.hpp}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{random_8hpp}{orpp/random.hpp}}"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespaceorpp}{orpp}}}
+\DoxyCodeLine{00009\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Criterion,}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Statespace,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace,}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Transition,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Reward}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ >}
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem}{overallriskproblem}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ Statespace,ConstrainedActionSpace,Transition,Reward>}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_a54e49b6f07e50e5683faffd8e2da4a93}{Statespace\_t}}\ =\ Statespace;}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_aa2df8f5d341c39b6ed697ad788aceec9}{ConstrainedActionSpace\_t}}\ =\ ConstrainedActionSpace;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ R>}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1finitehomodpproblem}{finitehomodpproblem}}<nestedcriterion<Criterion>,Statespace,A,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ Transition,\ R>}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase_accfda82c55753f012c201402e71edf57}{nestedproblembase}}(\textcolor{keyword}{const}\ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Statespace\&\ state,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ A\&\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Transition\&\ transition,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ R\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})\ :}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitehomodpproblem}{finitehomodpproblem}}<\mbox{\hyperlink{classorpp_1_1nestedcriterion}{nestedcriterion}}<Criterion>,\ Statespace,A,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,R>}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},\ state,\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},\ transition,\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}})}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<parametricriskmeasure<ldistribution<double>>,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Criterion>::value);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<iteratedspace<typename\ Statespace::Element\_t>,Statespace>::value);}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<\mbox{\hyperlink{classorpp_1_1constrainedspace}{constrainedspace}}<}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ Statespace::Element\_t,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ A::Element\_t>,A>::value);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<finitetransition<Statespace,A>,Transition>::value);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(std::is\_base\_of<dpreward<Statespace,A>,R>::value);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{comment}{//\ \ \ \ \ \ \ \ using\ computationparams\ =\ typename\ finitehomodpproblem<nestedcriterion<Criterion>,}}
+\DoxyCodeLine{00052\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Statespace,ConstrainedActionSpace,Transition,Reward>::computationparams;}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase_a54dc27647b5c11d5fc34c157e0c0fa12}{setriskaversion}}(\textcolor{keywordtype}{double}\ ra)\ \{\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}.nesting().setparam(ra);\ \}}
+\DoxyCodeLine{00054\ \ \ \ \ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblem}}\ =\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase<ConstrainedActionSpace,Reward>}};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward}{taylorreward}}\ :\ \textcolor{keyword}{public}\ Reward}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward_abad6aadda2fb302ba5e1a85b74a5633e}{taylorreward}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ base,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::vector<double>\&\ gradient,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Reward\&\ orig)\ :\ Reward(orig),}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ fbase(base),\ fgradient(gradient)}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ assert(fbase.size()\ ==\ fgradient.size());}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward_a72fc8d545c29c00aa5dd71e714723005}{operator()\ }}(\textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1dpcondition}{dpcondition}}<\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int},}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t>\&\ x)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00071\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ assert(x.s\ <\ fgradient.size());}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ assert(x.s\ <\ fbase.size());}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::max(0.0,Reward::operator()(x)+(x.a-\/fbase[x.s])\ *\ fgradient[x.s]);}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward_a8d3d814642ba1ef200d2c0b0047339a1}{maxgradadd}}(\textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1space}{space}})\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00077\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\ =\ 0;}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<fgradient.size();\ i++)}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\ =\ 0;}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fgradient[i]\ <\ 0)}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a;}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ exists\ =\ \mbox{\hyperlink{classorpp_1_1space}{space}}.firstfeasible(a,i);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(exists);}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!exists)}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}maxgradadd:\ At\ least\ one\ feasible\ element\ needed"{}});}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(a\ <=\ fbase[i]);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ -\/\ (fbase[i]-\/a)\ *\ fgradient[i];}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(fgradient[i]\ >\ 0)}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ exists\ =\ \mbox{\hyperlink{classorpp_1_1space}{space}}.lastfeasible(a,i);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(exists);}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!exists)}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}maxgradadd:\ At\ least\ one\ feasible\ element\ needed"{}});}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(a\ >=\ fbase[i]);}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ (fbase[i]-\/a)\ *\ fgradient[i];}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ m\ =\ std::max(m,x);}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ fbase;}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ std::vector<double>\ fgradient;}
+\DoxyCodeLine{00110\ \ \ \ \ \};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace}{onedactionspace}}\ :\ \textcolor{keyword}{public}\ ConstrainedActionSpace}
+\DoxyCodeLine{00115\ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace_af4312016ff4642763a223e478e4e4612}{onedactionspace}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ maskpolicy,\ index\ freeindex,}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1space}{space}})}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ :\ ConstrainedActionSpace(\mbox{\hyperlink{classorpp_1_1space}{space}}),}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ffreeindex(freeindex),\ fmaskpolicy(maskpolicy)\ \{\}}
+\DoxyCodeLine{00121\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ index\ ffreeindex;}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ fmaskpolicy;}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace_a30e65588ea7146f610c249a0cd81bd12}{isfeasible}}(\textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\&\ a,}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ Statespace::Element\_t\&\ s\ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00127\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \ \ \ \ assert(s\ <\ fmaskpolicy.size());}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(s\ ==\ ffreeindex)}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ConstrainedActionSpace::isfeasible(a,s);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a\ ==\ fmaskpolicy[s];}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00134\ \ \ \ \ \};}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedtaylorproblem}}\ =\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase<onedactionspace,taylorreward>}};}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}:}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,Statespace,ConstrainedActionSpace,}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ Transition,\ Reward>::computationparams}
+\DoxyCodeLine{00141\ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a3f6e3a2ecf0fdd13647bd60f2749d368}{computationparams}}()\ :\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_af103ea5e3fe9bf547e889889eb6033be}{fpseudogradientmaxiters}}(std::numeric\_limits<unsigned>::max()),}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a3184684eb0c71de640ff46db3e6f2e62}{fheuristicmaxiters}}(std::numeric\_limits<unsigned>::max()),}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a2413e9d2ec20ef1ef84793cce13eee2e}{fopttimelimit}}(std::numeric\_limits<timems>::max())\ \{\}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedtaylorproblem::computationparams}}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a466d5bc0dc995889b9666841798abc0d}{fnestedtaylorparams}};}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem::computationparams}}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}};}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_af103ea5e3fe9bf547e889889eb6033be}{fpseudogradientmaxiters}};}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a3184684eb0c71de640ff46db3e6f2e62}{fheuristicmaxiters}};}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ timems\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a2413e9d2ec20ef1ef84793cce13eee2e}{fopttimelimit}};}
+\DoxyCodeLine{00150\ \ \ \ \ \};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ }
+\DoxyCodeLine{00153\ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_a1f40ca4964be3e0bf7f1b9e59c1c9559}{overallriskproblem}}(\textcolor{keyword}{const}\ Criterion\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Statespace\&\ state,}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ ConstrainedActionSpace\&\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Transition\&\ transition,}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Reward\&\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}}\ ,}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ rmlipshitzfactor)\ :}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,\ Statespace,ConstrainedActionSpace,}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}},\ state,\ \mbox{\hyperlink{classorpp_1_1constraint}{constraint}},\ transition,\ \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}},\ \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}},\ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}}),}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \ \ \ frmlipshitzfactor(rmlipshitzfactor)}
+\DoxyCodeLine{00165\ \ \ \ \ \{\}}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{struct\ }rmtermination\ \ \{}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ operator()\ (\textcolor{keywordtype}{double}\ min,\ \textcolor{keywordtype}{double}\ max)\ \ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ abs(min\ -\/\ max)\ <=\ faccuracy\ /\ 2;}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00172\ }
+\DoxyCodeLine{00173\ \ \ \ \ \ \ rmtermination(\textcolor{keywordtype}{double}\ accuracy)\ :\ faccuracy(accuracy)\ \{\}}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ faccuracy;\ \}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ faccuracy;}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \};}
+\DoxyCodeLine{00179\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Problem>}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{struct\ }rmdifference\ \ \{}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ operator()\ (\textcolor{keywordtype}{double}\ iota)}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \ \ fproblem.setriskaversion(iota);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ r\ =\ fproblem.evaluate(finitvalue,fpolicy,faccuracy\ /\ 2,\ fparams);}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(r.sd\ >\ faccuracy\ /\ 2)}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}rmdifference:\ failed\ to\ achieve\ desired\ accuracy."{}});}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ r.x[finitindex]\ -\/\ fconstant;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ rmdifference(\textcolor{keyword}{const}\ Problem\&\ problem,}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ finitepolicy\&\ policy,}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ constant,}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ finitevaluefunction\&\ initvalue,}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\ initindex,}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ rmtermination\&\ term,}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ nestedproblem::computationparams\&\ pars\ ):}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ fproblem(problem),\ fpolicy(policy),\ fconstant(constant),}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \ \ finitvalue(initvalue),\ finitindex(initindex),\ faccuracy(term.accuracy()),}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \ \ fparams(pars)\ \{\}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ Problem\ fproblem;}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ finitepolicy\ fpolicy;}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ fconstant;}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ finitevaluefunction\ finitvalue;}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ orpp::index\ finitindex;}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ faccuracy;}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \textcolor{keyword}{typename}\ nestedproblem::computationparams\ fparams;}
+\DoxyCodeLine{00207\ \ \ \ \ \};}
+\DoxyCodeLine{00208\ }
+\DoxyCodeLine{00209\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}}
+\DoxyCodeLine{00212\ \ \ \ \ \{}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a4306b7026f05ecca6e5de99e3b82e5d0}{heuristicresult}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem}{overallriskproblem}}<Criterion,Statespace,ConstrainedActionSpace,}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Transition,Reward>\&\ pr)\ :\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}}(pr),\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a8e09e0bda19c8e3b05ee965559ade183}{v}}(0),\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_ad4516c2a9dfaed332cf16170de456e65}{e}}(0)\ \{\}}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}};}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a8e09e0bda19c8e3b05ee965559ade183}{v}};}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_ad4516c2a9dfaed332cf16170de456e65}{e}};}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_aa3075d21d7d50bf60dc724d68b4aa04c}{iota}};}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a4e2d7244f3443735990d7a4ee96d71cf}{output}}(std::ostream\&\ o)}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ \textcolor{stringliteral}{"{}Policy:"{}};}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}}.size();\ i++)}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ \textcolor{stringliteral}{"{}\ "{}}\ <<\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}}[i];}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ std::endl;}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ \textcolor{stringliteral}{"{}Value:\ "{}}\ <<\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a8e09e0bda19c8e3b05ee965559ade183}{v}};}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ std::endl;}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ \textcolor{stringliteral}{"{}Error:\ "{}}\ <<\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_ad4516c2a9dfaed332cf16170de456e65}{e}}\ <<\ std::endl;}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \ \ \ \ o\ <<\ \textcolor{stringliteral}{"{}iota:\ "{}}\ <<\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_aa3075d21d7d50bf60dc724d68b4aa04c}{iota}}\ <<\ std::endl;}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00230\ \ \ \ \ \};}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423}{findiota}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblem}}\&\ problem,}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ policy,}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ constant,}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ initvalue,}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\ initindex,}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem::computationparams}}\&\ pars}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00240\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ rmtermination\ term(accuracy\ /\ 2);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ rmdifference<nestedproblem>\ dif(problem,policy,constant,initvalue,\ initindex\ ,term,\ pars);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }boost::math::tools::bisect;}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ from\ =\ 0;\ \ \textcolor{comment}{//\ The\ solution\ must\ lie\ in\ the\ interval\ [from,\ to],\ additionally\ f(from)\ <=\ 0\ \&\&\ f(to)\ >=\ 0}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ to\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}.getparam();}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ assert(from\ <=\ to);}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dfrom\ =\ dif(from);}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ dto\ =\ dif(to);}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fabs(dfrom)<accuracy)}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ from;}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(fabs(dto)<accuracy)}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ to;}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(from\ <\ to)}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(dfrom\ <\ 0)}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}Error\ finding\ nested\ r.a.\ parameter:\ dif(from)\ <\ 0"{}});}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(dto\ >\ 0)}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}Error\ finding\ nested\ r.a.\ parameter:\ dif(to)\ >\ 0"{}});}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::pair<double,\ double>\ result\ =}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bisect(dif,\ from,\ to,\ term);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (result.first\ +\ result.second)\ /\ 2;}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}(...)}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ std::endl\ <<\ \textcolor{stringliteral}{"{}error\ finding\ dif(iota)=0,\ constant="{}}\ <<\ constant\ <<\ std::endl;}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{unsigned}\ nsteps\ =\ 5;}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ i<=nsteps;\ i++)}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ x\ =\ from+\ (to-\/from)/nsteps\ *\ i;}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ \textcolor{stringliteral}{"{}dif("{}}\ <<\ x\ <<\ \textcolor{stringliteral}{"{})="{}}\ <<\ dif(x)\ <<\ std::endl;}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw};}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ exception(\textcolor{stringliteral}{"{}Error\ finding\ nested\ r.a.\ parameter:\ from\ >\ to"{}});}
+\DoxyCodeLine{00284\ \ \ \ \ \}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ }
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_a564659419091ec5d6e659b0ddfa8ec20}{findiota}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ policy,}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ constant,}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ initvalue,}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ orpp::index\ initindex,}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keyword}{typename}\ \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem::computationparams}}\&\ pars}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ )\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00294\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblem}}\ problem(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}},}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}},}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}},}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}},this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}},}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}},}
+\DoxyCodeLine{00300\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}});}
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423}{findiota}}(problem,\ policy,constant,\ initvalue,\ initindex,accuracy,pars);}
+\DoxyCodeLine{00302\ \ \ \ \ \}}
+\DoxyCodeLine{00303\ }
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keyword}{typename}\ nestedproblem::viresult\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_af468148106980319cc8dbd99eb4f5a07}{riskaversesolution}}(\textcolor{keywordtype}{double}\ accuracy,\textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00305\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblem}}\ problem(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}},}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}},}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}},}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}},this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}},}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}},}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}});}
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ problem.\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase_a54dc27647b5c11d5fc34c157e0c0fa12}{setriskaversion}}(0);}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ problem.\mbox{\hyperlink{classorpp_1_1finitehomodpproblem_a46c001e83ea10c2e7c0067130cbdeb34}{valueiteration}}(\mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}(problem,0),accuracy,params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}});}
+\DoxyCodeLine{00315\ \ \ \ \ \}}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ quick=false>}
+\DoxyCodeLine{00318\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_ad862beef4686af4f6654c458d6201c08}{heuristic}}(index\ s0ind,\ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ initp,}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00321\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}overallriskproblem::heuristic"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ st\ =\ sys::gettimems();}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ bestp\ =\ initp;}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ lastp\ =\ bestp;}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ iota\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}.getparam();}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ initV(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}.num(),0);}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ lastvalueofcrit\ =\ 0;}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ resultingvalueofcrit\ =\ 0;}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ ;\ i++)}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblem}}\ problem(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}},}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}},}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}},}
+\DoxyCodeLine{00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}},this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}},}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}},}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}});}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ problem.\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase_a54dc27647b5c11d5fc34c157e0c0fa12}{setriskaversion}}(iota);}
+\DoxyCodeLine{00347\ }
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ vires\ =\ problem.\mbox{\hyperlink{classorpp_1_1finitehomodpproblem_a46c001e83ea10c2e7c0067130cbdeb34}{valueiteration}}(initV,accuracy/3,params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}});}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ initV\ =\ vires.v;}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}}\ cs\ =\ problem.\mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}}(\ s0ind,\ vires.p,\ accuracy\ /\ 2.0,\ params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}});}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ valueofcrit\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}(cs.\mbox{\hyperlink{structorpp_1_1statcounter_a7d947b1a46924fb95ea835f6ebd33825}{dist}}).x;}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}iteration\ "{}}\ <<\ i\ <<\ \textcolor{stringliteral}{"{}\ iota="{}}\ <<\ iota\ <<\ \textcolor{stringliteral}{"{},\ p="{}}}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ vires.p\ <<\ \textcolor{stringliteral}{"{},\ crit="{}}\ <<\ valueofcrit\ <<\ std::endl;}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ }
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i\ >\ 0)}
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(quick\ ||\ valueofcrit\ <=\ lastvalueofcrit\ +\ accuracy}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ i==params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a3184684eb0c71de640ff46db3e6f2e62}{fheuristicmaxiters}}-\/1)}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ resultingvalueofcrit\ =\ lastvalueofcrit;}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bestp\ =\ lastp;}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ lastp=vires.p;}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ lastvalueofcrit\ =\ valueofcrit;}
+\DoxyCodeLine{00372\ }
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ iota\ =\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423}{findiota}}(problem,vires.p,valueofcrit,vires.v,\ s0ind,\ accuracy,\ params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}});}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ sys::gettimems();}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t\ -\/\ st\ >\ params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a2413e9d2ec20ef1ef84793cce13eee2e}{fopttimelimit}})}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}Exiting\ for\ time\ reasons"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ timelimitexception(params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a2413e9d2ec20ef1ef84793cce13eee2e}{fopttimelimit}});}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ res(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}}\ =\ bestp;}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a8e09e0bda19c8e3b05ee965559ade183}{v}}\ =\ resultingvalueofcrit;}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_ad4516c2a9dfaed332cf16170de456e65}{e}}\ =\ accuracy;}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_aa3075d21d7d50bf60dc724d68b4aa04c}{iota}}\ =\ iota;}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}huristic\ ended:\ "{}};}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a4e2d7244f3443735990d7a4ee96d71cf}{output}}(sys::log());}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00389\ \ \ \ \ \}}
+\DoxyCodeLine{00390\ }
+\DoxyCodeLine{00391\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ quick=false>}
+\DoxyCodeLine{00392\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_a8e37cd11cc7bddf41aca62caa5ebc989}{heuristic}}(index\ s0ind,\ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00394\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ vires\ =\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_af468148106980319cc8dbd99eb4f5a07}{riskaversesolution}}(accuracy,params);}
+\DoxyCodeLine{00396\ }
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}overalldpproblem::heuristic\ RN\ initialization:\ p="{}}}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ vires.p\ <<\ \textcolor{stringliteral}{"{},\ expectation="{}}\ <<\ vires.v[s0ind]<<\ std::endl;}
+\DoxyCodeLine{00399\ }
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ heuristic<quick>(s0ind,\ accuracy,vires.p,params);}
+\DoxyCodeLine{00401\ \ \ \ \ \}}
+\DoxyCodeLine{00402\ }
+\DoxyCodeLine{00403\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ quick=false>}
+\DoxyCodeLine{00404\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_a8aae409d45334d5e9945221640e220b4}{taylorheuristic}}(index\ s0ind,\ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\&\ initp,}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00407\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}overallriskproblem::taylorheuristic"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ candp(initp);}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}}\ lastp(initp);}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ initV(*\textcolor{keyword}{this},0);}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}\ taylorinitV(*\textcolor{keyword}{this},0);}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ lastvalueofcrit\ =\ 0;}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ iota;}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ st\ =\ sys::gettimems();}
+\DoxyCodeLine{00417\ }
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ i=0;\ ;\ i++)}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblem}}\ nproblem(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}},}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}},}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}},}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}},}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}},}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}},}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}});}
+\DoxyCodeLine{00427\ }
+\DoxyCodeLine{00428\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ valueofcrit\ =\ \ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}}(\ s0ind,\ candp,\ accuracy\ /\ 2.0,\ params).\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}};}
+\DoxyCodeLine{00429\ }
+\DoxyCodeLine{00430\ \ \ \ \ \ \ \ \ \ \ \ \ iota\ =\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423}{findiota}}(nproblem,candp,valueofcrit,initV,\ s0ind,\ accuracy,\ params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}});}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}iteration\ "{}}\ <<\ i\ <<\ \textcolor{stringliteral}{"{}\ iota="{}}\ <<\ iota\ <<\ \textcolor{stringliteral}{"{},\ p="{}}}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ candp\ <<\ \textcolor{stringliteral}{"{},\ crit="{}}\ <<\ valueofcrit\ <<\ std::endl;}
+\DoxyCodeLine{00434\ }
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}((i>0\ \&\&\ (quick\ ||\ valueofcrit\ <=\ lastvalueofcrit\ +\ accuracy))}
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ||\ i==params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a3184684eb0c71de640ff46db3e6f2e62}{fheuristicmaxiters}}-\/1)}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00438\ }
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ nproblem.\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase_a54dc27647b5c11d5fc34c157e0c0fa12}{setriskaversion}}(iota);}
+\DoxyCodeLine{00440\ }
+\DoxyCodeLine{00441\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ s=0;\ s<candp.size();\ s++)}
+\DoxyCodeLine{00442\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00443\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<double>\ grad(candp.size(),0);}
+\DoxyCodeLine{00444\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ p=candp;}
+\DoxyCodeLine{00445\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a0\ =\ p[s];}
+\DoxyCodeLine{00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ ConstrainedActionSpace::Element\_t\ a1\ =\ a0;}
+\DoxyCodeLine{00447\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.nextfeasible(a1,s))}
+\DoxyCodeLine{00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00449\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(a1\ >\ a0);}
+\DoxyCodeLine{00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00451\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}.previousfeasible(a1,s))}
+\DoxyCodeLine{00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(a1\ <\ a0);}
+\DoxyCodeLine{00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00457\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ grad.push\_back(0);}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{00459\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00460\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ assert(a0\ !=\ a1);}
+\DoxyCodeLine{00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ p[s]\ =\ a1;}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ rhoalpha\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}}(\ s0ind,\ p,\ accuracy\ /\ 2.0,\ params).\mbox{\hyperlink{structorpp_1_1valuewitherror_ac3541d079c9965f5952384714d2c6aa7}{x}};}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ taylorV\ =\ nproblem.\mbox{\hyperlink{classorpp_1_1finitehomodpproblem_ac86bbf60d15c3ae335484ddbb8ac84c4}{evaluate}}(initV,p,accuracy\ /\ 2,\ params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_ae6b92ee390cd35663f01a705ffe7deed}{fnestedparams}}).x;}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ rhoeta\ =\ taylorV[s0ind];}
+\DoxyCodeLine{00465\ \ \textcolor{comment}{//std::cout\ <<\ "{}s="{}\ <<\ s\ <<\ "{}\ r0="{}\ <<\ rhoeta\ <<\ "{}\ r1="{}\ <<\ rhoalpha}}
+\DoxyCodeLine{00466\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ <<\ "{}\ d="{}\ <<\ (static\_cast<double>(a1)\ -\/\ static\_cast<double>(a0))}}
+\DoxyCodeLine{00467\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ <<\ "{}\ p:"{}\ <<\ p\ <<\ std::endl;}}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ grad[s]=((1-\/this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}})*(rhoalpha-\/rhoeta)\ /\ (a1\ -\/\ a0));}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ taylorinitV\ =\ taylorV;}
+\DoxyCodeLine{00470\ }
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace}{onedactionspace}}\ c(candp,s,this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}});}
+\DoxyCodeLine{00472\ }
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward}{taylorreward}}\ r(candp,grad,\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}());}
+\DoxyCodeLine{00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ addition\ =\ (1-\/this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}})\ *\ r.\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward_a8d3d814642ba1ef200d2c0b0047339a1}{maxgradadd}}(this-\/>fconstraint);}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline(0)\ <<\ \textcolor{stringliteral}{"{}grad="{}};}
+\DoxyCodeLine{00477\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned}\ k=0;\ k<grad.size();\ k++)}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ grad[k]\ <<\ \textcolor{stringliteral}{"{}\ "{}};}
+\DoxyCodeLine{00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::log()\ <<\ std::endl;}
+\DoxyCodeLine{00480\ }
+\DoxyCodeLine{00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedtaylorproblem}}\ taylorproblem(this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}},}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}},}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ c,}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}},}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ r,}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}},}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}}\ +\ addition);\ \textcolor{comment}{//\ should\ be\ reset}}
+\DoxyCodeLine{00488\ }
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ taylorproblem.\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase_a54dc27647b5c11d5fc34c157e0c0fa12}{setriskaversion}}(iota);}
+\DoxyCodeLine{00490\ }
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ vires\ =\ taylorproblem.\mbox{\hyperlink{classorpp_1_1finitehomodpproblem_a46c001e83ea10c2e7c0067130cbdeb34}{valueiteration}}(initV,accuracy/3,params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a466d5bc0dc995889b9666841798abc0d}{fnestedtaylorparams}});}
+\DoxyCodeLine{00492\ }
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastp\ =\ candp;}
+\DoxyCodeLine{00494\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ candp\ =\ vires.p;}
+\DoxyCodeLine{00495\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ taylorinitV\ =\ vires.v;}
+\DoxyCodeLine{00496\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lastvalueofcrit\ =\ valueofcrit;}
+\DoxyCodeLine{00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ t\ =\ sys::gettimems();}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(t\ -\/\ st\ >\ params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a2413e9d2ec20ef1ef84793cce13eee2e}{fopttimelimit}})}
+\DoxyCodeLine{00499\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}Exiting\ for\ time\ reasons"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00501\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ timelimitexception(params.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams_a2413e9d2ec20ef1ef84793cce13eee2e}{fopttimelimit}});}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00503\ }
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00505\ }
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ res(*\textcolor{keyword}{this});}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}}\ =\ lastp;}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a8e09e0bda19c8e3b05ee965559ade183}{v}}\ =\ lastvalueofcrit;}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_ad4516c2a9dfaed332cf16170de456e65}{e}}\ =\ accuracy;}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_aa3075d21d7d50bf60dc724d68b4aa04c}{iota}}\ =\ iota;}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}taylor\ huristic\ ended:\ "{}};}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ res.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a4e2d7244f3443735990d7a4ee96d71cf}{output}}(sys::log());}
+\DoxyCodeLine{00514\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ res;}
+\DoxyCodeLine{00515\ \ \ \ \ \}}
+\DoxyCodeLine{00516\ }
+\DoxyCodeLine{00517\ }
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keywordtype}{bool}\ quick=false>}
+\DoxyCodeLine{00519\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_a3536aff91d90663f6e3cbe711b730c5d}{taylorheuristic}}(index\ s0ind,\ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00521\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ vires\ =\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_af468148106980319cc8dbd99eb4f5a07}{riskaversesolution}}(accuracy,params);}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}overalldpproblem::taylorheuristic\ RN\ initialization:\ p="{}}}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ <<\ vires.p\ <<\ \textcolor{stringliteral}{"{},\ expectation="{}}\ <<\ vires.v[s0ind]<<\ std::endl;}
+\DoxyCodeLine{00526\ }
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ taylorheuristic<quick>(s0ind,\ accuracy,vires.p,params);}
+\DoxyCodeLine{00528\ \ \ \ \ \}}
+\DoxyCodeLine{00529\ }
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult}{heuristicplusresult}}}
+\DoxyCodeLine{00531\ \ \ \ \ \{}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult_a40df49dccb156bb7969ef421a4fb55d0}{hres}};}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \textcolor{keyword}{typename}\ \mbox{\hyperlink{classorpp_1_1finitedpproblem}{finitedpproblem}}<Criterion,}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Statespace,ConstrainedActionSpace,Transition,Reward>::}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \ \ \ \ \ pgdhomoresult\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult_addb9c7672d4b73ba05f87c49b72bbe30}{pgres}};}
+\DoxyCodeLine{00536\ \ \ \ \ \};}
+\DoxyCodeLine{00537\ }
+\DoxyCodeLine{00538\ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult}{heuristicplusresult}}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_aaf18f2b708afa353c2984967d2ebc42c}{heuristicplus}}(index\ s0ind,\ \textcolor{keywordtype}{double}\ accuracy,}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}\&\ params)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00540\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00541\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ enumeration}}
+\DoxyCodeLine{00542\ }
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ sys::logline()\ <<\ \textcolor{stringliteral}{"{}overallriskdpproblem::heuristicplus"{}}\ <<\ std::endl;}
+\DoxyCodeLine{00544\ }
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}\ hres\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1overallriskproblem_ad862beef4686af4f6654c458d6201c08}{heuristic}}(s0ind,accuracy,params);}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ pgres\ =\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_a0caeebd57221e84b8421719e82d9a88a}{pseudogradientdescenthomo}}(s0ind,\ hres.\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult_a69799487c6696bbc5522d4f59d375712}{p}},\ accuracy,\ params,1U);}
+\DoxyCodeLine{00548\ }
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ hres,\ pgres\ \};}
+\DoxyCodeLine{00550\ \ \ \ \ \}}
+\DoxyCodeLine{00551\ }
+\DoxyCodeLine{00552\ }
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_aaa085a50a1a70807e0c9f4eb26675dc7}{lipschitzconstant}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00555\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ frmlipshitzfactor\ *\ this-\/>\mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}}()\ /\ (1\ -\/\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}());}
+\DoxyCodeLine{00557\ \ \ \ \ \}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classorpp_1_1overallriskproblem_a9575e7dab81c09916110551e6a2e870c}{setriskaversion}}(\textcolor{keywordtype}{double}\ ra)\ \{\ this-\/>\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}().setparam(ra);\ \}}
+\DoxyCodeLine{00560\ }
+\DoxyCodeLine{00561\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00562\ \ \ \ \ \textcolor{keywordtype}{double}\ frmlipshitzfactor;}
+\DoxyCodeLine{00563\ \};}
+\DoxyCodeLine{00564\ }
+\DoxyCodeLine{00565\ }
+\DoxyCodeLine{00566\ }
+\DoxyCodeLine{00567\ }
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \}\ \textcolor{comment}{//\ namespace}}
+\DoxyCodeLine{00570\ }
+\DoxyCodeLine{00571\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ OVERALLRISKDP\_HPP}}
+\DoxyCodeLine{00572\ }
+
+\end{DoxyCode}

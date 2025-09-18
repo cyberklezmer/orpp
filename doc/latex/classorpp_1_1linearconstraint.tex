@@ -1,0 +1,104 @@
+\doxysection{orpp\+::linearconstraint Class Reference}
+\hypertarget{classorpp_1_1linearconstraint}{}\label{classorpp_1_1linearconstraint}\index{orpp::linearconstraint@{orpp::linearconstraint}}
+
+
+{\ttfamily \#include $<$optimization.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::linearconstraint\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::linearconstraint\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1linearconstraint_a7631c9e556fd9c642bb79dc9e8401cdf}{linearconstraint}} (unsigned int \mbox{\hyperlink{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c}{xdim}})
+\item 
+\mbox{\hyperlink{classorpp_1_1linearconstraint_a8ac02573e587f315f48f97d9328dc7bc}{linearconstraint}} (const std\+::vector$<$ double $>$ \&\mbox{\hyperlink{classorpp_1_1linearconstraint_a937ae7437741b76bfe538b84b7c6858c}{lhs}}, double \mbox{\hyperlink{classorpp_1_1linearconstraint_a91a99268964595fd3f8ec96e7601ca50}{rhs}}=0, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{constraint\+::type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}}=\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{constraint\+::eq}})
+\item 
+double \mbox{\hyperlink{classorpp_1_1linearconstraint_a937ae7437741b76bfe538b84b7c6858c}{lhs}} (unsigned int i) const
+\item 
+void \mbox{\hyperlink{classorpp_1_1linearconstraint_af26646300b3c0205c1c85cc60cc4b493}{setlhs}} (unsigned int i, double v)
+\item 
+void \mbox{\hyperlink{classorpp_1_1linearconstraint_afb2b5bef78c066d61410033f5654ac09}{setlhs}} (const std\+::vector$<$ double $>$ \&\mbox{\hyperlink{classorpp_1_1linearconstraint_a937ae7437741b76bfe538b84b7c6858c}{lhs}})
+\item 
+void \mbox{\hyperlink{classorpp_1_1linearconstraint_ad543a66efcccfe2cff55308ad2b584fb}{setrhs}} (double \mbox{\hyperlink{classorpp_1_1linearconstraint_a91a99268964595fd3f8ec96e7601ca50}{rhs}})
+\item 
+double \mbox{\hyperlink{classorpp_1_1linearconstraint_a91a99268964595fd3f8ec96e7601ca50}{rhs}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1constraint}{orpp\+::constraint}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1constraint_ac92f93bd73b7c6051804ff87abd59035}{constraint}} (unsigned int \mbox{\hyperlink{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c}{xdim}}, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}}=\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{eq}})
+\item 
+\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}} () const
+\item 
+void \mbox{\hyperlink{classorpp_1_1constraint_a601749c799e3877f8baa7876845f8a6c}{settype}} (\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \mbox{\hyperlink{classorpp_1_1constraint_aed031d9c2b4d9e7103981875cedd8293}{t}})
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1constraint_a7d840761351d2258593600fdee1aca6c}{xdim}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1constraint}{orpp\+::constraint}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{type}} \{ \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{eq}}
+, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16a6a96f23ba831912ab68b0fa2ae003f40}{geq}}
+, \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16abbc162814a5ad6713e593a79b1c3aafa}{leq}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1linearconstraint_a7631c9e556fd9c642bb79dc9e8401cdf}\label{classorpp_1_1linearconstraint_a7631c9e556fd9c642bb79dc9e8401cdf} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!linearconstraint@{linearconstraint}}
+\index{linearconstraint@{linearconstraint}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{linearconstraint()}{linearconstraint()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily orpp\+::linearconstraint\+::linearconstraint (\begin{DoxyParamCaption}\item[{unsigned int}]{xdim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1linearconstraint_a8ac02573e587f315f48f97d9328dc7bc}\label{classorpp_1_1linearconstraint_a8ac02573e587f315f48f97d9328dc7bc} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!linearconstraint@{linearconstraint}}
+\index{linearconstraint@{linearconstraint}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{linearconstraint()}{linearconstraint()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily orpp\+::linearconstraint\+::linearconstraint (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ double $>$ \&}]{lhs,  }\item[{double}]{rhs = {\ttfamily 0},  }\item[{\mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16}{constraint\+::type}}}]{t = {\ttfamily \mbox{\hyperlink{classorpp_1_1constraint_a8f40c76f05b8e22e0ad3d0b27762de16aea5d46ca3574bccbdcf2f0cd013158fe}{constraint\+::eq}}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1linearconstraint_a937ae7437741b76bfe538b84b7c6858c}\label{classorpp_1_1linearconstraint_a937ae7437741b76bfe538b84b7c6858c} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!lhs@{lhs}}
+\index{lhs@{lhs}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{lhs()}{lhs()}}
+{\footnotesize\ttfamily double orpp\+::linearconstraint\+::lhs (\begin{DoxyParamCaption}\item[{unsigned int}]{i }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1linearconstraint_a91a99268964595fd3f8ec96e7601ca50}\label{classorpp_1_1linearconstraint_a91a99268964595fd3f8ec96e7601ca50} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!rhs@{rhs}}
+\index{rhs@{rhs}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{rhs()}{rhs()}}
+{\footnotesize\ttfamily double orpp\+::linearconstraint\+::rhs (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1linearconstraint_afb2b5bef78c066d61410033f5654ac09}\label{classorpp_1_1linearconstraint_afb2b5bef78c066d61410033f5654ac09} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!setlhs@{setlhs}}
+\index{setlhs@{setlhs}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{setlhs()}{setlhs()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void orpp\+::linearconstraint\+::setlhs (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ double $>$ \&}]{lhs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1linearconstraint_af26646300b3c0205c1c85cc60cc4b493}\label{classorpp_1_1linearconstraint_af26646300b3c0205c1c85cc60cc4b493} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!setlhs@{setlhs}}
+\index{setlhs@{setlhs}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{setlhs()}{setlhs()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void orpp\+::linearconstraint\+::setlhs (\begin{DoxyParamCaption}\item[{unsigned int}]{i,  }\item[{double}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1linearconstraint_ad543a66efcccfe2cff55308ad2b584fb}\label{classorpp_1_1linearconstraint_ad543a66efcccfe2cff55308ad2b584fb} 
+\index{orpp::linearconstraint@{orpp::linearconstraint}!setrhs@{setrhs}}
+\index{setrhs@{setrhs}!orpp::linearconstraint@{orpp::linearconstraint}}
+\doxysubsubsection{\texorpdfstring{setrhs()}{setrhs()}}
+{\footnotesize\ttfamily void orpp\+::linearconstraint\+::setrhs (\begin{DoxyParamCaption}\item[{double}]{rhs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{optimization_8hpp}{optimization.\+hpp}}\end{DoxyCompactItemize}

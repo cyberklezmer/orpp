@@ -1,0 +1,163 @@
+\doxysection{orpp\+::range\texorpdfstring{$<$}{<} V \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1range}{}\label{classorpp_1_1range}\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+
+
+Range (interval of possible values) of variables {\ttfamily V}.  
+
+
+
+
+{\ttfamily \#include $<$optimization.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::range\texorpdfstring{$<$}{<} V \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::range\texorpdfstring{$<$}{<} V \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}{type}} \{ \mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4af81112e4789f248eeb83ecbfa686e16b}{realt}}
+, \mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4a1586b305be09391b27aa082f22668359}{intt}}
+, \mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4a93abe1bc214ceb05dde2431a6033835d}{bint}}
+ \}
+\item 
+using \mbox{\hyperlink{classorpp_1_1range_ab759233b091e9b68db769de90681daf8}{V\+\_\+t}} = V
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1range_a05348b4005e22ab949153ce693a472be}{range}} ()
+\item 
+\mbox{\hyperlink{classorpp_1_1range_af64deab777f2609e96fd31574af1cd62}{range}} (\mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}{type}} \mbox{\hyperlink{classorpp_1_1range_a8cb48eec6c0653818ff7433c36bfd1dc}{t}}, V \mbox{\hyperlink{classorpp_1_1range_a518dfdcdd3eb35f3c7f556d5c9f213f5}{l}}=minfinity$<$ V $>$(), V \mbox{\hyperlink{classorpp_1_1range_ad71d941d88370e1041d06025d86deccd}{h}}=infinity$<$ V $>$())
+\item 
+void \mbox{\hyperlink{classorpp_1_1range_a224299e5f1e6862e38cea18f425f19f6}{setlimits}} (V \mbox{\hyperlink{classorpp_1_1range_a518dfdcdd3eb35f3c7f556d5c9f213f5}{l}}=minfinity$<$ V $>$(), V \mbox{\hyperlink{classorpp_1_1range_ad71d941d88370e1041d06025d86deccd}{h}}=infinity$<$ V $>$())
+\item 
+void \mbox{\hyperlink{classorpp_1_1range_ae74eaf60c20bf2b3d0d359c037bd8042}{setpositive}} ()
+\item 
+V \mbox{\hyperlink{classorpp_1_1range_a518dfdcdd3eb35f3c7f556d5c9f213f5}{l}} () const
+\item 
+V \mbox{\hyperlink{classorpp_1_1range_ad71d941d88370e1041d06025d86deccd}{h}} () const
+\item 
+\mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}{type}} \mbox{\hyperlink{classorpp_1_1range_a8cb48eec6c0653818ff7433c36bfd1dc}{t}} () const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1range_a23f22db86c668866ebae9aef5b41f0cb}{ishinf}} () const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1range_ac72507f78ac23a2a33728124d8bbac92}{islinf}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename V$>$\newline
+class orpp\+::range$<$ V $>$}
+Range (interval of possible values) of variables {\ttfamily V}. 
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classorpp_1_1range_ab759233b091e9b68db769de90681daf8}\label{classorpp_1_1range_ab759233b091e9b68db769de90681daf8} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!V\_t@{V\_t}}
+\index{V\_t@{V\_t}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{V\_t}{V\_t}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+using \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::\+V\+\_\+t =  V}
+
+
+
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}\label{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!type@{type}}
+\index{type@{type}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+enum \mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}{orpp\+::range\+::type}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{realt@{realt}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!realt@{realt}}}\Hypertarget{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4af81112e4789f248eeb83ecbfa686e16b}\label{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4af81112e4789f248eeb83ecbfa686e16b} 
+realt&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{intt@{intt}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!intt@{intt}}}\Hypertarget{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4a1586b305be09391b27aa082f22668359}\label{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4a1586b305be09391b27aa082f22668359} 
+intt&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{bint@{bint}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!bint@{bint}}}\Hypertarget{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4a93abe1bc214ceb05dde2431a6033835d}\label{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4a93abe1bc214ceb05dde2431a6033835d} 
+bint&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1range_a05348b4005e22ab949153ce693a472be}\label{classorpp_1_1range_a05348b4005e22ab949153ce693a472be} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!range@{range}}
+\index{range@{range}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{range()}{range()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+\mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::range (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_af64deab777f2609e96fd31574af1cd62}\label{classorpp_1_1range_af64deab777f2609e96fd31574af1cd62} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!range@{range}}
+\index{range@{range}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{range()}{range()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+\mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::range (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}{type}}}]{t,  }\item[{V}]{l = {\ttfamily minfinity$<$V$>$()},  }\item[{V}]{h = {\ttfamily infinity$<$V$>$()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1range_ad71d941d88370e1041d06025d86deccd}\label{classorpp_1_1range_ad71d941d88370e1041d06025d86deccd} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!h@{h}}
+\index{h@{h}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{h()}{h()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+V \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::h (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_a23f22db86c668866ebae9aef5b41f0cb}\label{classorpp_1_1range_a23f22db86c668866ebae9aef5b41f0cb} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!ishinf@{ishinf}}
+\index{ishinf@{ishinf}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{ishinf()}{ishinf()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+bool \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::ishinf (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_ac72507f78ac23a2a33728124d8bbac92}\label{classorpp_1_1range_ac72507f78ac23a2a33728124d8bbac92} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!islinf@{islinf}}
+\index{islinf@{islinf}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{islinf()}{islinf()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+bool \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::islinf (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_a518dfdcdd3eb35f3c7f556d5c9f213f5}\label{classorpp_1_1range_a518dfdcdd3eb35f3c7f556d5c9f213f5} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!l@{l}}
+\index{l@{l}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{l()}{l()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+V \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::l (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_a224299e5f1e6862e38cea18f425f19f6}\label{classorpp_1_1range_a224299e5f1e6862e38cea18f425f19f6} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!setlimits@{setlimits}}
+\index{setlimits@{setlimits}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{setlimits()}{setlimits()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+void \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::setlimits (\begin{DoxyParamCaption}\item[{V}]{l = {\ttfamily minfinity$<$V$>$()},  }\item[{V}]{h = {\ttfamily infinity$<$V$>$()} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_ae74eaf60c20bf2b3d0d359c037bd8042}\label{classorpp_1_1range_ae74eaf60c20bf2b3d0d359c037bd8042} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!setpositive@{setpositive}}
+\index{setpositive@{setpositive}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{setpositive()}{setpositive()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+void \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::setpositive (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1range_a8cb48eec6c0653818ff7433c36bfd1dc}\label{classorpp_1_1range_a8cb48eec6c0653818ff7433c36bfd1dc} 
+\index{orpp::range$<$ V $>$@{orpp::range$<$ V $>$}!t@{t}}
+\index{t@{t}!orpp::range$<$ V $>$@{orpp::range$<$ V $>$}}
+\doxysubsubsection{\texorpdfstring{t()}{t()}}
+{\footnotesize\ttfamily template$<$typename V $>$ \\
+\mbox{\hyperlink{classorpp_1_1range_a3d4c854cdfe67aed31f2b08733d096d4}{type}} \mbox{\hyperlink{classorpp_1_1range}{orpp\+::range}}$<$ V $>$\+::t (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{optimization_8hpp}{optimization.\+hpp}}\end{DoxyCompactItemize}

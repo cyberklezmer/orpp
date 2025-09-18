@@ -1,0 +1,85 @@
+\doxysection{orpp\+::CVaR\texorpdfstring{$<$}{<} Distribution, negative \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1CVaR}{}\label{classorpp_1_1CVaR}\index{orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}}
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::CVaR\texorpdfstring{$<$}{<} Distribution, negative \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::CVaR\texorpdfstring{$<$}{<} Distribution, negative \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1CVaR_ac98e1cf9b6a4f0d6580b778a1ad73c9d}{CVaR}} (probability alpha)
+\item 
+virtual void \mbox{\hyperlink{classorpp_1_1CVaR_a1f4b3c66b600970355f0fb82bb83bfa7}{setparam}} (double param)
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1CVaR_a7ccab6f551b8e4bd17f548fb8a09053f}{getparam}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1MeanCVaR}{orpp\+::\+Mean\+CVa\+R$<$ Distribution, negative $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1MeanCVaR_a36ba0659c68c176faa6299e7ef306ea8}{Mean\+CVaR}} (probability alpha, double lambda)
+\item 
+virtual double \mbox{\hyperlink{classorpp_1_1MeanCVaR_ac65803b30e316963c67e2bb24a1fd63a}{operator()}} (const Distribution \&d, const typename Distribution\+::\+C\+\_\+t \&c) const
+\begin{DoxyCompactList}\small\item\em tbd can be done for sorted ddistribution \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{structorpp_1_1realestimate}{realestimate}} \mbox{\hyperlink{classorpp_1_1MeanCVaR_afdad2f2b4557aebb215d251e799c61e1}{operator()}} (const \mbox{\hyperlink{classorpp_1_1empiricaldistribution}{empiricaldistribution}} \&d) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1riskmeasure}{orpp\+::riskmeasure$<$ Distribution $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1riskmeasure_a134b873cbe5102bd348e27886ed5fe0f}{operator()}} (const Distribution \&d) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classorpp_1_1MeanCVaR}{orpp\+::\+Mean\+CVa\+R$<$ Distribution, negative $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+probability \mbox{\hyperlink{classorpp_1_1MeanCVaR_ab6fdcd32346e223885e1339e2c059a6f}{falpha}}
+\item 
+double \mbox{\hyperlink{classorpp_1_1MeanCVaR_ae0f02e6f300cdd18743fc41d2bc6d92c}{flambda}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1CVaR_ac98e1cf9b6a4f0d6580b778a1ad73c9d}\label{classorpp_1_1CVaR_ac98e1cf9b6a4f0d6580b778a1ad73c9d} 
+\index{orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}!CVaR@{CVaR}}
+\index{CVaR@{CVaR}!orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}}
+\doxysubsubsection{\texorpdfstring{CVaR()}{CVaR()}}
+{\footnotesize\ttfamily template$<$typename Distribution , bool negative = false$>$ \\
+\mbox{\hyperlink{classorpp_1_1CVaR}{orpp\+::\+CVaR}}$<$ Distribution, negative $>$\+::\+CVaR (\begin{DoxyParamCaption}\item[{probability}]{alpha }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1CVaR_a7ccab6f551b8e4bd17f548fb8a09053f}\label{classorpp_1_1CVaR_a7ccab6f551b8e4bd17f548fb8a09053f} 
+\index{orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}!getparam@{getparam}}
+\index{getparam@{getparam}!orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}}
+\doxysubsubsection{\texorpdfstring{getparam()}{getparam()}}
+{\footnotesize\ttfamily template$<$typename Distribution , bool negative = false$>$ \\
+virtual double \mbox{\hyperlink{classorpp_1_1CVaR}{orpp\+::\+CVaR}}$<$ Distribution, negative $>$\+::getparam (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classorpp_1_1MeanCVaR_a17b02dab54265df6e9ca752dcafcf939}{orpp\+::\+Mean\+CVa\+R$<$ Distribution, negative $>$}}.
+
+\Hypertarget{classorpp_1_1CVaR_a1f4b3c66b600970355f0fb82bb83bfa7}\label{classorpp_1_1CVaR_a1f4b3c66b600970355f0fb82bb83bfa7} 
+\index{orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}!setparam@{setparam}}
+\index{setparam@{setparam}!orpp::CVaR$<$ Distribution, negative $>$@{orpp::CVaR$<$ Distribution, negative $>$}}
+\doxysubsubsection{\texorpdfstring{setparam()}{setparam()}}
+{\footnotesize\ttfamily template$<$typename Distribution , bool negative = false$>$ \\
+virtual void \mbox{\hyperlink{classorpp_1_1CVaR}{orpp\+::\+CVaR}}$<$ Distribution, negative $>$\+::setparam (\begin{DoxyParamCaption}\item[{double}]{param }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \mbox{\hyperlink{classorpp_1_1MeanCVaR_a18eacd4f383e71fa67c79b9507e9dc97}{orpp\+::\+Mean\+CVa\+R$<$ Distribution, negative $>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,91 @@
+\doxysection{orpp\+::csv\texorpdfstring{$<$}{<} sep \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1csv}{}\label{classorpp_1_1csv}\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+
+
+{\ttfamily \#include $<$csv.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::csv\texorpdfstring{$<$}{<} sep \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::csv\texorpdfstring{$<$}{<} sep \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}} () const
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}{c}} (unsigned \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}) const
+\item 
+const std\+::string \& \mbox{\hyperlink{classorpp_1_1csv_a5f0d54a10e2e720eb0695f682fa77d00}{operator()}} (unsigned i, unsigned j) const
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1csv_a80ab925c1a8ba1f01c2ad061e0581925}{getunsigned}} (unsigned i, unsigned j) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1csv_af6f4fdd282a8122e87a2072a9e0f951e}{getdouble}} (unsigned i, unsigned j) const
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1csv_a5ac63e26e10025820d42b8c695355dd2}{findinrow}} (unsigned \mbox{\hyperlink{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}{r}}, const std\+::string \&s)
+\item 
+\mbox{\hyperlink{classorpp_1_1csv_a37be7349f8b56500213cccd6f6c20b8d}{csv}} (const std\+::string \&afn, size\+\_\+t initialsize=1)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1csv_a37be7349f8b56500213cccd6f6c20b8d}\label{classorpp_1_1csv_a37be7349f8b56500213cccd6f6c20b8d} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!csv@{csv}}
+\index{csv@{csv}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{csv()}{csv()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+\mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::csv (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{afn,  }\item[{size\+\_\+t}]{initialsize = {\ttfamily 1} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183}\label{classorpp_1_1csv_a103630c9ea785ae2cb0bbb7aff555183} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!c@{c}}
+\index{c@{c}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{c()}{c()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+unsigned \mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::c (\begin{DoxyParamCaption}\item[{unsigned}]{r }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1csv_a5ac63e26e10025820d42b8c695355dd2}\label{classorpp_1_1csv_a5ac63e26e10025820d42b8c695355dd2} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!findinrow@{findinrow}}
+\index{findinrow@{findinrow}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{findinrow()}{findinrow()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+unsigned \mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::findinrow (\begin{DoxyParamCaption}\item[{unsigned}]{r,  }\item[{const std\+::string \&}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1csv_af6f4fdd282a8122e87a2072a9e0f951e}\label{classorpp_1_1csv_af6f4fdd282a8122e87a2072a9e0f951e} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!getdouble@{getdouble}}
+\index{getdouble@{getdouble}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{getdouble()}{getdouble()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+double \mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::getdouble (\begin{DoxyParamCaption}\item[{unsigned}]{i,  }\item[{unsigned}]{j }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1csv_a80ab925c1a8ba1f01c2ad061e0581925}\label{classorpp_1_1csv_a80ab925c1a8ba1f01c2ad061e0581925} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!getunsigned@{getunsigned}}
+\index{getunsigned@{getunsigned}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{getunsigned()}{getunsigned()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+unsigned \mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::getunsigned (\begin{DoxyParamCaption}\item[{unsigned}]{i,  }\item[{unsigned}]{j }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1csv_a5f0d54a10e2e720eb0695f682fa77d00}\label{classorpp_1_1csv_a5f0d54a10e2e720eb0695f682fa77d00} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!operator()@{operator()}}
+\index{operator()@{operator()}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+const std\+::string \& \mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::operator() (\begin{DoxyParamCaption}\item[{unsigned}]{i,  }\item[{unsigned}]{j }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1}\label{classorpp_1_1csv_aa7cfd169b1268093ecafce534e1bf8b1} 
+\index{orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}!r@{r}}
+\index{r@{r}!orpp::csv$<$ sep $>$@{orpp::csv$<$ sep $>$}}
+\doxysubsubsection{\texorpdfstring{r()}{r()}}
+{\footnotesize\ttfamily template$<$char sep = \textquotesingle{},\textquotesingle{}$>$ \\
+unsigned \mbox{\hyperlink{classorpp_1_1csv}{orpp\+::csv}}$<$ sep $>$\+::r (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{csv_8hpp}{csv.\+hpp}}\end{DoxyCompactItemize}

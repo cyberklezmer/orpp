@@ -1,0 +1,258 @@
+\doxysection{orpp\+::overallriskproblem\texorpdfstring{$<$}{<} Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1overallriskproblem}{}\label{classorpp_1_1overallriskproblem}\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+
+
+{\ttfamily \#include $<$overallriskdp.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::overallriskproblem\texorpdfstring{$<$}{<} Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::overallriskproblem\texorpdfstring{$<$}{<} Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult}{heuristicplusresult}}
+\item 
+struct \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace}{onedactionspace}}
+\item 
+class \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward}{taylorreward}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem_a54e49b6f07e50e5683faffd8e2da4a93}{Statespace\+\_\+t}} = Statespace
+\item 
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem_aa2df8f5d341c39b6ed697ad788aceec9}{Constrained\+Action\+Space\+\_\+t}} = Constrained\+Action\+Space
+\item 
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem_aebc82637306cda4a3c6426d0eeba3d2d}{nestedproblem}} = \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase}}$<$ Constrained\+Action\+Space, Reward $>$
+\item 
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem_a985d4bf572c61d358ad797c354fd9f43}{nestedtaylorproblem}} = \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase}}$<$ \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace}{onedactionspace}}, \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward}{taylorreward}} $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1dpproblem_a08196563f450a4c568e2d5fd3386e71a}{State\+Space\+\_\+t}} = State\+Space
+\item 
+using \mbox{\hyperlink{classorpp_1_1dpproblem_ac4f91922410e1096f9f8aab91adc65a6}{Constrained\+Action\+Space\+\_\+t}} = Constrained\+Action\+Space
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1overallriskproblem_a1f40ca4964be3e0bf7f1b9e59c1c9559}{overallriskproblem}} (const Criterion \&\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}, const Statespace \&state, const Constrained\+Action\+Space \&\mbox{\hyperlink{classorpp_1_1constraint}{constraint}}, const Transition \&transition, const Reward \&\mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}, double \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}}, double \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}}, double rmlipshitzfactor)
+\item 
+double \mbox{\hyperlink{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423}{findiota}} (const \mbox{\hyperlink{classorpp_1_1overallriskproblem_aebc82637306cda4a3c6426d0eeba3d2d}{nestedproblem}} \&problem, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&policy, double constant, const \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}} initvalue, orpp\+::index initindex, double accuracy, const typename \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem\+::computationparams}} \&pars) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1overallriskproblem_a564659419091ec5d6e659b0ddfa8ec20}{findiota}} (const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&policy, double constant, const \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}} initvalue, orpp\+::index initindex, double accuracy, const typename \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem\+::computationparams}} \&pars) const
+\item 
+nestedproblem\+::viresult \mbox{\hyperlink{classorpp_1_1overallriskproblem_af468148106980319cc8dbd99eb4f5a07}{riskaversesolution}} (double accuracy, const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+{\footnotesize template$<$bool quick = false$>$ }\\\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem_ad862beef4686af4f6654c458d6201c08}{heuristic}} (index s0ind, double accuracy, \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&initp, const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+{\footnotesize template$<$bool quick = false$>$ }\\\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem_a8e37cd11cc7bddf41aca62caa5ebc989}{heuristic}} (index s0ind, double accuracy, const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+{\footnotesize template$<$bool quick = false$>$ }\\\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem_a8aae409d45334d5e9945221640e220b4}{taylorheuristic}} (index s0ind, double accuracy, \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&initp, const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+{\footnotesize template$<$bool quick = false$>$ }\\\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem_a3536aff91d90663f6e3cbe711b730c5d}{taylorheuristic}} (index s0ind, double accuracy, const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult}{heuristicplusresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem_aaf18f2b708afa353c2984967d2ebc42c}{heuristicplus}} (index s0ind, double accuracy, const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&params) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1overallriskproblem_aaa085a50a1a70807e0c9f4eb26675dc7}{lipschitzconstant}} () const
+\item 
+void \mbox{\hyperlink{classorpp_1_1overallriskproblem_a9575e7dab81c09916110551e6a2e870c}{setriskaversion}} (double ra)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1finitedpproblem_ad48f58839e698ffd84ae8eb0446c4d96}{finitedpproblem}} (const Criterion \&crit, const Statespace \&state, const Constrained\+Action\+Space \&\mbox{\hyperlink{classorpp_1_1constraint}{constraint}}, const Transition \&transition, const Reward \&reward, double gamma, double maxreward)
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1finitedpproblem_aec6413a1ecf4be19a986ae5d23387ba5}{requiredhorizon}} (double accuracy) const
+\item 
+\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}$<$ double $>$ \mbox{\hyperlink{classorpp_1_1finitedpproblem_ab05a551ff9931580d3872d7a4a64dcf5}{evaluatecrit}} (index s0ind, const heteropolicy \&p, double accuracy, const computationparams \&params) const
+\item 
+\mbox{\hyperlink{structorpp_1_1valuewitherror}{valuewitherror}}$<$ double $>$ \mbox{\hyperlink{classorpp_1_1finitedpproblem_a642f5c6906f6d3c1b00322014acd3587}{evaluatecrit}} (index s0ind, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&p, double accuracy, const computationparams \&params) const
+\item 
+unsigned \mbox{\hyperlink{classorpp_1_1finitedpproblem_ae8327413954244c3437232439196f4ff}{numpolicyvalues}} () const
+\item 
+enumresult \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac7fe60296183864f965fcbf4834ddc96}{enumeratehomo}} (index s0ind, double accuracy, const computationparams \&params)
+\item 
+\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_a189d28a6c67818de0d7263b6f523521d}{evaluateraw}} (index s0index, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&p, double accuracy, const computationparams \&params) const
+\item 
+\mbox{\hyperlink{structorpp_1_1statcounter}{statcounter}} \mbox{\hyperlink{classorpp_1_1finitedpproblem_a8c2608601c448b7a6390669e7ba88c83}{evaluateraw}} (index s0index, const heteropolicy \&p, double accuracy, const computationparams \&params) const
+\item 
+double \mbox{\hyperlink{classorpp_1_1finitedpproblem_ac2094c87ca76ea6989f806db6326afab}{maxreward}} () const
+\item 
+pgdheteroresult \mbox{\hyperlink{classorpp_1_1finitedpproblem_a83397b5e0db27beae2cfc814d7b852e4}{pseudogradientdescent}} (orpp\+::index s0ind, const heteropolicy \&initps, double accuracy, const computationparams \&params, unsigned initialstep=std\+::numeric\+\_\+limits$<$ unsigned $>$\+::max()) const
+\item 
+pgdhomoresult \mbox{\hyperlink{classorpp_1_1finitedpproblem_a0caeebd57221e84b8421719e82d9a88a}{pseudogradientdescenthomo}} (orpp\+::index s0ind, const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&initp, double accuracy, const computationparams \&params, unsigned initialstep=std\+::numeric\+\_\+limits$<$ unsigned $>$\+::max()) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1dpproblem_a7d0ffb6bef2a835cd5831fe868175518}{dpproblem}} (const Criterion \&\mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}}, const State\+Space \&state, const Constrained\+Action\+Space \&\mbox{\hyperlink{classorpp_1_1constraint}{constraint}}, const Transition \&transition, const Reward \&\mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}}, double \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}})
+\item 
+double \mbox{\hyperlink{classorpp_1_1dpproblem_a41155fefbfdd8079d5062c2026ce2744}{gamma}} () const
+\item 
+const Constrained\+Action\+Space \& \mbox{\hyperlink{classorpp_1_1dpproblem_ac1cb6d6732358c9336f25856f26f5d1b}{constraint}} () const
+\item 
+const State\+Space \& \mbox{\hyperlink{classorpp_1_1dpproblem_a67c58125c6327a34f3f75d10a2793f86}{statespace}} () const
+\item 
+const Criterion \& \mbox{\hyperlink{classorpp_1_1dpproblem_a4c6fd95e8026c7eedcbd1c03497ae323}{crit}} () const
+\item 
+Criterion \& \mbox{\hyperlink{classorpp_1_1dpproblem_a69d400286a6ef86f75d763904d5736a1}{crit}} ()
+\item 
+const Reward \& \mbox{\hyperlink{classorpp_1_1dpproblem_ac5141c86c6e1036e10f808f53afe3339}{reward}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classorpp_1_1finitedpproblem}{orpp\+::finitedpproblem$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classorpp_1_1finitedpproblem_a3607acc5f268e6081e1835ed13ecdebe}{fmaxreward}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classorpp_1_1dpproblem}{orpp\+::dpproblem$<$ Criterion, State\+Space, Constrained\+Action\+Space, Transition, Reward $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+Criterion \mbox{\hyperlink{classorpp_1_1dpproblem_a206dee3ca389d836a04a3888252ca1b0}{fcrit}}
+\item 
+State\+Space \mbox{\hyperlink{classorpp_1_1dpproblem_a2dda7e063c85da6d6add6c306a852309}{fstatespace}}
+\item 
+Constrained\+Action\+Space \mbox{\hyperlink{classorpp_1_1dpproblem_afca1087de476cfa209af8f430454450a}{fconstraint}}
+\item 
+Transition \mbox{\hyperlink{classorpp_1_1dpproblem_a7c2dd60f0ab8b114ddc091a9386724a9}{ftransition}}
+\item 
+Reward \mbox{\hyperlink{classorpp_1_1dpproblem_a3d8f66185d0d7c21e700ba6a3ccbe7fb}{freward}}
+\item 
+double \mbox{\hyperlink{classorpp_1_1dpproblem_aef987ce2bf2ac8ce9babb7c17a45a104}{fgamma}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Typedef Documentation}
+\Hypertarget{classorpp_1_1overallriskproblem_aa2df8f5d341c39b6ed697ad788aceec9}\label{classorpp_1_1overallriskproblem_aa2df8f5d341c39b6ed697ad788aceec9} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!ConstrainedActionSpace\_t@{ConstrainedActionSpace\_t}}
+\index{ConstrainedActionSpace\_t@{ConstrainedActionSpace\_t}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{ConstrainedActionSpace\_t}{ConstrainedActionSpace\_t}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::\+Constrained\+Action\+Space\+\_\+t =  Constrained\+Action\+Space}
+
+\Hypertarget{classorpp_1_1overallriskproblem_aebc82637306cda4a3c6426d0eeba3d2d}\label{classorpp_1_1overallriskproblem_aebc82637306cda4a3c6426d0eeba3d2d} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!nestedproblem@{nestedproblem}}
+\index{nestedproblem@{nestedproblem}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{nestedproblem}{nestedproblem}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::nestedproblem =  \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase}}$<$Constrained\+Action\+Space,Reward$>$}
+
+\Hypertarget{classorpp_1_1overallriskproblem_a985d4bf572c61d358ad797c354fd9f43}\label{classorpp_1_1overallriskproblem_a985d4bf572c61d358ad797c354fd9f43} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!nestedtaylorproblem@{nestedtaylorproblem}}
+\index{nestedtaylorproblem@{nestedtaylorproblem}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{nestedtaylorproblem}{nestedtaylorproblem}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::nestedtaylorproblem =  \mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1nestedproblembase}{nestedproblembase}}$<$\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1onedactionspace}{onedactionspace}},\mbox{\hyperlink{classorpp_1_1overallriskproblem_1_1taylorreward}{taylorreward}}$>$}
+
+\Hypertarget{classorpp_1_1overallriskproblem_a54e49b6f07e50e5683faffd8e2da4a93}\label{classorpp_1_1overallriskproblem_a54e49b6f07e50e5683faffd8e2da4a93} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!Statespace\_t@{Statespace\_t}}
+\index{Statespace\_t@{Statespace\_t}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{Statespace\_t}{Statespace\_t}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+using \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::\+Statespace\+\_\+t =  Statespace}
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1overallriskproblem_a1f40ca4964be3e0bf7f1b9e59c1c9559}\label{classorpp_1_1overallriskproblem_a1f40ca4964be3e0bf7f1b9e59c1c9559} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!overallriskproblem@{overallriskproblem}}
+\index{overallriskproblem@{overallriskproblem}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{overallriskproblem()}{overallriskproblem()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::overallriskproblem (\begin{DoxyParamCaption}\item[{const Criterion \&}]{crit,  }\item[{const Statespace \&}]{state,  }\item[{const Constrained\+Action\+Space \&}]{constraint,  }\item[{const Transition \&}]{transition,  }\item[{const Reward \&}]{reward,  }\item[{double}]{gamma,  }\item[{double}]{maxreward,  }\item[{double}]{rmlipshitzfactor }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classorpp_1_1overallriskproblem_a564659419091ec5d6e659b0ddfa8ec20}\label{classorpp_1_1overallriskproblem_a564659419091ec5d6e659b0ddfa8ec20} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!findiota@{findiota}}
+\index{findiota@{findiota}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{findiota()}{findiota()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+double \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::findiota (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{policy,  }\item[{double}]{constant,  }\item[{const \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}}]{initvalue,  }\item[{orpp\+::index}]{initindex,  }\item[{double}]{accuracy,  }\item[{const typename \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem\+::computationparams}} \&}]{pars }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423}\label{classorpp_1_1overallriskproblem_ab881121d2aa9d9546bf9a5a698f33423} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!findiota@{findiota}}
+\index{findiota@{findiota}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{findiota()}{findiota()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+double \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::findiota (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classorpp_1_1overallriskproblem_aebc82637306cda4a3c6426d0eeba3d2d}{nestedproblem}} \&}]{problem,  }\item[{const \mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{policy,  }\item[{double}]{constant,  }\item[{const \mbox{\hyperlink{classorpp_1_1finitevaluefunction}{finitevaluefunction}}}]{initvalue,  }\item[{orpp\+::index}]{initindex,  }\item[{double}]{accuracy,  }\item[{const typename \mbox{\hyperlink{structorpp_1_1finitedpproblem_1_1computationparams}{nestedproblem\+::computationparams}} \&}]{pars }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_a8e37cd11cc7bddf41aca62caa5ebc989}\label{classorpp_1_1overallriskproblem_a8e37cd11cc7bddf41aca62caa5ebc989} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!heuristic@{heuristic}}
+\index{heuristic@{heuristic}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{heuristic()}{heuristic()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+template$<$bool quick = false$>$ \\
+\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::heuristic (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_ad862beef4686af4f6654c458d6201c08}\label{classorpp_1_1overallriskproblem_ad862beef4686af4f6654c458d6201c08} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!heuristic@{heuristic}}
+\index{heuristic@{heuristic}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{heuristic()}{heuristic()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+template$<$bool quick = false$>$ \\
+\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::heuristic (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{double}]{accuracy,  }\item[{\mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{initp,  }\item[{const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_aaf18f2b708afa353c2984967d2ebc42c}\label{classorpp_1_1overallriskproblem_aaf18f2b708afa353c2984967d2ebc42c} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!heuristicplus@{heuristicplus}}
+\index{heuristicplus@{heuristicplus}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{heuristicplus()}{heuristicplus()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicplusresult}{heuristicplusresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::heuristicplus (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_aaa085a50a1a70807e0c9f4eb26675dc7}\label{classorpp_1_1overallriskproblem_aaa085a50a1a70807e0c9f4eb26675dc7} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!lipschitzconstant@{lipschitzconstant}}
+\index{lipschitzconstant@{lipschitzconstant}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{lipschitzconstant()}{lipschitzconstant()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+double \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::lipschitzconstant (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_af468148106980319cc8dbd99eb4f5a07}\label{classorpp_1_1overallriskproblem_af468148106980319cc8dbd99eb4f5a07} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!riskaversesolution@{riskaversesolution}}
+\index{riskaversesolution@{riskaversesolution}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{riskaversesolution()}{riskaversesolution()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+nestedproblem\+::viresult \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::riskaversesolution (\begin{DoxyParamCaption}\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_a9575e7dab81c09916110551e6a2e870c}\label{classorpp_1_1overallriskproblem_a9575e7dab81c09916110551e6a2e870c} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!setriskaversion@{setriskaversion}}
+\index{setriskaversion@{setriskaversion}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{setriskaversion()}{setriskaversion()}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+void \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::setriskaversion (\begin{DoxyParamCaption}\item[{double}]{ra }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_a3536aff91d90663f6e3cbe711b730c5d}\label{classorpp_1_1overallriskproblem_a3536aff91d90663f6e3cbe711b730c5d} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!taylorheuristic@{taylorheuristic}}
+\index{taylorheuristic@{taylorheuristic}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{taylorheuristic()}{taylorheuristic()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+template$<$bool quick = false$>$ \\
+\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::taylorheuristic (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{double}]{accuracy,  }\item[{const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1overallriskproblem_a8aae409d45334d5e9945221640e220b4}\label{classorpp_1_1overallriskproblem_a8aae409d45334d5e9945221640e220b4} 
+\index{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}!taylorheuristic@{taylorheuristic}}
+\index{taylorheuristic@{taylorheuristic}!orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$@{orpp::overallriskproblem$<$ Criterion, Statespace, ConstrainedActionSpace, Transition, Reward $>$}}
+\doxysubsubsection{\texorpdfstring{taylorheuristic()}{taylorheuristic()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Criterion , typename Statespace , typename Constrained\+Action\+Space , typename Transition , typename Reward $>$ \\
+template$<$bool quick = false$>$ \\
+\mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1heuristicresult}{heuristicresult}} \mbox{\hyperlink{classorpp_1_1overallriskproblem}{orpp\+::overallriskproblem}}$<$ Criterion, Statespace, Constrained\+Action\+Space, Transition, Reward $>$\+::taylorheuristic (\begin{DoxyParamCaption}\item[{index}]{s0ind,  }\item[{double}]{accuracy,  }\item[{\mbox{\hyperlink{classorpp_1_1finitepolicy}{finitepolicy}} \&}]{initp,  }\item[{const \mbox{\hyperlink{structorpp_1_1overallriskproblem_1_1computationparams}{computationparams}} \&}]{params }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{overallriskdp_8hpp}{overallriskdp.\+hpp}}\end{DoxyCompactItemize}

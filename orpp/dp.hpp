@@ -1076,7 +1076,7 @@ public:
 
     valuewitherror<finitevaluefunction> evaluate(
                          const finitevaluefunction& initialV,
-                         finitepolicy& p,
+                         const finitepolicy& p,
                          double accuracy,
                          const computationparams& evalparams) const
     {

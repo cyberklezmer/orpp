@@ -1,0 +1,182 @@
+\doxysection{mle Class Reference}
+\hypertarget{classmle}{}\label{classmle}\index{mle@{mle}}
+
+
+Class computing MLE estinate.  
+
+
+
+
+{\ttfamily \#include $<$oldorpp.\+hpp$>$}
+
+
+
+Inheritance diagram for mle\+:
+% FIG 0
+
+
+Collaboration diagram for mle\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classmle_aedcd52753d9c676c69f4ee18b4641930}{mle}} (const vector$<$ paraminfo $>$ \&aparams)
+\item 
+double \mbox{\hyperlink{classmle_ac61f67fad14ff55bb9405f5c9de3d0c8}{estimate}} (vector$<$ paramresult $>$ \&result, bool stds=false)
+\begin{DoxyCompactList}\small\item\em {\ttfamily initialpars.\+size()==0} means no ninitial parameter \end{DoxyCompactList}\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{classmle_a957a60854b4e9aab15a4deef7e16935f}{getJ}} ()
+\item 
+double \mbox{\hyperlink{classmle_ad1e35d9d04268fee3b100a37fe03d21a}{loglik}} (const vector$<$ double $>$ \&x, vector$<$ double $>$ \&g)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classestimator}{estimator}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classestimator_a1095ce929af0edcf48ff9d5263aa1f95}{estimator}} (const vector$<$ paraminfo $>$ \&aparams)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classobject_a19562885680264bf861ba03b2e713b0c}{setlogging}} (\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} al=\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}})
+\item 
+bool \mbox{\hyperlink{classobject_a00411d9c6c86f9cdb3db728eb3ce882b}{islogging}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classnloptuser}{nloptuser}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classnloptuser_a98c56549fcf04a4a0b21f2ca624c23db}{setmaxtime}} (double m)
+\item 
+void \mbox{\hyperlink{classnloptuser_a650367780232585746d1c92e1198abad}{setftolrel}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_a8d90cdff2ba336d00c76d0447ada5119}{setxtolrel}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_a012283692ec629a565e93475ab7b1735}{setftolabs}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_aeba9e7a24368f18d9f7111eaa08c3e5d}{setxtolabs}} (double f)
+\item 
+void \mbox{\hyperlink{classnloptuser_a1f6c97d01f3f7026e931f7b4d2e33563}{setgradient}} (bool g)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual int \mbox{\hyperlink{classmle_ac416926a2a8808d6e2fb726a4e253378}{getN}} ()=0
+\begin{DoxyCompactList}\small\item\em called once before repeated evaluation of evallogdensity (with the same params but different i) \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classmle_a05b7fad71d2bb70da28107e6fdc0fff5}{beforeloglikeval}} (const vector$<$ double $>$ aparams)
+\item 
+virtual double \mbox{\hyperlink{classmle_a891c81b05bcd8007ec977075f8e126cd}{evallogdensity}} (int i, const vector$<$ double $>$ \&a\+Args, vector$<$ double $>$ \&g)=0
+\item 
+virtual void \mbox{\hyperlink{classmle_a50ccee885b42ba5cf2e493d9460beb38}{afterloglikeval}} (const vector$<$ double $>$ \&aparams, const vector$<$ double $>$ \&grad, double \mbox{\hyperlink{classmle_ad1e35d9d04268fee3b100a37fe03d21a}{loglik}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classestimator}{estimator}}}
+\begin{DoxyCompactItemize}
+\item 
+const vector$<$ paraminfo $>$ \& \mbox{\hyperlink{classestimator_abaaecf12abdbd756b6a327564dd821d3}{getparams}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_a04aad740887b47c735b9ed9078e45d77}{object}} ()
+\item 
+virtual \mbox{\hyperlink{classobject_a6233244b77a2794b456e5eee6964806d}{\texorpdfstring{$\sim$}{\string~}object}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classnloptuser}{nloptuser}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classnloptuser_aaf32eeedb382e514c83372689658797b}{nloptuser}} (nlopt\+::algorithm aalg, bool amax)
+\item 
+double \mbox{\hyperlink{classnloptuser_a2dfcab9327dbc3cf72fd60229bf0ffd6}{opt}} (const vector$<$ paraminfo $>$ \&params, vector$<$ paramresult $>$ \&result)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \{ \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa32b207eaae85c46e0c1576e3242c9c9}{nologging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03abb06c7c6cd5179f9fc91a0cd254ef6d5}{basiclogging}}
+, \mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03aa6589c21d3d5347fd1e306419c3dae19}{extendedlogging}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobject_aad221ede4de34bb5beff8ba0e3620e03}{elogginglevel}} \mbox{\hyperlink{classobject_a16be6bd5605b5df8120272924a88d2f2}{logging}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classobject}{object}}}
+\begin{DoxyCompactItemize}
+\item 
+ofstream \mbox{\hyperlink{classobject_a272d13822c00cec48d2ae6391a91adbd}{nulstream}}
+\item 
+ostream \& \mbox{\hyperlink{classobject_a6749b1b5cef09026c908edad043a4421}{lout}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class computing MLE estinate. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classmle_aedcd52753d9c676c69f4ee18b4641930}\label{classmle_aedcd52753d9c676c69f4ee18b4641930} 
+\index{mle@{mle}!mle@{mle}}
+\index{mle@{mle}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{mle()}{mle()}}
+{\footnotesize\ttfamily mle\+::mle (\begin{DoxyParamCaption}\item[{const vector$<$ paraminfo $>$ \&}]{aparams }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classmle_a50ccee885b42ba5cf2e493d9460beb38}\label{classmle_a50ccee885b42ba5cf2e493d9460beb38} 
+\index{mle@{mle}!afterloglikeval@{afterloglikeval}}
+\index{afterloglikeval@{afterloglikeval}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{afterloglikeval()}{afterloglikeval()}}
+{\footnotesize\ttfamily virtual void mle\+::afterloglikeval (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{aparams,  }\item[{const vector$<$ double $>$ \&}]{grad,  }\item[{double}]{loglik }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\Hypertarget{classmle_a05b7fad71d2bb70da28107e6fdc0fff5}\label{classmle_a05b7fad71d2bb70da28107e6fdc0fff5} 
+\index{mle@{mle}!beforeloglikeval@{beforeloglikeval}}
+\index{beforeloglikeval@{beforeloglikeval}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{beforeloglikeval()}{beforeloglikeval()}}
+{\footnotesize\ttfamily virtual void mle\+::beforeloglikeval (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$}]{aparams }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+\Hypertarget{classmle_ac61f67fad14ff55bb9405f5c9de3d0c8}\label{classmle_ac61f67fad14ff55bb9405f5c9de3d0c8} 
+\index{mle@{mle}!estimate@{estimate}}
+\index{estimate@{estimate}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{estimate()}{estimate()}}
+{\footnotesize\ttfamily double mle\+::estimate (\begin{DoxyParamCaption}\item[{vector$<$ paramresult $>$ \&}]{result,  }\item[{bool}]{stds = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+{\ttfamily initialpars.\+size()==0} means no ninitial parameter 
+
+
+
+Implements \mbox{\hyperlink{classestimator_af12e2a76deb56f9adc6bf841527b743a}{estimator}}.
+
+\Hypertarget{classmle_a891c81b05bcd8007ec977075f8e126cd}\label{classmle_a891c81b05bcd8007ec977075f8e126cd} 
+\index{mle@{mle}!evallogdensity@{evallogdensity}}
+\index{evallogdensity@{evallogdensity}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{evallogdensity()}{evallogdensity()}}
+{\footnotesize\ttfamily virtual double mle\+::evallogdensity (\begin{DoxyParamCaption}\item[{int}]{i,  }\item[{const vector$<$ double $>$ \&}]{a\+Args,  }\item[{vector$<$ double $>$ \&}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+\Hypertarget{classmle_a957a60854b4e9aab15a4deef7e16935f}\label{classmle_a957a60854b4e9aab15a4deef7e16935f} 
+\index{mle@{mle}!getJ@{getJ}}
+\index{getJ@{getJ}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{getJ()}{getJ()}}
+{\footnotesize\ttfamily vector$<$ vector$<$ double $>$ $>$ mle\+::getJ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classmle_ac416926a2a8808d6e2fb726a4e253378}\label{classmle_ac416926a2a8808d6e2fb726a4e253378} 
+\index{mle@{mle}!getN@{getN}}
+\index{getN@{getN}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{getN()}{getN()}}
+{\footnotesize\ttfamily virtual int mle\+::getN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+called once before repeated evaluation of evallogdensity (with the same params but different i) 
+
+\Hypertarget{classmle_ad1e35d9d04268fee3b100a37fe03d21a}\label{classmle_ad1e35d9d04268fee3b100a37fe03d21a} 
+\index{mle@{mle}!loglik@{loglik}}
+\index{loglik@{loglik}!mle@{mle}}
+\doxysubsubsection{\texorpdfstring{loglik()}{loglik()}}
+{\footnotesize\ttfamily double mle\+::loglik (\begin{DoxyParamCaption}\item[{const vector$<$ double $>$ \&}]{x,  }\item[{vector$<$ double $>$ \&}]{g }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{oldorpp_8hpp}{oldorpp.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,136 @@
+\doxysection{orpp\+::lvdistribution\texorpdfstring{$<$}{<} X \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{classorpp_1_1lvdistribution}{}\label{classorpp_1_1lvdistribution}\index{orpp::lvdistribution$<$ X $>$@{orpp::lvdistribution$<$ X $>$}}
+
+
+List defined std\+::vector distribution.  
+
+
+
+
+{\ttfamily \#include $<$random.\+hpp$>$}
+
+
+
+Inheritance diagram for orpp\+::lvdistribution\texorpdfstring{$<$}{<} X \texorpdfstring{$>$}{>}\+:
+% FIG 0
+
+
+Collaboration diagram for orpp\+::lvdistribution\texorpdfstring{$<$}{<} X \texorpdfstring{$>$}{>}\+:
+% FIG 1
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1lvdistribution_a54d2e4b809c418d21231b15cab5d293b}{lvdistribution}} (const std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ std\+::vector$<$ X $>$ $>$ $>$ \&\mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}})
+\item 
+\mbox{\hyperlink{classorpp_1_1lvdistribution_a902f68bba673f78cc43cc8ba107dbe6d}{lvdistribution}} (const std\+::vector$<$ std\+::vector$<$ X $>$ $>$ \&values)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ldistribution}{orpp\+::ldistribution$<$ std\+::vector$<$ X $>$ $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1ldistribution_ab43ca8d0ebab61fa2056ab1439113977}{ldistribution}} (const std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ std\+::vector$<$ X $>$ $>$ $>$ \&atoms, bool equiprobable, bool sorted)
+\item 
+\mbox{\hyperlink{classorpp_1_1ldistribution_a1c1e60ab3edf858e6cebb8466797a9d2}{ldistribution}} (const std\+::vector$<$ std\+::vector$<$ X $>$ $>$ \&values, bool sorted)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1fdistribution}{orpp\+::fdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_aa5a18ae46baffff64603b0a6c34aa8fa}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ $>$ \&a, const C \&c) const
+\item 
+void \mbox{\hyperlink{classorpp_1_1fdistribution_a3e088625e270923ababc08c78da34436}{atoms}} (std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ $>$ \&a) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a1b0461af9ae00cf3c7e3b6b6e1e109b4}{natoms}} (const C \&c) const
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1fdistribution_a364bc69a59992019b60577513b79bc7e}{natoms}} () const
+\item 
+double \mbox{\hyperlink{classorpp_1_1fdistribution_aea085685c1b4c0c130ae91be696bda3a}{mean}} (const C \&c, double prec=0) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_aa5e8c24b49bd855bdc808e09812f44af}{operator()}} (unsigned int i, const C \&c) const
+\item 
+\mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ I $>$ \mbox{\hyperlink{classorpp_1_1ddistribution_ad4371920e20f3e71114c4319549be619}{operator()}} (unsigned int i) const
+\item 
+bool \mbox{\hyperlink{classorpp_1_1ddistribution_a1343fcd6ea84a74b6cdd2f0eb79be1b7}{sorted}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1mdistribution}{orpp\+::mdistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_abd0822307ae6e254d5579adbc96e10c9}{draw}} (const C \&c) const
+\item 
+I \mbox{\hyperlink{classorpp_1_1mdistribution_a4893f9f0e6fa99daf5f6c679c7968dc3}{draw}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1vdistribution}{orpp\+::vdistribution$<$ X, nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{classorpp_1_1vdistribution_aa4d45d3459c204592aa13e66acbb90ae}{dim}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classorpp_1_1distribution_a3e5e2e88538435660859b8010169d4f0}{distribution}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1vdistribution}{orpp\+::vdistribution$<$ X, nothing $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1vdistribution_ac45fdc3efa7adb4d514e5517a40b6f54}{X\+\_\+t}} = X
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types inherited from \mbox{\hyperlink{classorpp_1_1distribution}{orpp\+::distribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_ae59ffabb9ff198664afd4154d5dcef3c}{I\+\_\+t}} = I
+\item 
+using \mbox{\hyperlink{classorpp_1_1distribution_aea91e10421d110df51075e01e06e80d0}{C\+\_\+t}} = C
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classorpp_1_1ddistribution}{orpp\+::ddistribution$<$ I, C $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+I \mbox{\hyperlink{classorpp_1_1ddistribution_a89f86b475ecb43f4f6e63b0bceb36899}{drawuniv}} (const C \&c) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename X$>$\newline
+class orpp\+::lvdistribution$<$ X $>$}
+List defined std\+::vector distribution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em X} & type of the values\textquotesingle{} components \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classorpp_1_1lvdistribution_a54d2e4b809c418d21231b15cab5d293b}\label{classorpp_1_1lvdistribution_a54d2e4b809c418d21231b15cab5d293b} 
+\index{orpp::lvdistribution$<$ X $>$@{orpp::lvdistribution$<$ X $>$}!lvdistribution@{lvdistribution}}
+\index{lvdistribution@{lvdistribution}!orpp::lvdistribution$<$ X $>$@{orpp::lvdistribution$<$ X $>$}}
+\doxysubsubsection{\texorpdfstring{lvdistribution()}{lvdistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename X $>$ \\
+\mbox{\hyperlink{classorpp_1_1lvdistribution}{orpp\+::lvdistribution}}$<$ X $>$\+::lvdistribution (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{structorpp_1_1atom}{atom}}$<$ std\+::vector$<$ X $>$ $>$ $>$ \&}]{atoms }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{classorpp_1_1lvdistribution_a902f68bba673f78cc43cc8ba107dbe6d}\label{classorpp_1_1lvdistribution_a902f68bba673f78cc43cc8ba107dbe6d} 
+\index{orpp::lvdistribution$<$ X $>$@{orpp::lvdistribution$<$ X $>$}!lvdistribution@{lvdistribution}}
+\index{lvdistribution@{lvdistribution}!orpp::lvdistribution$<$ X $>$@{orpp::lvdistribution$<$ X $>$}}
+\doxysubsubsection{\texorpdfstring{lvdistribution()}{lvdistribution()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename X $>$ \\
+\mbox{\hyperlink{classorpp_1_1lvdistribution}{orpp\+::lvdistribution}}$<$ X $>$\+::lvdistribution (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::vector$<$ X $>$ $>$ \&}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+orpp/\mbox{\hyperlink{random_8hpp}{random.\+hpp}}\end{DoxyCompactItemize}
