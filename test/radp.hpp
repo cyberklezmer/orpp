@@ -15,6 +15,11 @@ public:
     critmcv(double alpha) : MeanCVaR(0.95, alpha) {}
 };
 
+class critmcv75: public MeanCVaR<ldistribution<double>,true>
+{
+public:
+    critmcv75(double alpha) : MeanCVaR(0.75, alpha) {}
+};
 
 
 }

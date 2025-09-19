@@ -1,1 +1,2 @@
 problem,crit,nstates/maxinv,maxcons/lot,kappa,gamma,pcrash,accuracy,evalaccuracy,
+sell,,0.7,0.9,0.025,383.57
