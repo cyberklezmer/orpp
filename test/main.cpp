@@ -632,10 +632,10 @@ void dosell(unsigned nthreads, std::string repontname)
         = pars.fnestedparams.fthreadstouse = nthreads;
     pars.fthreadbatch = pars.fnestedtaylorparams.fthreadbatch
         = pars.fnestedparams.fthreadbatch = 5000;
-
+    pars.fminevaliterations = pars.fnestedparams.fminevaliterations = 100;
+    double accuracy = 0.025;
     double evalaccuracy = 0.0025
-                          *10
-
+*3
         ;
     unsigned pfmaxstatestoenum = 10000;
 
@@ -646,7 +646,9 @@ void dosell(unsigned nthreads, std::string repontname)
     }
 
     report << "problem,crit,";
-    report << "nstates/maxinv,maxcons/lot,kappa,gamma,pcrash,accuracy,evalaccuracy,";
+    report << "endowment,nprices,initprice,kappa,gamma,accuracy,evalaccuracy,";
+    report << "numcomplete,numhomo,numhetero,iscompletehomo,completecrit,should_be_ture,homocrit,"
+              "hpol,hcrit,hcritsd,extracted_hpol,numunkowns,nerrors,time" << std::endl;
     std::string id;
 
     id = "sell";
@@ -656,8 +658,9 @@ void dosell(unsigned nthreads, std::string repontname)
         cid = "cvar";
     if constexpr(std::is_same<critmcv,C>::value)
         cid = "MCV";
+    if constexpr(std::is_same<critmcv75,C>::value)
+        cid = "MCV75";
 
-    report << std::endl;
     report << std::setprecision(5);
 
     // zajímavé bylo cvar s gamma 0.7, kappa 0.7
@@ -666,228 +669,198 @@ void dosell(unsigned nthreads, std::string repontname)
     double kappa = 0.7;
     probability bparam = 0.9;
 
-    unsigned nprices = 4;
-    unsigned initprice = 0;
-    for(unsigned int endowment = 4; endowment <=4; endowment++)
-    {
-        sys::log() << "Endiwoment " << endowment << std::endl;
-        sellproblem<C> problem(endowment, nprices, bparam, kappa, gamma);
-
-        std::vector<typename sellproblem<C>::fullstrategy> list;
-        sellproblem<C>::createpolicies(list, nprices, endowment);
-        sys::log() << "Number of policies: " << list.size() << std::endl;
-
-        std::vector<typename sellproblem<C>::fullstrategy> homo;
-        homo.reserve(list.size()); // optional
-        for(auto s: list)
+    for(unsigned nprices=2; nprices <= 5 ; nprices++)
+        for(unsigned int endowment = 3; endowment <= (nprices <= 2 ? 5 : 4); endowment++)
         {
-            std::vector<std::vector<std::vector<int>>> notebook;
-            if(sellproblem<C>::template is_homo<true>(s,endowment,notebook))
-                homo.push_back(s);
-        }
-        sys::log() << "Number of homogenous policies: " << homo.size() << std::endl;
 
-/*        std::vector<typename sellproblem<C>::fullstrategy> hetero;
-        hetero.reserve(list.size()); // optional
-        for(auto s: list)
-        {
-            std::vector<std::vector<std::vector<int>>> notebook;
-            if(sellproblem<C>::template is_homo<false>(s,endowment, notebook))
-                hetero.push_back(s);
-        }
-        sys::log() << "Number of homogenous policies: " << hetero.size() << std::endl;
-*/
-        double alpha, lambda;
-        if constexpr(std::is_same<critcvar,C>::value)
-        {
-            alpha = kappa;
-            lambda = 1;
-        }
-        else if constexpr(std::is_same<critmcv75,C>::value)
-        {
-            alpha = 0.75;
-            lambda = kappa;
-        }
-        else
-        {
-            throw "not impemented";
-        }
+            unsigned initprice = nprices == 2 ? 0 : 1;
 
-        MeanCVaR<ldistribution<double,true>,true> crit(alpha,lambda);
+            report << id << "," << cid<< ",";
+            report << endowment<< "," << nprices<< "," << initprice<< "," << kappa
+                       << "," << gamma<< "," << accuracy << "," << evalaccuracy << ",";
 
-//            ;
-        std::vector<std::vector<std::vector<std::vector<int>>>> notebooks(2);
-        for(unsigned i=0; i<2;i++)
-        {
-            typename sellproblem<C>::fullstrategy bests(list[0].T(),list[0].k());
-            double bestenum = sellproblem<C>::findbeststragegy(i==0 ? list : homo,
-                                  endowment,
-                                  initprice,
-                                  bparam,
-                                  gamma,
-                                   kappa,
-                                   crit,
-                                   bests);
+            timems tverystart;
+            timems tstart = tverystart = sys::gettimems();
 
-            bool ishomo =  sellproblem<C>::template is_homo<true>(bests,endowment, notebooks[i]);
+            sys::log() << "Endiwoment " << endowment << std::endl;
+            sellproblem<C> problem(endowment, nprices, bparam, kappa, gamma);
 
-            sys::log() << "Enumeration: " << (i==0 ? "all" : "homo");
-            sys::log() << " opt. crit=" << bestenum << std::endl;
-            sys::log() << "Best strategy" << std::endl;;
-            bests.output(sys::log());
-            sys::log() << std::endl;
+            std::vector<typename sellproblem<C>::fullstrategy> list;
+            sellproblem<C>::createpolicies(list, nprices, endowment);
+            sys::log() << "Number of policies: " << list.size() << std::endl;
 
-
-
-
-/*ldistribution<double, true> bdist = sellproblem<C>::overalldist(bests, endowment, initprice, bparam, gamma);
-sys::log() << "best distribution" << std::endl;
-for(unsigned i=0; i<bdist.natoms(); i++)
-{
-    sys::log() << bdist(i).p << "," << bdist(i).x << std::endl;
-}
- bests[{0,0,0,0}] = 1;
-ldistribution<double, true> dist = sellproblem<C>::overalldist(bests, endowment, initprice, bparam, gamma);
-sys::log() << "sec best distribution" << std::endl;
-for(unsigned i=0; i<dist.natoms(); i++)
-{
-    sys::log() << dist(i).p << "," << dist(i).x << std::endl;
-}
-auto secbest = crit(dist);
-sys::log() << "Test. crit=" << secbest << std::endl;
-sys::log() << "Test strategy" << std::endl;;
-bests.output(sys::log());
-sys::log() << std::endl;
-*/
-        }
-
-
-        sys::log().flush();
-
-
-        auto initstate = sellstatespace::state(endowment,initprice,nprices);
-
-        report << id << "," << cid << ",";
-
-        pars.fenumtimelimit = 3*7200*1000;
-
-
-        report << kappa << "," << gamma << ","
-           << evalaccuracy << ",";
-
-        sys::logline() << "kappa, gamma = " << kappa << "," << gamma << std::endl;
-//    invhomoproblem<C> hp(p.maxinv,p.lot, p.kappa, p.pincrease, p.gamma, p.pcrash);
-
-       if(sys::loglevel() >= 2)
-       {
-           finitepolicy tp(problem);
-           sys::log() << "Testing transition given policy " << tp << std::endl;
-
-           selltransition st(nprices, bparam, endowment);
-           for(unsigned i=0; i<nprices * (endowment+1); i++)
-           {
-               sys::log() << "state " << i << " atoms " << st.natoms({tp[i],i}) << std::endl;
-               for(unsigned j=0; j < nprices * (endowment+1); j++)
-               {
-                   auto a = st(j,{tp[i],i});
-                   sys::log() << a.p << " ";
-               }
-               sys::log() << std::endl;
-           }
-       }
-
-
-        timems tverystart;
-        timems tstart = tverystart = sys::gettimems();
-
-        finitepolicy probablybest(problem);
-
-    //
-    try
-    {
-        typename sellproblem<C>::heuristicplusresult hpres
-          = problem.heuristicplus(initstate,evalaccuracy,pars);
-        auto hpol = hpres.pgres.p;
-        timems tend = sys::gettimems();
-
-
-/* finitepolicy hpol(problem);
-for(unsigned i=nprices; i<hpol.size(); i++)
-    hpol[i]=1; */
-        auto res = problem.evaluatecrit(initstate,hpol,evalaccuracy,pars);
-        sys::log() << "Crit reevaluated=" << res.x << std::endl;
-
-
-        for(unsigned i=0; i<2; i++)
-        {
-            finitepolicy p(problem);
-            std::vector<int> x(p.size());
-            unsigned numunkowns = 0;
-            unsigned nerrors = 0;
-            for(unsigned j=0; j<=endowment; j++)
+            std::vector<typename sellproblem<C>::fullstrategy> homo;
+            homo.reserve(list.size()); // optional
+            for(auto s: list)
             {
-                for(unsigned k=0; k<nprices; k++)
-                {
-                    unsigned dstind = sellstatespace::state(j,k,nprices);
-                    if(j<=1)
-                    {
-                        x[dstind] = p[dstind] = j;
-                    }
-                    else if(j==endowment && k != initprice)
-                    {
-                        x[dstind] = p[dstind] = endowment;
-                    }
-                    else
-                    {
-                        int nitem = notebooks[i][0][j][k];
-                        if(nitem == -1)
-                        {
-                            numunkowns++;
-                            p[dstind] = 1;
-                            x[dstind] = -1;
-                        }
-                        else
-                        {
-                            p[dstind] = j-nitem;
-                            x[dstind] = j-nitem;
-                            if(p[dstind] != hpol[dstind])
-                                nerrors++;
-                        }
-                    }
-                }
+                std::vector<std::vector<std::vector<int>>> notebook;
+                if(sellproblem<C>::template is_homo<true>(s,endowment,notebook))
+                    homo.push_back(s);
+            }
+            sys::log() << "Number of homogenous policies: " << homo.size() << std::endl;
+
+            std::vector<typename sellproblem<C>::fullstrategy> hetero;
+            hetero.reserve(list.size()); // optional
+            for(auto s: list)
+            {
+                std::vector<std::vector<std::vector<int>>> notebook;
+                if(sellproblem<C>::template is_homo<false>(s,endowment, notebook))
+                    hetero.push_back(s);
+            }
+            sys::log() << "Number of heterogenous policies: " << hetero.size() << std::endl;
+
+            report << list.size() << "," << homo.size() << "," << hetero.size() << ",";
+
+            double alpha, lambda;
+            if constexpr(std::is_same<critcvar,C>::value)
+            {
+                alpha = kappa;
+                lambda = 1;
+            }
+            else if constexpr(std::is_same<critmcv75,C>::value)
+            {
+                alpha = 0.75;
+                lambda = kappa;
+            }
+            else
+            {
+                throw "not impemented";
             }
 
-            sys::log() << "Policy comparison"
-                       << ", unkowns =" << numunkowns
-                       << " numerrors=" << nerrors  <<  std::endl;
-            sys::log() <<                           "Heuristic " << hpol << std::endl;
-            sys::log() <<  (i == 0 ? "hetero    " : "homo      ") << p << std::endl;
-            auto res2 = problem.evaluatecrit(initstate,p ,evalaccuracy,pars);
-            sys::log() << "Crit reevaluated from exact = " << res2.x << "(" << res2.sd << ")" << std::endl;
+            MeanCVaR<ldistribution<double,true>,true> crit(alpha,lambda);
+
+            std::vector<std::vector<std::vector<std::vector<int>>>> notebooks(2);
+            for(unsigned i=0; i<2;i++)
+            {
+                typename sellproblem<C>::fullstrategy bests(list[0].T(),list[0].k());
+                double bestenum = sellproblem<C>::findbeststragegy(i==0 ? list : homo,
+                                      endowment,
+                                      initprice,
+                                      bparam,
+                                      gamma,
+                                       kappa,
+                                       crit,
+                                       bests);
+
+                bool ishomo =  sellproblem<C>::template is_homo<true>(bests,endowment, notebooks[i]);
+
+                sys::log() << "Enumeration: " << (i==0 ? "all" : "homo");
+                sys::log() << " opt. crit=" << bestenum << std::endl;
+                sys::log() << "Best strategy" << std::endl;;
+                bests.output(sys::log());
+                sys::log() << std::endl;
+
+                report << (ishomo ? "homo" : "hetero") << "," << bestenum << ",";
+            }
+
+
+
+
+            auto initstate = sellstatespace::state(endowment,initprice,nprices);
+
+
+            pars.fenumtimelimit = 3*7200*1000;
+
+
+           if(sys::loglevel() >= 2)
+           {
+               finitepolicy tp(problem);
+               sys::log() << "Testing transition given policy " << tp << std::endl;
+
+               selltransition st(nprices, bparam, endowment);
+               for(unsigned i=0; i<nprices * (endowment+1); i++)
+               {
+                   sys::log() << "state " << i << " atoms " << st.natoms({tp[i],i}) << std::endl;
+                   for(unsigned j=0; j < nprices * (endowment+1); j++)
+                   {
+                       auto a = st(j,{tp[i],i});
+                       sys::log() << a.p << " ";
+                   }
+                   sys::log() << std::endl;
+               }
+           }
+
+            try
+            {
+                typename sellproblem<C>::heuristicplusresult hpres
+                  = problem.heuristicplus(initstate,accuracy,pars);
+                auto hpol = hpres.pgres.p;
+                timems tend = sys::gettimems();
+
+
+                auto res = problem.evaluatecrit(initstate,hpol,evalaccuracy,pars);
+                sys::log() << "Crit reevaluated=" << res.x << std::endl;
+
+
+                    finitepolicy p(problem);
+                    std::vector<int> x(p.size());
+                    unsigned numunkowns = 0;
+                    unsigned nerrors = 0;
+                    for(unsigned j=0; j<=endowment; j++)
+                    {
+                        for(unsigned k=0; k<nprices; k++)
+                        {
+                            unsigned dstind = sellstatespace::state(j,k,nprices);
+                            if(j<=1)
+                            {
+                                x[dstind] = p[dstind] = j;
+                            }
+                            else if(j==endowment && k != initprice)
+                            {
+                                x[dstind] = p[dstind] = endowment;
+                            }
+                            else
+                            {
+                                int nitem = notebooks[1][0][j][k];
+                                if(nitem == -1)
+                                {
+                                    numunkowns++;
+                                    p[dstind] = 1;
+                                    x[dstind] = -1;
+                                }
+                                else
+                                {
+                                    p[dstind] = j-nitem;
+                                    x[dstind] = j-nitem;
+                                    if(p[dstind] != hpol[dstind])
+                                        nerrors++;
+                                }
+                            }
+                        }
+                    }
+
+                    auto res2 = problem.evaluatecrit(initstate,p,evalaccuracy,pars);
+                    sys::log() << "Policy comparison"
+                               << ", unkowns =" << numunkowns
+                               << " numerrors=" << nerrors  <<  std::endl;
+                    sys::log() << "Heuristic " << hpol << ": " << res.x << "(" << res.sd << ")" <<std::endl;
+                    sys::log() << "Exact     " << p << ": " << res2.x << "(" << res2.sd << ")" << std::endl;
+                    sys::log() << "Crit reevaluated from exact = "  << std::endl;
+                    report << hpol << "," << res2.x << "," << res2.sd << "," << p << "," << numunkowns << "," << nerrors << ",";
+
+            }
+            catch(const timelimitexception& e)
+            {
+                report << ",,,,outoftime,,";
+            }
+//            catch(...)
+//            {
+//                report << ",,,,failed,,";
+            //}
+
+
+            // Calculating total time taken by the program.
+            double time_taken = (sys::gettimems() - tverystart) / 1000.0;
+            sys::logline() << "Time taken by program is : " << std::fixed
+                           << time_taken << std::setprecision(5);
+
+            report << time_taken << std::endl;
+
+            sys::log() << " sec " << std::endl;
+
+            sys::logline() << std::endl;
         }
 
-/*        report << hpres.hres.p << ","
-               << hpres.hres.v << "," << hpres.hres.iota << ","
-               << hpres.pgres.p << "," << res.x << ","  << tend - tstart << ",";;; */
-        probablybest = hpol;
-    }
-    catch(const timelimitexception& e)
-    {
-        report << ",,,,outoftime,,";
-    }
-    }
-
-
-    // Calculating total time taken by the program.
-    double time_taken = (sys::gettimems() - tverystart) / 1000.0;
-    sys::logline() << "Time taken by program is : " << std::fixed
-                   << time_taken << std::setprecision(5);
-
-    report << time_taken << std::endl;
-
-    sys::log() << " sec " << std::endl;
-
-    sys::logline() << std::endl;
 }
 
 
@@ -896,7 +869,7 @@ int main(int argc, char *argv[])
     unsigned nthreads = 1;
     using crit = critmcv75;
 
-    dosell<crit>(nthreads,std::string("testreport"));
+    dosell<crit>(nthreads,std::string("testreport.csv"));
     return 1;
 
 

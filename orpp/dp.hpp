@@ -334,6 +334,7 @@ public:
     struct computationparams
     {
         computationparams() : fmaxevaliterations(std::numeric_limits<unsigned>::max()),
+            fminevaliterations(10),
             fthreadstouse(0), fthreadbatch(1000),
             fevaltimelimit(std::numeric_limits<timems>::max()),
             fpseudogradientmaxiters(std::numeric_limits<unsigned>::max()),
@@ -341,6 +342,7 @@ public:
             fenumtimelimit(std::numeric_limits<timems>::max())
           {}
         unsigned fmaxevaliterations;
+          unsigned fminevaliterations;
         unsigned fthreadstouse;
         unsigned fthreadbatch;
         timems fevaltimelimit;
@@ -651,7 +653,7 @@ public:
                     sys::logline(3) << "End fo loop" << std::endl;
             }
 
-            if(j>10 && sc.averagestdev() < accuracy / 4)
+            if(j>params.fminevaliterations && sc.averagestdev() < accuracy / 4)
             {
                 break;
             }
