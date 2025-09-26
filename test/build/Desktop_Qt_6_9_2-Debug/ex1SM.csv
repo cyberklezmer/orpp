@@ -1,0 +1,3 @@
+problem,crit,endowment,nprices,initprice,kappa,gamma,accuracy,evalaccuracy,numcomplete,numhomo,numhetero,iscompletehomo,completecrit,should_be_ture,homocrit,hpol,hcrit,hcritsd,extracted_hpol,numunkowns,nerrors,x,timeenum,timeheur
+sell,MCV75,3,2,0,0.7,0.9,0.025,0.0025,6,6,6,homo,1.468,homo,1.468,0 0 1 1 1 2 1 2,1.4691,0.000625,0 0 1 1 1 2 1 3,0,0, $0$ & $1$ & $1$ & $1$ \\  $0$ & $1$ & $2$ & $?$ \\ ,0.001,147.59
+sell,MCV75,4,2,0,0.7,0.9,0.025,0.0025,42,30,30,homo,2.3353,homo,2.3353,0 0 1 1 1 2 1 3 1 4,2.3382,0.000625,0 0 1 1 1 2 1 3 1 4,0,0, $0$ & $1$ & $1$ & $1$ & $1$ \\  $0$ & $1$ & $2$ & $3$ & $?$ \\ ,0.006,155.01

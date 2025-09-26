@@ -9,7 +9,7 @@
 #include "testproblem.hpp"
 
 
-enum eanalysis {eexp1, eexp2, eapprox, enumanalyses};
+enum eanalysis {eexp1, eexp2, eapprox, eilu, enumanalyses};
 
 using namespace orpp;
 
@@ -666,6 +666,7 @@ void dosell(unsigned nthreads, std::string repontname)
     double kappa = 0.7;
     probability bparam = 0.9;
 
+    bool loggingforexample = true;
     for(unsigned nprices=2; nprices <= 5 ; nprices++)
         for(unsigned int endowment = 3; endowment <= (nprices <= 2 ? 6 : 4); endowment++)
         {
@@ -775,14 +776,35 @@ void dosell(unsigned nthreads, std::string repontname)
                    sys::log() << std::endl;
                }
            }
-            timems tstart = sys::gettimems();
-
+            timems tendenum = sys::gettimems();
+            timems tstartheur = sys::gettimems();
             try
             {
+                if(loggingforexample)
+                {
+                    finitepolicy initpolicy(problem,1);
+                    for(unsigned k=0; k<nprices; k++)
+                        initpolicy[sellstatespace::state(0,k,nprices)]=0;
+                    sys::logline() << "Taylor heuristic for the sake of exapmles";
+//                    sys::setloglevel(2);
+
+                    typename sellproblem<C>::heuristicresult hres
+                        = problem.taylorheuristic(initstate,accuracy,initpolicy,pars);
+                    sys::log() << "Taylor heuristic:" << hres.p << std::endl;
+
+                    sys::log() << "Relaxation heuristic:"  << std::endl;
+                    typename sellproblem<C>::heuristicresult hres2
+                        = problem.heuristic(initstate,accuracy,initpolicy,pars);
+                    sys::log() << "Relaxation heuristic:" << hres2.p << std::endl;
+                    tstartheur = sys::gettimems();
+
+                }
+
                 typename sellproblem<C>::heuristicplusresult hpres
                   = problem.heuristicplus(initstate,accuracy,pars);
+                sys::setloglevel(0);
+
                 auto hpol = hpres.pgres.p;
-                timems tend = sys::gettimems();
 
 
                 auto res = problem.evaluatecrit(initstate,hpol,evalaccuracy,pars);
@@ -864,8 +886,8 @@ void dosell(unsigned nthreads, std::string repontname)
 
 
             // Calculating total time taken by the program.
-            double time_enum = (tstart - tverystart) / 1000.0;
-            double time_taken = (sys::gettimems() - tverystart) / 1000.0;
+            double time_enum = (tendenum - tverystart) / 1000.0;
+            double time_taken = (sys::gettimems() - tstartheur) / 1000.0;
             sys::logline() << "Time taken by program is : " << std::fixed
                            << time_taken << std::setprecision(5);
 
@@ -874,6 +896,7 @@ void dosell(unsigned nthreads, std::string repontname)
             sys::log() << " sec " << std::endl;
 
             sys::logline() << std::endl;
+            loggingforexample = false;
         }
 
 }
@@ -881,12 +904,7 @@ void dosell(unsigned nthreads, std::string repontname)
 
 int main(int argc, char *argv[])
 {
-    unsigned nthreads = 48;
-    using crit = critmcv75;
-
-    dosell<crit>(nthreads,std::string("sell.csv"));
-    return 1;
-
+    unsigned nthreads = 1;
 
     if(argc>1)
     {
@@ -901,7 +919,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    eanalysis e = eexp1;
+    eanalysis e = eilu;
     if(argc > 2)
         switch(argv[2][0])
         {
@@ -914,12 +932,15 @@ int main(int argc, char *argv[])
         case 'A':
             e = eapprox;
             break;
+        case 'I':
+            e = eilu;
+            break;
         default:
             throw exception("Unknown option in the second argument");
         }
 
     enum etask {etest, einv, esell};
-    etask et;
+    etask et = esell;
     if(argc>3)
     {
         if(argv[3][0] == 'I')
@@ -931,7 +952,7 @@ int main(int argc, char *argv[])
 
     }
 
-    bool cvar = true;
+    bool cvar = false;
     if(argc>4)
     {
         if(argv[4][0] == 'M')
@@ -947,6 +968,8 @@ int main(int argc, char *argv[])
         rn = "ex2";
     else if(e == eapprox)
         rn = "approx";
+    else if(e == eilu)
+        rn = "ilu";
 
     switch(et)
     {
@@ -982,8 +1005,9 @@ int main(int argc, char *argv[])
         }
         else
         {
-            using mcrit = critmcv;
-            dosell<crit>(nthreads, rn + "SM.csv" );
+            using crit = critmcv75;
+
+            dosell<crit>(nthreads,rn + "SM.csv");
         }
         break;
 

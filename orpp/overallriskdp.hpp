@@ -428,6 +428,7 @@ public:
             double valueofcrit =  this->evaluatecrit( s0ind, candp, accuracy / 2.0, params).x;
 
             iota = findiota(nproblem,candp,valueofcrit,initV, s0ind, accuracy, params.fnestedparams);
+            sys::log() << "iter. " << i << " iota=" << iota << std::endl;
 
             sys::logline() << "iteration " << i << " iota=" << iota << ", p="
                          << candp << ", crit=" << valueofcrit << std::endl;
@@ -473,11 +474,10 @@ public:
                 taylorreward r(candp,grad, this->reward());
                 double addition = (1-this->fgamma) * r.maxgradadd(this->fconstraint);
 
-                sys::logline(0) << "grad=";
+                sys::logline(0) << "Coord=" << s << " hi=" << a1-a0  << " grad=";
                 for(unsigned k=0; k<grad.size(); k++)
-                    sys::log() << grad[k] << " ";
-                sys::log() << std::endl;
-
+                    sys::log() << grad[k] / (1-this->fgamma)  << " ";
+                sys::log() << "->";
                 nestedtaylorproblem taylorproblem(this->fcrit,
                                       this->fstatespace,
                                       c,
@@ -492,6 +492,8 @@ public:
 
                 lastp = candp;
                 candp = vires.p;
+                sys::log() << vires.p << std::endl;
+
                 taylorinitV = vires.v;
                 lastvalueofcrit = valueofcrit;
                 auto t = sys::gettimems();
