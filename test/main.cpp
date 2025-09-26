@@ -404,8 +404,8 @@ void domain(unsigned nthreads, std::string repontname, eanalysis e)
                << "hppolicyh,hpcrith,hplambdah,hppolicyp,hpcritp,hptime,"
                << "pghomopolicy,pghomocrit,pghomotime,"
                << "enumgpolicy,enumgcrit,enumegtime,"
-               << "pgheteropolicy,pgheterocrit,pgheterotime,"
-               << "timetaken"
+               << "pgheteropolicy,pgheterocrit,pgheterotime,x,"
+               << "timeenum,timetaken"
                << std::endl;
     report << std::setprecision(5);
 
@@ -624,7 +624,6 @@ void dosell(unsigned nthreads, std::string repontname)
 
     sys::setloglevel(0);
 
-    auto tverystart = sys::gettimems();
 
     typename sellproblem<C>::computationparams pars;
 
@@ -634,9 +633,7 @@ void dosell(unsigned nthreads, std::string repontname)
         = pars.fnestedparams.fthreadbatch = 5000;
     pars.fminevaliterations = pars.fnestedparams.fminevaliterations = 100;
     double accuracy = 0.025;
-    double evalaccuracy = 0.0025
-*3
-        ;
+    double evalaccuracy = 0.0025;
     unsigned pfmaxstatestoenum = 10000;
 
     std::ofstream report(repontname);
@@ -648,7 +645,7 @@ void dosell(unsigned nthreads, std::string repontname)
     report << "problem,crit,";
     report << "endowment,nprices,initprice,kappa,gamma,accuracy,evalaccuracy,";
     report << "numcomplete,numhomo,numhetero,iscompletehomo,completecrit,should_be_ture,homocrit,"
-              "hpol,hcrit,hcritsd,extracted_hpol,numunkowns,nerrors,time" << std::endl;
+              "hpol,hcrit,hcritsd,extracted_hpol,numunkowns,nerrors,x,timeenum,timeheur" << std::endl;
     std::string id;
 
     id = "sell";
@@ -670,7 +667,7 @@ void dosell(unsigned nthreads, std::string repontname)
     probability bparam = 0.9;
 
     for(unsigned nprices=2; nprices <= 5 ; nprices++)
-        for(unsigned int endowment = 3; endowment <= (nprices <= 2 ? 5 : 4); endowment++)
+        for(unsigned int endowment = 3; endowment <= (nprices <= 2 ? 6 : 4); endowment++)
         {
 
             unsigned initprice = nprices == 2 ? 0 : 1;
@@ -679,8 +676,7 @@ void dosell(unsigned nthreads, std::string repontname)
             report << endowment<< "," << nprices<< "," << initprice<< "," << kappa
                        << "," << gamma<< "," << accuracy << "," << evalaccuracy << ",";
 
-            timems tverystart;
-            timems tstart = tverystart = sys::gettimems();
+            timems tverystart=  sys::gettimems();;
 
             sys::log() << "Endiwoment " << endowment << std::endl;
             sellproblem<C> problem(endowment, nprices, bparam, kappa, gamma);
@@ -779,6 +775,7 @@ void dosell(unsigned nthreads, std::string repontname)
                    sys::log() << std::endl;
                }
            }
+            timems tstart = sys::gettimems();
 
             try
             {
@@ -807,7 +804,8 @@ void dosell(unsigned nthreads, std::string repontname)
                             }
                             else if(j==endowment && k != initprice)
                             {
-                                x[dstind] = p[dstind] = endowment;
+                                x[dstind] = -1;
+                                p[dstind] = endowment;
                             }
                             else
                             {
@@ -837,7 +835,23 @@ void dosell(unsigned nthreads, std::string repontname)
                     sys::log() << "Exact     " << p << ": " << res2.x << "(" << res2.sd << ")" << std::endl;
                     sys::log() << "Crit reevaluated from exact = "  << std::endl;
                     report << hpol << "," << res2.x << "," << res2.sd << "," << p << "," << numunkowns << "," << nerrors << ",";
-
+                     for(unsigned i=0; i<nprices; i++)
+                     {  
+                        std::string delim = "";
+                        for(unsigned j=0; j<=endowment; j++)
+                        {
+                            report << delim << " $";
+                            int y = x[sellstatespace::state(j,i,nprices)];
+                            if(y == -1)
+                               report << "?";
+                            else
+                               report << y;
+                            report << "$ ";   
+                            delim = "&";
+                        }
+                        report << "\\\\ ";
+                    }
+                    report << ",";
             }
             catch(const timelimitexception& e)
             {
@@ -850,11 +864,12 @@ void dosell(unsigned nthreads, std::string repontname)
 
 
             // Calculating total time taken by the program.
+            double time_enum = (tstart - tverystart) / 1000.0;
             double time_taken = (sys::gettimems() - tverystart) / 1000.0;
             sys::logline() << "Time taken by program is : " << std::fixed
                            << time_taken << std::setprecision(5);
 
-            report << time_taken << std::endl;
+            report << time_enum << "," << time_taken << std::endl;
 
             sys::log() << " sec " << std::endl;
 
@@ -866,10 +881,10 @@ void dosell(unsigned nthreads, std::string repontname)
 
 int main(int argc, char *argv[])
 {
-    unsigned nthreads = 1;
+    unsigned nthreads = 48;
     using crit = critmcv75;
 
-    dosell<crit>(nthreads,std::string("testreport.csv"));
+    dosell<crit>(nthreads,std::string("sell.csv"));
     return 1;
 
 
